@@ -1,0 +1,246 @@
+.header{
+    margin: 9px 10px;
+    width: 100%;
+}
+.headerLine{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+.uploadPos{
+    position: absolute;
+    top: 43%;
+    left: 43%;
+}
+
+.btn{
+    transition: ease-in 0.25s;
+}
+.fileUploadExcel{
+    // position: relative;
+    // overflow: hidden;
+    // margin-left: -23px;
+    // padding: 5px 18px;
+    border-radius: 5px;
+    padding: 28px 113px;
+    margin-top: 12px;
+    cursor: pointer !important;
+    border: 2px dashed #00aed9;
+    position: relative;
+
+
+}
+.fileUploadExcel input.upload {
+    position: absolute;
+    /* top: 0; */
+    /* right: 0; */
+    /* margin: 0; */
+    /* padding: 0; */
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    left: 0px;
+    width: 100%;
+    padding: 0px;
+    height: 100%;
+    top: 0%;
+}
+.fileUploadExcel  span{
+    font-size: 16px;
+}
+.fileUploadExcel:hover{
+    background: #00aed9;
+    border: 2px dashed #fff;
+    color: white;
+
+}
+
+.alertMSg{
+    color: rgb(245, 38, 38);
+    text-align: center;
+}
+
+.noteMsg{
+    width: 100%;
+    text-align: center;
+    margin: 30px 0px;
+    font-size: 14px;
+}
+.noteMsg span{
+    color: #d90028;
+    font-weight: 600;
+}
+
+
+.uploadbtn{
+    padding: 3px 10px;
+    margin: 8px 20px;
+    border-radius: 2px;
+}
+.cursor{
+    cursor: pointer;
+}
+.head1{
+    margin: 12px 10px;
+    font-weight: 600;
+    font-size: 15px;
+}
+.fileDetDiv{
+    border: 1px solid #9ac9fb;
+    padding: 10px 55px;
+    background: rgba(154, 201, 251, 0.16);
+    margin-left: 16px;
+    margin-right: 15px;
+    width: 97%;
+}
+.label{
+    font-weight: 700;
+    margin: 5px 0px;
+    text-align: right;
+}
+
+table {
+	// max-width:980px;
+	table-layout:fixed;
+    margin:auto;
+    border: 1px solid rgba(174, 204, 218, 0.58);
+    border-bottom: 0px solid transparent;
+}
+th, td {
+	padding:5px 10px;
+    // border:1px solid #000;
+    text-align: center;
+    word-break: break-all;
+}
+
+
+thead, tfoot {
+    background-color: #9ac9fb;
+	display:table;
+	width:100%;
+	// width:calc(100% - 18px);
+}
+ .table-height .table td {
+    // padding: 0.75rem;
+     vertical-align: middle !important;
+    // border-top: 1px solid #ffffff;
+}
+.viewTable tbody {
+	max-height:380px;
+	overflow:auto;
+	overflow-x:hidden;
+	display:block;
+    width:100%;
+
+    font-size: 14px;
+}
+.viewTable tbody tr{
+    background-color: rgba(226, 238, 251, 0.43);
+
+    border-bottom: 1px solid rgba(174, 204, 218, 0.58);
+
+}
+
+
+.item-dist {
+	height:400px;
+	overflow:auto;
+	overflow-x:hidden;
+	display:block;
+    width:100%;
+    background: #f2f5fa;
+    font-size: 14px;
+}
+.table-hover tbody tr:hover {
+    background-color:rgba(203, 226, 247, 0.65)  !important;
+}
+.table th, .table td {
+    // padding: 0.75rem;
+    vertical-align: middle;
+    // border-bottom: 1px solid #aeccda;
+    border-top: 0px solid transparent;
+}
+tbody tr {
+	display:table;
+	width:100%;
+	table-layout:fixed;
+}
+.table thead th {
+    /* vertical-align: bottom; */
+    border-bottom: 1px solid #aeccda;;
+    width: 12% !important;
+	text-align: center;
+    padding: 5px 4px;
+    font-weight: bold !important;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 2px;
+    background: darkgray;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    background: grey;
+    // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.pagination{
+    margin: 20px 0px;
+    float: right;
+}
+
+p._uploadMsg {
+  position: absolute;
+  left: 34%;
+  top: 52%;
+  z-index: 9999;
+  font-size: 20px;
+}
+
+.overlay {
+  position: fixed;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.58);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+._modePo {
+  position: fixed;
+  z-index: 1005;
+  top: 25%;
+  left: 40%;
+  width: 25%;
+  background: white;
+}
+
+._modePoHead {
+  padding: 6px;
+  text-align: center;
+  background: #3a3a3a;
+  color: white;
+}
+
+._modePoHead p {
+  margin: 0;
+}
+
+.creategrpBtn{
+  background: #20a8d8;
+  border: none;
+  padding: 1px 15px;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+}
+
+.disabledIt {
+  cursor: not-allowed !important;
+}

@@ -1,0 +1,223 @@
+<app-loader *ngIf="showLoad"></app-loader>
+<div class="col-lg-12" *ngIf="showItemSetList">
+  <div class="row">
+  <div >
+    <header>
+      <p class="head">List of Item Sets</p>
+      <hr class="headerLine">
+    </header>
+
+    <!-- list Table -->
+    <div class="col-md-12">
+      <table class="table table-hover viewTable">
+        <thead>
+          <tr>
+            <th>Item Set</th>
+            <th>Number of Items</th>
+            <th>Date Created</th>
+            <th>Author</th>
+            <th>Reviewer</th>
+            <th>Maximum Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="itemSetLists.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="7">No data found</td></tr>
+          <tr *ngFor = "let data of itemSetLists" (click)="getItemsetDet(data.itemset_id)" class="cursor">
+            <td>{{data.itemset_name}}</td>
+            <td>{{data.no_of_items}}</td>
+            <td>{{data.created_date}}</td>
+            <td>{{data.author}}</td>
+            <td>{{data.reviewer}}</td>
+            <td>{{data.score}}</td>
+            <td class="cursor"><p (click)="getItemsetDet(data.itemset_id)"><fa [name]="'eye'" [size]=1></fa></p></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+   
+  </div>
+  </div>
+</div>
+
+<div *ngIf="showItemList" class="col-lg-12">
+  <div class="row">
+    <div class="col-lg-4 ItemSet" >
+      <div class="leftColumnHEad">
+        <p class="itemSetHead">Item Set</p>
+        <p class="itemSetHeadBack" (click)="backToViewList()"><fa [name]="'angle-left'" [size]=1></fa> &nbsp; Back</p>
+      </div>
+      <div class="leftcolumn">
+        <div *ngFor = "let data of itemSetLists" class="ItemList" [ngClass]="{'clicked': data.itemset_id == choosenItemSetId}" (click)="getItemsetDet(data.itemset_id,0)">
+          <p>{{data.itemset_name}}</p>
+          <p>Author - {{data.author}}&nbsp; | &nbsp; Reviewer - {{data.reviewer}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8" style="padding:0px;">
+      <div class="rightcolumn">
+          <p class="itemSetHead1">List of Items</p>
+          <p ><fa [name]="'expand-alt'" [size]=1></fa></p>
+          
+      </div>
+      <hr>
+
+      <div *ngIf="eachSectionItems?.section_items.length == 0" class="noItems">
+          <p class="editIcon"><fa [name]="'edit'" [size]=5></fa></p>
+          <p style="opacity: 0.2;">No Item To Display</p>
+          <div class="addBank1">
+            <button class = "btn btn-primary addnewItemBtn" (click)="AddNewItems()">Add New Items</button><br>
+            <p class="Or">or</p>
+            <a class="addBankLink">Add Items from Item Bank</a>
+          </div>
+      </div>
+      <!-- Sections -->
+      <div *ngIf="eachSectionItems?.section_items.length != 0">
+        <div *ngFor="let data of getOneItem?.itemset_sections;let i=index" class="section_head" >
+          <p class="section_name" *ngIf="eachSectionItems?.section_items.length != 0" [ngClass]="{'textClr' : data.section_id == eachSectionItems.section_id}" (click)="getNextSection(i)">{{data.section_name}}</p>
+        </div>
+      </div>
+      <hr *ngIf="eachSectionItems?.section_items.length != 0">
+
+      <div class="setion_wise_Item" *ngIf="eachSectionItems?.section_items.length != 0">
+        <div *ngFor="let data of eachSectionItems?.section_items; let seq = index" [ngClass]="{'shadow':showItem == seq}" class="eachQuesBorder">
+          <div *ngIf="data.item_type==1" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq}">
+                  
+            <div  class=""  *ngFor="let value of data?.item; let i=index" >
+              
+            <p *ngIf="value.item_df_id == 1"><span *ngIf="i==0">{{seq+1}}.&nbsp;</span>&nbsp;{{value.data_format_value}}</p><br>
+            <span *ngIf="i==0 && value.item_df_id == 6">{{seq+1}}.&nbsp;</span>&nbsp;<img src="{{value.data_format_value}}" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;">
+            <span *ngIf="i==0 && value.item_df_id == 10">{{seq+1}}.&nbsp;</span>&nbsp;<audio src="{{value.data_format_value}}" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+            <span *ngIf="i==0 && value.item_df_id == 11">{{seq+1}}.&nbsp;</span>&nbsp;<video src="{{value.data_format_value}}" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+            </div>
+            <!-- answer block -->
+            <div class='hideAnswer' [ngClass]="{'class4':showItem == seq}">
+                <div *ngFor='let input of data?.answer_choices; let i = index;'>
+                  <div class="">
+                    <div *ngFor="let data of input?.choice_elements; let id=index;">
+                      <div *ngIf="data.answer_df_id== 1" style="margin-left: 3px;margin-bottom: 4px;" [ngClass]="{'textClr':input.correct_answer == true}"><span *ngIf="id==0">{{input.label}}.&nbsp;</span>&nbsp;{{data.data_format_value}}</div><br>
+                      <div *ngIf="data.answer_df_id== 6" style="margin-top: -23px;margin-bottom: 10px;margin-left: 15px;" [ngClass]="{'textClr':input.correct_answer == true}"><span *ngIf="id==0">{{ansLabel+i}}.&nbsp;</span>&nbsp;<img src="{{data.data_format_value}}" style="width: 84px;"></div>
+                      <!-- audio -->
+                      <div *ngIf="data.answer_df_id == 10" style="margin-top: 4px;margin-left: 35px;margin-bottom: 8px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                        <span *ngIf="id==0">{{input.label}}.&nbsp;</span>&nbsp;<audio  controls  controlsList="nodownload"  style="width: 200px;margin-left: -18px; margin-top: -23px;" class="audiotag">
+                          <source src="{{data.data_format_value}}" type="audio/mp3">
+                        </audio>
+                      </div>
+                      <!-- video -->
+                      <div *ngIf="data.answer_df_id == 11" style="margin-top: 4px;margin-left: 3px;margin-bottom: 8px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                        <span *ngIf="id==0">{{input.label}}.&nbsp;</span>&nbsp;<video controls controlsList="nodownload"  style="width: 173px;margin-top: -23px;" class="audiotag1">
+                          <source src="{{data.data_format_value}}" type="video/mp4">
+                          </video>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        
+          </div>
+       
+        <!-- Tf -->
+        <div *ngIf="data.item_type==2" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq}">
+          <div  class="" *ngFor="let value of data?.item; let i=index" >
+            <p *ngIf="value.item_df_id == 1"><span *ngIf="i==0 && value.item_df_id == 1">{{seq+1}}.&nbsp;</span>&nbsp;{{value.data_format_value}}</p>
+            <span *ngIf="i==0 && value.item_df_id == 6">{{seq+1}}.&nbsp;</span>&nbsp;<img src="{{value.data_format_value}}" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;">
+            <span *ngIf="i==0 && value.item_df_id == 10">{{seq+1}}.&nbsp;</span>&nbsp;<audio src="{{value.data_format_value}}" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+            <span *ngIf="i==0 && value.item_df_id == 11">{{seq+1}}.&nbsp;</span>&nbsp;<video src="{{value.data_format_value}}" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+           
+          </div>
+           <!-- answer block -->
+          <div class='hideAnswer' [ngClass]="{'class4':showItem == seq}">
+              <div *ngFor='let input of data?.answer_choices; let i = index;'>
+                  <div class="correct_options_block_TF_viewItem">
+                      <div class="correct_radio_button_TF">
+                          <p *ngIf="input.answer_df_id == 1" [ngClass]="{'textClr':input.correct_answer == true}">{{input.label}}.&nbsp;{{input.data_format_value}}</p>
+                      </div>
+                  </div>
+                  
+              </div>
+          </div>
+          <!-- <span class="textClr"><a class="editItemBtn  backToDirective"  (click)="editItemDirective(seq)"> Edit</a></span> -->
+        </div>
+        
+         <!-- match -->
+        <div  *ngIf="data.item_type == 3" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq}">
+            <div *ngFor="let data1 of data?.item; let i = index;" class="display_margin1">
+              <p *ngIf="data1.item_df_id == 1"><span *ngIf="i==0 && data1.item_df_id == 1">{{seq+1}}.&nbsp;</span>&nbsp;{{data1.data_format_value}}</p>
+              <span *ngIf="i==0 && data1.item_df_id == 6">{{seq+1}}.&nbsp;</span>&nbsp;<img src="{{data1.data_format_value}}" *ngIf="data1.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;">
+              <span *ngIf="i==0 && data1.item_df_id == 10">{{seq+1}}.&nbsp;</span>&nbsp;<audio src="{{data1.data_format_value}}" *ngIf="data1.item_df_id == 10" width="400" height = "200" controls></audio>
+              <span *ngIf="i==0 && data1.item_df_id == 11">{{seq+1}}.&nbsp;</span>&nbsp;<video src="{{data1.data_format_value}}" *ngIf="data1.item_df_id == 11" width="400" height = "200" controls></video>
+              <div *ngIf="data1.item_df_id == 9">
+                    <div *ngFor='let input1 of data1?.data_format_value;let idn = index;'>
+                      <div class="col-md-12" *ngIf="input1.match_data[0].header == 1">
+                        <div class="row">
+                          <div class="headMargin_left" *ngFor='let data of input1?.match_data;let in=index'  [ngClass]="{'header-margin': in==1}">
+                              <div style="margin-top:5px;" class="input-group" >
+                                <b><p *ngIf="data.match_data_format_id == 1" class="previewMatchStmt">{{data.match_value}}</p></b>
+                                <img src="{{data.match_value}}" *ngIf="data.match_data_format_id == 6 " style="width: 197px;height: 135px;">
+                                <audio width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 10 " style="width: 202px;">
+                                  <source src="{{data.match_value}}" type="audio/mp3">
+                                </audio>
+                                <video width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 11 " style="width: 196px;height: 100px;">
+                                  <source src="{{data.match_value}}" type="video/mp4">
+                                </video>
+                              </div>
+                          </div>
+                            
+                        </div>
+                      </div>
+                      <div class="col-md-12" *ngIf="input1.match_data[0].header != 1">
+                          <div class="row">
+                              
+                            <div class="" *ngFor='let data of input1?.match_data;let in=index' style="margin-right: 19px;margin-left: 26px;" >
+                                <div style="" class="input-group match_margin" [ngClass]="{'extraOption' : input1?.match_data[0].match_value == 'abc'}">
+                                    <p *ngIf="data.match_data_format_id == 1 && data.match_value != 'abc'" class="previewMatchStmt"><span *ngIf="data.match_data_format_id == 1 && (data1.match_type == 4 || data1.match_type == 5)">{{data.label}}.</span>&nbsp;{{data.match_value}}</p>
+                                    <span *ngIf="data.match_data_format_id == 6 && (data1.match_type == 4 || data1.match_type == 5)">{{data.label}}.</span>&nbsp;<img src="{{data.match_value}}" *ngIf="data.match_data_format_id == 6 && data.match_value != 'abc'" style="width: 178px;height: 121px;">
+                                    <span *ngIf="data.match_data_format_id == 10 && (data1.match_type == 4 || data1.match_type == 5)">{{data.label}}.</span>&nbsp;<audio width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 10 && data.match_value != 'abc'" style="width: 202px;">
+                                      <source src="{{data.match_value}}" type="audio/mp3">
+                                    </audio>
+                                    <span *ngIf="data.match_data_format_id == 11 && (data1.match_type == 4 || data1.match_type == 5)">{{data.label}}.</span>&nbsp;<video width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 11 && data.match_value != 'abc'" style="width: 196px;height: 100px;">
+                                      <source src="{{data.match_value}}" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                              
+                          </div>
+                        </div>
+                    </div>
+              </div>
+            </div>
+            <!-- answer block -->
+              <div class='' *ngIf="data.match_type == 4" style="margin-left: -50px;margin-top: 34px;">
+                <div *ngFor='let input of data?.answer_choices; let i = index;' style="">
+                  <div class="" style="margin-bottom: 13px;">
+                    <div *ngIf="input.answer_df_id== 1" style="margin-top: 4px;margin-left: 93px;" [ngClass]="{'textClr':input.correct_answer == true}"><span>{{input.label}}.</span>&nbsp;{{input.data_format_value}}</div><br>
+                    <div *ngIf="input.answer_df_id== 6" style="margin-top: -23px;margin-bottom: 10px;margin-left: 87px;" [ngClass]="{'textClr':input.correct_answer == true}"><span >{{input.label}}.</span>&nbsp;<img src="{{input.data_format_value}}" style="width: 84px;"></div> 
+                    <!-- audio -->
+                    <div *ngIf="input.answer_df_id == 10" style="margin-top: 4px;margin-left: 102px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                      <span >{{input.label}}.</span>&nbsp;<audio  controls  controlsList="nodownload"  style="width: 200px;margin-left: -18px; margin-top: -23px;" class="audiotag">
+                        <source src="{{input.data_format_value}}" type="audio/mp3">
+                      </audio>
+                    </div>
+                    <!-- video -->
+                    <div *ngIf="input.answer_df_id == 11" style="margin-top: 4px;margin-left: 93px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                      <span >{{input.label}}.</span>&nbsp;<video controls controlsList="nodownload"  style="width: 173px;margin-top: -23px;" class="audiotag1">
+                        <source src="{{input.data_format_value}}" type="video/mp4">
+                        </video>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class='' *ngIf = "data.match_type == 5" style="margin-left: 22px;margin-bottom: 2px;">
+                  <div *ngFor='let input of data?.answer_choices; let idn = index;' style="margin-bottom: 6px;">
+                      <div *ngIf="input.answer_df_id== 1" [ngClass]="{'textClr':input.correct_answer == true}"><span>{{input.label}}.</span>&nbsp;{{input.data_format_value}}</div>
+                  </div>
+              </div> 
+        </div>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

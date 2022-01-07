@@ -1,0 +1,112 @@
+<app-loader *ngIf="showload"></app-loader>
+
+<!-- notification -->
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+<!-- bootstrap alert -->
+<div *ngFor="let alert of alerts" class="alertPOPup">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+</div>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <h3 class="card-title">Manage Groups </h3>
+                            <a  class="take-test float-right mt-2" data-toggle="modal" data-target="#newuser">Create Group</a>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="custom-table v-top">
+                                    <thead>
+                                        <tr>
+                                            <th>Test Group</th>
+                                            <th>Description</th>
+                                            <th>Add Users</th>
+                                            <th>View Group</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="pagedItems.length==0"><td colspan="4" align="center">No data found</td></tr>
+                                        <tr *ngFor = "let data of pagedItems;let i=index">
+                                            <td>{{data.group_name}}</td>
+                                            <td *ngIf="data.group_description != null">{{data.group_description}}</td>
+                                            <td *ngIf="data.group_description == null">--</td>
+                                            <td>
+                                                <a [routerLink]="['/author/add-user-group',data.group_id,data.group_name ]"><img src="src/assets/img/admin-icons/add-icon.png"  alt=""></a>
+                                            </td>
+                                            <td>
+                                                <a [routerLink]="['/author/view-user-group',data.group_id,data.group_name]"><img src="src/assets/img/admin-icons/view-icon.png" alt=""></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!userGroupList || userGroupList.length==0">
+                                    <figure>
+                                        <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                    </figure>
+                                    <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                                </div>
+                                <div class="pagination-custom">
+                                  <ul  *ngIf="pager.pages && pager.pages.length">
+                                  <li [ngClass]="{disabled:pager.currentPage === 1}" class="disabled">
+                                  <a  (click)="setPage(pager.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+                                  </li>
+                                  <li *ngFor="let page of pager.pages" class="active">
+                                  <a [class.active-selected-page]="page==currentPage" (click)="setPage(page)"  >{{page}}</a>
+                                  <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                  </li>
+                                                                     
+                                  <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                  <a (click)="setPage(pager.currentPage + 1)"><i class="fa fa-angle-right"></i></a>
+                                  </li>
+                                  </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col-md-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+  <!-- Modal Create New User Group Start -->
+  <div class="modal fade modal-custom" id="newuser" tabindex="-1" role="dialog" aria-labelledby="newuserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 490px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Create New Group</div>
+            <div class="text">
+                <div class="form-group">
+                    <label>Participant Group Name</label>
+                    <input type="text" name="" id="" class="form-control" [(ngModel)]="createGroup.group_name" required placeholder="Enter participant group name">
+                    <p class="alertDanger" *ngIf="grpName.errors && (grpName.dirty || grpName.touched) || grpName == true" style="margin-bottom: -2px;">Participant group name is required.</p>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" required [(ngModel)]="createGroup.group_description" placeholder="Enter description" style="min-height: 100px;"></textarea>
+                    <p class="alertDanger" *ngIf="grpDesc.errors && (grpDesc.dirty || grpDesc.touched) || grpDesc == true" style="margin-bottom: -2px;">Group description is required.</p>
+                    <p class="alertDanger" *ngIf="grpDescLimit == true" style="margin-bottom: -2px;">Maximum limit exceed in this textarea.</p>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190" (click)="createUserGroup()">Create</button>
+                <button class="skip-btn w190" (click)="cancelTestGroup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->

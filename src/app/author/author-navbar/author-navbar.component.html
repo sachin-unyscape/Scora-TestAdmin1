@@ -1,0 +1,419 @@
+<div *ngFor="let alert of alerts" class="alertPOPup">
+  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+</div>
+
+
+
+<app-loader *ngIf="fullpageload"></app-loader>
+<header  class="app-header navbar topNavBg" [ngStyle]="{'background':org_themes.top_navigation_bar_color}">
+  <button class="navbar-toggler mobile-sidebar-toggler hidden-lg-up" type="button">&#9776;</button>
+  <img [src]="tenantLogo" style="width: auto;height: 46px;margin-top: 8px;margin-left: 25px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';" tooltip="{{currentOrgName}}" placement="right">
+  <!-- <span class="orgLogoTagLine">Powered by Scora</span> -->
+  <a class="" href="#"   href="#"></a>
+  <!-- <a class="navbar-brand"  href="#"><img src="assets/logo.png"></a> -->
+  <!-- <ul class="nav navbar-nav hidden-md-down">
+    <li class="nav-item">
+      <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
+    </li>
+    <li class="nav-item px-1">
+      <a class="nav-link" href="#">Dashboard</a>
+    </li>
+    <li class="nav-item px-1">
+      <a class="nav-link" href="#">Users</a>
+    </li>
+    <li class="nav-item px-1">
+      <a class="nav-link" href="#">Settings</a>
+    </li>
+  </ul> -->
+  <ul class="nav navbar-nav ml-auto top-nav-icon">
+    <!-- <li class="nav-item dropdown"  dropdown (onToggle)="toggled($event)">
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+          <i class="fa fa-cog iconcolor" aria-hidden="true" style="font-size:18px;"></i>
+      </a>
+        <div class="dropdown-menu dropdown-menu-right" dropdownMenu aria-labelledby="simple-dropdown">
+          <div class="dropdown-header text-center"><strong>Themes</strong></div>
+
+          <div class="theme">
+            <div class="circle" (click)="loadNavItems_post('theme1')"></div>
+            <div class="circle1" (click)="loadNavItems_post('theme2')"></div>
+            <div class="circle2" (click)="loadNavItems_post('theme3')"></div>
+            <div class="circle3" (click)="loadNavItems_post('theme4')"></div>
+            <div class="circle4" (click)="loadNavItems_post('theme5')"></div>
+            <div class="circle" style="background: #fff5ff" (click)="loadNavItems_post('theme6')"></div>
+            <div class="circle" style="background: #f2fff8" (click)="loadNavItems_post('theme7')"></div>
+            <div class="circle" style="background: #fff9f5" (click)="loadNavItems_post('theme8')"></div>
+            <div class="circle" style="background: #f2ffff" (click)="loadNavItems_post('theme9')"></div>
+            <div class="circle" style="background: #eff7ff" (click)="loadNavItems_post('theme10')"></div>
+          </div>
+
+
+        </div>
+    </li> -->
+      <!-- <li class="nav-item dropdown"  dropdown (onToggle)="toggled($event)">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+          <i class="icon-bell iconcolor" style="font-size:18px" ></i>
+
+        </a>
+          <div class="dropdown-menu dropdown-menu-right" dropdownMenu aria-labelledby="simple-dropdown">
+            <div class="dropdown-header text-center"><strong>Account</strong></div>
+
+            <a class="dropdown-item" href="#"><i class="fa fa-bell-o"></i> Updates<span class="badge badge-info">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-envelope-o"></i> Messages<span class="badge badge-success">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-tasks"></i> Tasks<span class="badge badge-danger">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-comments"></i> Comment<span class="badge badge-warning">42</span></a>
+
+            <div class="dropdown-header text-center"><strong>Settings</strong></div>
+
+            <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Profile</a>
+            <a class="dropdown-item" href="#"><i class="fa fa-wrench"></i> Setting</a>
+            <a class="dropdown-item" href="#"><i class="fa fa-usd"></i> Payments<span class="badge badge-default">42</span></a>
+            <a class="dropdown-item" href="#"><i class="fa fa-file"></i> Projects<span class="badge badge-primary">42</span></a>
+            <div class="divider"></div>
+            <a class="dropdown-item" href="#"><i class="fa fa-shield"></i> Lock account</a>
+            <a class="dropdown-item" href="#" (click)="logout()"><i class="fa fa-lock"></i> Logout</a>
+          </div>
+      </li> -->
+
+      <li class="nav-item dropdown"  dropdown (onToggle)="toggled($event)">
+          <!-- <span dropdownToggle>
+            <i class="fa fa-th" aria-hidden="true" style="font-size:18px;"></i>
+          </span> -->
+
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle>
+            <i class="fa fa-th iconcolor" aria-hidden="true" style="font-size:18px;" tooltip="Applications" placement="left"></i>
+            <!-- <span class="badge badge-pill badge-danger">5</span> -->
+          </a>
+
+            <div class="dropdown-menu dropdown-menu-right" dropdownMenu aria-labelledby="simple-dropdown">
+
+                <div class="admin-icon">
+                  <div class="admins-menu" *ngFor="let item of adminimage?.applications; let i=index" [ngClass]="{'admins-menu-default':item.default == true}">
+                    <img [src]="item.application_name == 'Admin/Author'?item.application_hover_image:item.application_image" (click)="admin_redirect(item.application_name)" (mouseover)="onMouseOver(item.application_image, i, item.application_name)" (mouseout)="onMouseOut(item.application_image, i, item.application_name)"><p (click)="admin_redirect(item.application_name)">{{item.application_name}}</p></div>
+                </div>
+                <!-- (mouseover)="onMouseOver(item.baseimage)" (mouseout)="onMouseOut1()" -->
+                <!-- <div class="admin-icon">
+                  <div class="admins-menu" (mouseover)="onMouseOver1()" (mouseout)="onMouseOut1()"><img [src]="imgSrc1"><p>Pika Admin</p></div>
+                  <div class="admins-menu" (mouseover)="onMouseOver2()" (mouseout)="onMouseOut2()"><img [src]="imgSrc2"><p>Tenant Admin</p></div>
+                  <div class="admins-menu" (mouseover)="onMouseOver3()" (mouseout)="onMouseOut3()"><img [src]="imgSrc3"><p>Author</p></div>
+                  <div class="admins-menu" (mouseover)="onMouseOver4()" (mouseout)="onMouseOut4()"><img [src]="imgSrc4"><p>Test Admin</p></div>
+                </div> -->
+            </div>
+        </li>
+        <li class="nav-divider"  style="margin: 0 30px; padding: 20px 0 20px 0; border-left: 3px solid #fff;"></li>
+        <li class="nav-item dropdown admin"  dropdown (onToggle)="toggled($event)">
+            <!-- <span dropdownToggle>
+                <i class="fa fa-user" aria-hidden="true" style="font-size:18px;"></i>
+            </span> -->
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle aria-controls="dropdown-autoclose1">
+              <i class="fa fa-user iconcolor" aria-hidden="true"  style="font-size:18px;" tooltip="Accounts" placement="left"></i>
+              <!-- <span class="badge badge-pill badge-danger">5</span> -->
+            </a>
+
+              <div class="dropdown-menu dropdown-menu-right" dropdownMenu aria-labelledby="simple-dropdown" *ngIf="universityall?.available_organization"  id="dropdown-autoclose1" aria-labelledby="button-autoclose1">
+                <div class="admin-profile" >
+                  <div class="admins-head">
+                    <!-- <span class="admin-accounts"><a (click)="myaccount()" style="color:#545454">Settings</a></span> -->
+                    <span class="admin-signout"><a style="color:#00aed9"  (click)="logout()">Sign out1</a></span>
+                  </div>
+                  <div class="admin-profile-image" (mouseenter)="showUpload()" (mouseleave)="removeUpload()">
+
+                      <img [src]="universityall.profile_picture">
+                      <i class="fa fa-circle-o-notch fa-spin profileLoader" *ngIf="profileLoader"></i>
+                      <div class="fileUpload" *ngIf="uploadProfile">
+                        <span><i class="fa fa-camera" style="color: #252325ed !important;font-size: 31px;padding: 15px 2px;"></i></span>
+                        <input type="file" (change)="fileChange($event,i)" placeholder="Upload file" accept=".jpg,.jpeg,.png" id="files"  class="upload">
+
+                      </div>
+                  </div>
+                  <div class="admin-profile-image-text">
+                      <p>{{universityall.profile_name}}</p>
+                      <p style="font-size:12px">{{universityall.profile_email}}</p>
+                  </div>
+                  <div class="my-organization">
+                      <span >My Organization(s)</span>
+                      <div *ngFor="let university of universityall?.available_organization; let i=index" class="university-details" [ngClass]="{'university-details-highlight':userOrgId == university.org_id}" (click)="nextOrganisation(university.org_id)">
+                        <div class="university-logo">
+                            <img [src]="university.organization_img" style="float: left; max-width: 85px;margin: 11px 5px;">
+                        </div>
+                        <div class="university-name">
+                          <p class="universitynames">{{university.organization_name}}</p>
+                          <span *ngFor="let adminame of university.organization_roles" class="adminnames nameSize" ><span style="font-size:12px !important">{{adminame}}</span></span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+          </li>
+  </ul>
+
+</header>
+
+<div class="app-body">
+  <div class="sidebar sideNavBg" [ngStyle]="{'background':org_themes.left_navigation_bar_color}">
+    <nav class="sidebar-nav">
+
+
+
+      <!-- <ul class="navbar-nav sidenav-toggler">
+        <li class="nav-item">
+          <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </a>
+        </li>
+      </ul> -->
+
+      <ul class="nav Sidenavitem " *ngFor="let moduleaccess of availableModulesList;let  Ma = index">
+        <!-- <li class="divider"></li> -->
+
+        <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Dashboard' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else Dashboarderror" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+          <a class="nav-link icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/dashboard']"><i class="fa fa-bar-chart" aria-hidden="true"></i> <span class="nav-item-menu">Dashboard</span> </a>
+        </li>
+        <ng-template #Dashboarderror>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Dashboard' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"   [routerLink]="['/author/Unauthorized']"><i class="fa fa-bar-chart" aria-hidden="true"></i> <span class="nav-item-menu">Dashboard</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item  nav-dropdown" *ngIf="moduleaccess.module_name == 'Items' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else itemsError"  [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link nav-dropdown-toggle navitem{{org_themes.theme_id}} icon{{org_themes.theme_id}}" href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> <span class="nav-item-menu">Items</span></a>
+            <ul class="nav-dropdown-items" *ngFor="let submodule of moduleaccess.sub_modules;let i=index">
+              <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'View Items' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Items/viewitems','allitem']"> <i class="fa fa-list-ul" aria-hidden="true"></i><span class="nav-item-menu">View Items</span></a>
+              </li>
+              <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Add New' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Items/additem',0,0,0]"> <i class="fa fa-plus-square-o" aria-hidden="true"></i><span class="nav-item-menu">Add New</span></a>
+              </li>
+              <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Bulk Upload' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Items/bulk-upload']"> <i class="fa fa-upload" aria-hidden="true"></i><span class="nav-item-menu">Bulk Upload</span></a>
+              </li>
+              <!-- <li class="nav-item" *ngIf="i==0">
+                <a class="nav-link" (click)="RedirectSourceFile()"> <i class="fa fa-file-code-o" aria-hidden="true"></i><span class="nav-item-menu">Source File</span></a>
+              </li> -->
+              <!-- <li class="nav-item" >
+                <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/Items/itemsethistory']"> <i class="fa fa-history" aria-hidden="true"></i><span class="nav-item-menu">Item History</span></a>
+              </li> -->
+            </ul>
+        </li>
+
+        <ng-template #itemsError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Items' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"   [routerLink]="['/author/Unauthorized']"><i class="fa fa-file-text-o" aria-hidden="true"></i> <span class="nav-item-menu">Items</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item nav-dropdown" *ngIf="moduleaccess.module_name == 'Itemsets' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else itemsetError"  [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+          <a class="nav-link nav-dropdown-toggle navitem{{org_themes.theme_id}} icon{{org_themes.theme_id}}"   href="#"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span class="nav-item-menu">Item Sets</span></a>
+          <ul class="nav-dropdown-items" *ngFor="let submodule of moduleaccess.sub_modules">
+
+            <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Add Item Set' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/ItemSets/additemset']"> <i class="fa fa-plus-square-o" aria-hidden="true"></i><span class="nav-item-menu">Add Item Set</span></a>
+            </li>
+
+            <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'View Item Set' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/ItemSets/viewitemsets',0,0,0]"> <i class="fa fa-files-o" aria-hidden="true"></i> <span class="nav-item-menu">View Item Sets</span></a>
+            </li>
+
+
+            <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Requested Item Set' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/ItemSets/RequestedItemsets']"> <i class="fa fa-external-link" aria-hidden="true"></i><span class="nav-item-menu">Requested Item Sets</span></a>
+            </li>
+            <!-- <li class="nav-item" >
+              <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/ItemSets/itemsethistory']"> <i class="fa fa-history" aria-hidden="true"></i><span class="nav-item-menu">Item set History</span></a>
+            </li> -->
+
+          </ul>
+        </li>
+        <ng-template #itemsetError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Itemsets' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"   [routerLink]="['/author/Unauthorized']"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> <span class="nav-item-menu">Itemsets</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item nav-dropdown" *ngIf="moduleaccess.module_name == 'Task' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else taskError"  [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+          <a class="nav-link nav-dropdown-toggle navitem{{org_themes.theme_id}} icon{{org_themes.theme_id}}"   href="#"><i class="fa fa-tasks" aria-hidden="true"></i> <span class="nav-item-menu">Tasks</span></a>
+          <ul class="nav-dropdown-items" *ngFor="let submodule of moduleaccess.sub_modules">
+            <li class="nav-item navitem{{org_themes.theme_id}}"  *ngIf="submodule.sub_module_name == 'To Create' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Tasks/tocreate',0,0,0]"> <i class="fa fa-plus-square-o" aria-hidden="true"></i><span class="nav-item-menu">To Create</span></a>
+            </li>
+            <li class="nav-item navitem{{org_themes.theme_id}}"  *ngIf="submodule.sub_module_name == 'To Review' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Tasks/ToReview']"> <i class="fa fa-search" aria-hidden="true"></i><span class="nav-item-menu">To Review</span></a>
+            </li>
+            <li class="nav-item navitem{{org_themes.theme_id}}"  *ngIf="submodule.sub_module_name == 'Under Review' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Tasks/underReview',0,0,0]"> <i class="fa fa-paper-plane-o" aria-hidden="true"></i><span class="nav-item-menu">Under Review</span></a>
+            </li>
+          </ul>
+        </li>
+        <ng-template #taskError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Task' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  [routerLink]="['/author/Unauthorized']"><i class="fa fa-tasks" aria-hidden="true"></i> <span class="nav-item-menu">Task</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item nav-dropdown" *ngIf="moduleaccess.module_name == 'Test' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else testError" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link nav-dropdown-toggle navitem{{org_themes.theme_id}} icon{{org_themes.theme_id}}"   href="#"><i class="fa fa-file" aria-hidden="true"></i> <span class="nav-item-menu">Tests</span></a>
+            <ul class="nav-dropdown-items" *ngFor="let submodule of moduleaccess.sub_modules">
+              <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Create Test' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus"  routerLinkActive="active" [routerLink]="['/author/Tests/createTest',0]"> <i class="fa fa-plus" aria-hidden="true"></i><span class="nav-item-menu">Create Test</span></a>
+              </li>
+              <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="submodule.sub_module_name == 'Manage Test' && submodule.access == true && (currentApplicationName == 'Admin/Author' || currentApplicationName == 'User Dashboard')">
+                <a class="nav-link submenus"  routerLinkActive="active" [routerLink]="['/author/Tests/ManageTests']"> <i class="fa fa-calendar-o" aria-hidden="true"></i><span class="nav-item-menu">Manage Tests</span></a>
+              </li>
+              <!-- <li class="nav-item" >
+                <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/Tests/testHistory']"> <i class="fa fa-history" aria-hidden="true"></i><span class="nav-item-menu">Tests History</span></a>
+              </li> -->
+            </ul>
+        </li>
+        <ng-template #testError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Test' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"   [routerLink]="['/author/Unauthorized']"><i class="fa fa-file" aria-hidden="true"></i> <span class="nav-item-menu">Test</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Customize' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else custError" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/MetaData']"><i class="fa fa-angle-double-down" aria-hidden="true"></i> <span class="nav-item-menu">Customize</span> </a>
+        </li>
+        <ng-template #custError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Customize' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"   [routerLink]="['/author/Unauthorized']"><i class="fa fa-angle-double-down" aria-hidden="true"></i> <span class="nav-item-menu">Customize</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Manage Users' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else userError" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/ManageUsers']"><i class="fa fa-address-book" aria-hidden="true"></i> <span class="nav-item-menu">Manage Users</span> </a>
+        </li>
+        <ng-template #userError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Manage Users' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  [routerLink]="['/author/Unauthorized']"><i class="fa fa-address-book" aria-hidden="true"></i> <span class="nav-item-menu">Manage Users</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'User Groups' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else grpError" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/userGroups']"><i class="fa fa-users" aria-hidden="true"></i> <span class="nav-item-menu">User Groups</span> </a>
+        </li>
+        <ng-template #grpError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'User Groups' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  [routerLink]="['/author/Unauthorized']"><i class="fa fa-users" aria-hidden="true"></i> <span class="nav-item-menu">User Groups</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Profile' && moduleaccess.access == true && (currentApplicationName == 'Admin/Author');else proError" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+          <a class="nav-link icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/profile']"><i class="fa fa-user" aria-hidden="true"></i> <span class="nav-item-menu">Profile</span> </a>
+        </li>
+        <ng-template #proError>
+          <li class="nav-item navitem{{org_themes.theme_id}}" *ngIf="moduleaccess.module_name == 'Profile' && moduleaccess.access == true && currentApplicationName == 'User Dashboard'" [ngClass]="{'disableSideMenus':currentApplicationName == 'User Dashboard'}">
+            <a class="nav-link icon{{org_themes.theme_id}}"  [routerLink]="['/author/Unauthorized']"><i class="fa fa-user" aria-hidden="true"></i> <span class="nav-item-menu">Profile</span> </a>
+          </li>
+        </ng-template>
+
+        <li class="nav-item nav-dropdown " *ngIf="Ma == 0">
+          <a class="nav-link nav-dropdown-toggle navitem{{org_themes.theme_id}} icon{{org_themes.theme_id}}"   href="#"><i class="fa fa-files-o" aria-hidden="true"></i> <span class="nav-item-menu">Uploads</span></a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item navitem{{org_themes.theme_id}}">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Upload/UploadedFiles']"> <i class="fa fa-file-text" aria-hidden="true"></i><span class="nav-item-menu">Uploaded Files</span></a>
+            </li>
+             <li class="nav-item navitem{{org_themes.theme_id}}">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Upload/Jobs']"> <i class="fa fa-th-list" aria-hidden="true"></i><span class="nav-item-menu">Jobs</span></a>
+            </li>
+            <!--<li class="nav-item navitem{{org_themes.theme_id}}">
+              <a class="nav-link submenus icon{{org_themes.theme_id}}"  routerLinkActive="active" [routerLink]="['/author/Upload/MatchItem']"> <i class="fa fa-arrows-alt" aria-hidden="true"></i><span class="nav-item-menu">Match Items</span></a>
+            </li> -->
+          </ul>
+        </li>
+
+
+        <!--
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle"   href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> <span class="nav-item-menu">My Tasks</span></a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item" >
+              <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/Mytasks/createtask']"> <span class="nav-item-menu">Create Task</span></a>
+            </li>
+            <li class="nav-item" >
+              <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/Mytasks/reviewtask']"> <span class="nav-item-menu">Review Tasks</span></a>
+            </li>
+          </ul>
+        </li> -->
+
+
+
+
+        <!-- <li class="nav-item" >
+          <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/templates']"><i class="fa fa-files-o" aria-hidden="true"></i> <span class="nav-item-menu">Templates</span> </a>
+        </li> -->
+
+        <!-- <li class="nav-item" >
+          <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/pinboard']"><i class="fa fa-map-pin" aria-hidden="true"></i> <span class="nav-item-menu">My Pinboard</span> </a>
+        </li> -->
+
+        <!-- <li class="nav-item" >
+          <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/calander']"><i class="fa fa-calendar-o" aria-hidden="true"></i> <span class="nav-item-menu">My Calendar</span> </a>
+        </li> -->
+
+        <!-- <li class="nav-item" >
+          <a class="nav-link"  routerLinkActive="active" [routerLink]="['/author/planner']"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> <span class="nav-item-menu">Planner</span> </a>
+        </li> -->
+
+
+
+        <!-- hide to base template -->
+
+        <!-- <li class="nav-item" >
+          <a class="nav-link"  routerLinkActive="active" [routerLink]="['/question']"><i class="icon-speedometer"></i> <span class="nav-item-menu">Question</span> </a>
+        </li>
+        <li class="nav-item nav-dropdown">
+          <a class="nav-link nav-dropdown-toggle"   href="#"><i class="icon-star"></i> <span class="nav-item-menu">Pages</span></a>
+          <ul class="nav-dropdown-items">
+            <li class="nav-item" [ngClass]="AllBaseimage.navitem">
+              <a class="nav-link"  routerLinkActive="active" [routerLink]="['/pages/login']"><i class="icon-star"></i> <span class="nav-item-menu">Login</span></a>
+            </li>
+            <li class="nav-item" [ngClass]="AllBaseimage.navitem">
+              <a class="nav-link"  routerLinkActive="active" [routerLink]="['/pages/register']"><i class="icon-star"></i> <span class="nav-item-menu">Register</span></a>
+            </li>
+            <li class="nav-item" [ngClass]="AllBaseimage.navitem">
+              <a class="nav-link" [ngClass]="AllBaseimage.navcolor" routerLinkActive="active" [routerLink]="['/pages/404']"><i class="icon-star"></i> <span class="nav-item-menu">Error 404</span></a>
+            </li>
+            <li class="nav-item" [ngClass]="AllBaseimage.navitem">
+              <a class="nav-link" [ngClass]="AllBaseimage.navcolor" routerLinkActive="active" [routerLink]="['/pages/500']"><i class="icon-star"></i> <span class="nav-item-menu">Error 500</span></a>
+            </li>
+          </ul>
+        </li> -->
+
+      </ul>
+      <ul class="nav navbar-nav hidden-md-down navitem{{org_themes.theme_id}} navToggle">
+        <li class="nav-item toggle-item " >
+          <a class="nav-link navbar-toggler sidebar-toggler" href="#"><i class="fa fa-fw fa-angle-left" style="font-size:20px"></i></a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- Breadcrumb -->
+    <!-- <ol class="breadcrumb">
+      <breadcrumbs></breadcrumbs> -->
+
+      <!-- Breadcrumb Menu-->
+      <!-- <li class="breadcrumb-menu hidden-md-down">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+          <a class="btn btn-secondary" href="#"><i class="icon-speech"></i></a>
+          <a class="btn btn-secondary" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+          <a class="btn btn-secondary" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
+        </div>
+      </li> -->
+
+    <!-- </ol> -->
+
+    <div class="">
+      <router-outlet></router-outlet>
+    </div><!-- /.conainer-fluid -->
+  </main>
+</div>
+
+<!-- <footer class="app-footer">
+  <a href="http://coreui.io">CoreUI</a> &copy; 2017 creativeLabs.
+  <span class="float-right">Powered by <a href="http://coreui.io">CoreUI</a></span>
+</footer> -->
+
+<!-- <app-loader *ngIf="fullpageload"></app-loader> -->

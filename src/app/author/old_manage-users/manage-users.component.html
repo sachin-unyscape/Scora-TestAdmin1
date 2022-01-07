@@ -1,0 +1,1067 @@
+<app-loader *ngIf="showload"></app-loader>
+<div class="content-wrapper">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header p-4">
+                          <h3 class="card-title mt-2">Manage Users
+                              <a class="info" data-toggle="tooltip" data-placement="top" title="" data-original-title="Click to know user roles">
+                                  <img src="src/assets/img/info-circle.png" alt="" data-toggle="modal" data-target="#userrole">
+                              </a>
+                          </h3>
+                          <a href="" class="take-test float-right mt-3" data-toggle="modal" data-target="#inviteuser">Invite User</a>
+                          <a href="" class="white-btn float-right mr-4" data-toggle="modal" data-target="#importdata">Import</a>
+                          <a href="" class="skip-btn float-right mr-4" data-toggle="modal" data-target="#createfields">Create Fields</a>
+
+                      </div>
+                      <div class="card-body pt-0">
+                          <div class="table-responsive">
+                              <table class="custom-table v-top">
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>Email Id</th>
+                                          <th>Mobile No.</th>
+                                          <th>Role</th>
+                                          <th>Edit</th>
+                                          <th>Delete</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td>Ronald Richards</td>
+                                          <td>Ronaldr@gmail.com</td>
+                                          <td>(229) 555-0109</td>
+                                          <td>Test Admin</td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#updatesingle"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>Ronald Richards</td>
+                                          <td>Ronaldr@gmail.com</td>
+                                          <td>(229) 555-0109</td>
+                                          <td>Test Admin</td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#updatesingle"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>Ronald Richards</td>
+                                          <td>Ronaldr@gmail.com</td>
+                                          <td>(229) 555-0109</td>
+                                          <td>Test Admin</td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#updatesingle"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>Ronald Richards</td>
+                                          <td>Ronaldr@gmail.com</td>
+                                          <td>(229) 555-0109</td>
+                                          <td>Test Admin</td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#updatesingle"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>Ronald Richards</td>
+                                          <td>Ronaldr@gmail.com</td>
+                                          <td>(229) 555-0109</td>
+                                          <td>Test Admin</td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#updatesingle"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a href="" data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+
+                              <div class="pagination-custom">
+                                  <ul>
+                                      <li>
+                                          <a href="#" class="disable"><i class="fa fa-angle-left"></i></a>
+                                      </li>
+                                      <li>
+                                          <a href="#">1</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">2</a>
+                                      </li>
+                                      <li>
+                                          <a href="#" class="active">3</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">4</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">5</a>
+                                      </li>
+                                      <li>
+                                          <a href="#">6</a>
+                                      </li>
+                                      <li>
+                                          <a href="#"><i class="fa fa-angle-right"></i></a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>
+ <!-- /.content-wrapper -->
+
+  <!-- Modal Create Fields Start -->
+  <div class="modal fade modal-custom" id="createfields" tabindex="-1" role="dialog" aria-labelledby="createfieldsLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 490px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Create Fields
+                <div class="gren">Max (XX) fields (YY fields left)</div>
+            </div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="switch-wrap">
+                                <label>Label</label>
+                                <div class="switch-btn">
+                                    <!-- Rounded switch -->
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Label</label>
+                            <input type="text" name="" id="" class="form-control" value="Write here">
+                        </div>
+                        <div class="form-group">
+                            <label>Field Type</label>
+                            <select name="" id="" class="select h52 w-100">
+                                <option value="Please select">Please select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Placeholder Text</label>
+                            <input type="text" name="" id="" class="form-control" value="Write here">
+                        </div>
+                        <div class="form-group mt-4">
+                            <a href="" class="take-test">Add More Field</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Create</button>
+                <button class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Import Data Start -->
+<div class="modal fade modal-custom" id="importdata" tabindex="-1" role="dialog" aria-labelledby="importdataLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 490px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Import</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>File Type</label>
+                            <select name="" id="" class="select h52 w-100">
+                                <option value="Please select">Please select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload File</label>
+                            <div class="custom-files">
+                                <input type="file" name="" id="">
+                                <div class="file-chose">
+                                    <span>Please select</span>
+                                    <span class="upload">Upload</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="scan"><img src="dist/img/scan-loader.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div class="virus"><img src="dist/img/virus.png" alt=""> <span>Your file is infected. Please clean-up, quarantine and attempt upload again.</span></div>
+                            <div class="suc-upload"><img src="dist/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Done</button>
+                <button class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Add single user Start -->
+<div class="modal fade modal-custom" id="userrole" tabindex="-1" role="dialog" aria-labelledby="userroleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">User Roles</div>
+            <div class="text user-role">
+                <div class="row p-0">
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="dist/img/admin-icons/super-admin.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Tenant Admin</div>
+                                <div class="txt">Set-up tenant account, brand and personalise UI by choosing themes; create users for various functions and assign rights and privileges to users.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="dist/img/admin-icons/author.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Author</div>
+                                <div class="txt">Develop item banks by creating different types of reusable question items of different types including MCQs, True/False, Matching, Passage-based, Short-answer, Assignments etc., with customizable attribute tags, multi-media
+                                    elements, mathematical formulae and chemical equations or simply import questions using standard excel templates.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="dist/img/admin-icons/examiner.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Examiner</div>
+                                <div class="txt">View and mark constructed response items such as short answers, essays or assignments based on a pre-defined rubric.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="dist/img/admin-icons/test.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Test Admin</div>
+                                <div class="txt">Define test blueprints, marking schemes and rubrics, generate test banks and publish formative or summative test papers, schedule and deliver tests to individual participants or groups. </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="dist/img/admin-icons/participant.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Participant</div>
+                                <div class="txt">Take formative tests, view and analyse performance, understand strengths and weaknesses and improve learning; take summative tests and receive certificates. </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Invite User Start -->
+<div class="modal fade modal-custom" id="inviteuser" tabindex="-1" role="dialog" aria-labelledby="inviteuserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Invite single user</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="" id="" class="form-control mandatory" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email ID</label>
+                            <input type="text" name="" id="" class="form-control mandatory" placeholder="Enter Email">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtopic</label>
+                            <div class="clearfix">
+                                <select name="" id="" class="select h52" style="width: 30%; min-width: auto; float: left; padding-left: 10px;">
+                                <option value="">Select code</option>
+                            </select>
+                                <input type="text" name="" id="" class="form-control" placeholder="Enter Mobile Number" style="width: 65%; margin-left: 5%; float: left;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <a href="" class="take-test">Add Custom Field</a>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Roles</label>
+                            <div class="table-responsive">
+                                <table class="custom-table border th10">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Create</th>
+                                            <th>Edit</th>
+                                            <th>Retire</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Super Admin</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Author</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Test Admin</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Examiner</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Participant</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="custum-filed">Custom Fields added by you</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Organisation</label>
+                                    <input type="text" name="" id="" class="form-control mandatory" placeholder="Write here">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Organisation</label>
+                                    <input type="text" name="" id="" class="form-control" placeholder="Write here">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Invite</button>
+                <button class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+
+<!-- Modal update user Start -->
+<div class="modal fade modal-custom" id="updatesingle" tabindex="-1" role="dialog" aria-labelledby="updatesingleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Update Single User</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="" id="" class="form-control" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email ID</label>
+                            <input type="text" name="" id="" class="form-control" placeholder="Enter Email">
+                        </div>
+                        <div class="form-group">
+                            <label>Subtopic</label>
+                            <div class="clearfix">
+                                <select name="" id="" class="select h52" style="width: 30%; min-width: auto; float: left; padding-left: 10px;">
+                                <option value="">Select code</option>
+                            </select>
+                                <input type="text" name="" id="" class="form-control" placeholder="Enter Mobile Number" style="width: 65%; margin-left: 5%; float: left;">
+                            </div>
+                        </div>
+                        <label class="custum-filed">Custom Fields added by you</label>
+                        <div class="form-group">
+                            <label>Organisation</label>
+                            <input type="text" name="" id="" class="form-control" placeholder="Write here">
+                        </div>
+                        <div class="form-group">
+                            <a href="" class="take-test">Add Custom Field</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Roles</label>
+                            <div class="table-responsive">
+                                <table class="custom-table border th10">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Create</th>
+                                            <th>Edit</th>
+                                            <th>Retire</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Super Admin</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Author</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Test Admin</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" checked>
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Examiner</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>Participant</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Invite</button>
+                <button class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+
+
+<!-- Delete Modal -->
+<div class="modal fade delete-modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <figure class="delete-img">
+                <img src="dist/img/delete-img.png" alt="">
+            </figure>
+            <div class="title">Delete?</div>
+            <p class="text">This will delete the user permanently.<br> Are you sure you want to proceed?</p>
+            <div class="button-groups">
+                <button class="delete-btn w190 mb-3">Delete</button>
+                <button class="white-btn w190">No! Go back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal End -->

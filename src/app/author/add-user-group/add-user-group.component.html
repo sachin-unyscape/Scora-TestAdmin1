@@ -1,0 +1,261 @@
+<app-loader *ngIf="showload"></app-loader>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3 class="card-title"><a (click)="backClicked()"><i class="fa fa-angle-left mr-3"></i></a>Add Users to {{grp_name}} <span class="u-no">({{addedUsersCount}})</span> </h3>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <div class="adduser-action">
+                                        <button *ngIf="finalUsers.length == 0" class="white-btn mr-4 disbale-btn">Add Users</button>
+                                        <a *ngIf="finalUsers.length > 0" (click)="addSelected()" class="white-btn float-right mr-4  primary-btn">Add Selected</a>
+                                        <a class="fillter mr-4" data-toggle="modal" data-target="#fillter">
+                                            <img src="src/assets/img/admin-icons/filter.png" alt="">
+                                        </a>
+                                        <div class="serach-wrap">
+                                            <input type="text" class="form-control" placeholder="Search here" (keyup)="filterUsers($event.target.value)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="custom-table v-top">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" (click)="selectAllUsers(pagedItems)" class="abc" id="selectAll" name="check">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th>S.No</th>
+                                            <th>User</th>
+                                            <th>Email Id</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of pagedItems;let i=index">
+                                            <td>
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" [disabled]="data.User_Status == 'Added'" (change)="getFinalUsers(data)" id="{{data.user_id}}" value="{{data.user_id}}" name="check">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{i+1}}</td>
+                                            <td>{{data.username}}</td>
+                                            <td>{{data.user_email}}</td>
+                                            <td (click)="addUsersGroup(data.username,data.user_email)" *ngIf="data.User_Status == 'Active'">
+                                                <a><img src="src/assets/img/admin-icons/add-icon.png" alt=""></a>
+                                            </td>
+                                            <td *ngIf="data.User_Status == 'Added'">
+                                                <a class="added-text"><img src="src/assets/img/admin-icons/added-icon.png" alt=""> Added</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!allUsersList || allUsersList.length==0">
+                                    <figure>
+                                        <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                    </figure>
+                                    <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                                </div>
+                                <div class="pagination-custom">
+                                    <ul *ngIf="pager.pages && pager.pages.length">
+                                        <li [ngClass]="{disabled:pager.currentPage === 1}" class="disabled">
+                                            <a (click)="setPage(pager.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+                                        </li>
+                                        <li *ngFor="let page of pager.pages" class="active">
+                                            <a [class.active-selected-page]="page==currentPage" (click)="setPage(page)">{{page}}</a>
+                                            <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                        </li>
+
+                                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                            <a (click)="setPage(pager.currentPage + 1)"><i class="fa fa-angle-right"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col-md-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+
+<!-- Modal Create New User Group Start -->
+<div class="modal fade modal-custom" id="newuser" tabindex="-1" role="dialog" aria-labelledby="newuserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 490px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+            <div class="title">Create New User Group</div>
+            <div class="text">
+                <div class="form-group">
+                    <label>User Group Name</label>
+                    <input type="text" name="" id="" class="form-control" placeholder="Enter group name">
+                </div>
+                <div class="form-group">
+                    <label>Email ID</label>
+                    <textarea class="form-control" placeholder="Enter description" style="min-height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Create</button>
+                <button class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Create New User Group Start -->
+<div class="modal fade modal-custom" id="fillter" tabindex="-1" role="dialog" aria-labelledby="fillterLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 640px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" (click)="closeFilterModal()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+            <div class="title mb-0">Filter Users <a class="take-test float-right" (click)="clearFilter()">Clear All</a></div>
+            <div class="text fillter-block">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <ng-container *ngFor="let item of LablesData">
+                                <a (click)="getLableData(item)" class="nav-link active" [ngClass]="{'nav-link active':item.label === selectedLable, 'nav-link':item.label != selectedLable}" id="college-tab" data-toggle="pill" href="#college">{{item.label}}</a>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <div class="tab-pane fade show active" id="college" role="tabpanel" aria-labelledby="college-tab">
+                                <ul class="listing">
+                                    <ng-container *ngIf="clikedData && clikedData.Attribute === 'attribute1'">
+                                        <li *ngFor="let item of clikedData.data">
+                                            <div class="cust-check">
+                                                <!-- Repeat -->
+                                                <div class="repeat-check">
+                                                    <input #checkboxes type="checkbox" (change)="getFinalFilters(item)" [checked]="finalFiltersEmail.indexOf(item)>=0" id="{{item.email}}" value="{{item.email}}" name="check">
+                                                    <div class="check-btn">
+                                                        <span><i class="fa fa-check"></i></span>
+                                                    </div>
+                                                    <span class="text">{{item.email}}</span>
+                                                    <div class="number">
+                                                        ({{item.length}})
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ng-container>
+                                    <ng-container *ngIf="clikedData && clikedData.Attribute === 'attribute2'">
+                                        <li *ngFor="let item of clikedData.data">
+                                            <div class="cust-check">
+                                                <!-- Repeat -->
+                                                <div class="repeat-check">
+                                                    <input #checkboxes type="checkbox" (change)="getFinalFilters(item)" [checked]="finalFiltersRole.indexOf(item)>=0" name="check" id="">
+                                                    <div class="check-btn">
+                                                        <span><i class="fa fa-check"></i></span>
+                                                    </div>
+                                                    <span class="text">{{item.User_Role_Nm}}</span>
+                                                    <div class="number">
+                                                        ({{item.length}})
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ng-container>
+                                    <ng-container *ngIf="clikedData && clikedData.Attribute === 'attribute3'">
+                                        <li *ngFor="let item of clikedData.data">
+                                            <div class="cust-check">
+                                                <!-- Repeat -->
+                                                <div class="repeat-check">
+                                                    <input #checkboxes type="checkbox" (change)="getFinalFilters(item)" [checked]="finalFiltersPhone.indexOf(item)>=0" name="check" id="">
+                                                    <div class="check-btn">
+                                                        <span><i class="fa fa-check"></i></span>
+                                                    </div>
+                                                    <span class="text">{{item.Phone}}</span>
+                                                    <div class="number">
+                                                        ({{item.length}})
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ng-container>
+                                    <ng-container *ngIf="clikedData && clikedData.Attribute === 'attribute4'">
+                                        <li *ngFor="let item of clikedData.data">
+                                            <div class="cust-check">
+                                                <!-- Repeat -->
+                                                <div class="repeat-check">
+                                                    <input #checkboxes type="checkbox" (change)="getFinalFilters(item)" [checked]="finalFiltersName.indexOf(item)>=0" name="check" id="">
+                                                    <div class="check-btn">
+                                                        <span><i class="fa fa-check"></i></span>
+                                                    </div>
+                                                    <span class="text">{{item.Tenant_user_nm}}</span>
+                                                    <div class="number">
+                                                        ({{item.length}})
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ng-container>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button (click)="ApplyFilter()" class="default-btn mr-3 w190">Apply</button>
+                <button (click)="closeFilterModal()" class="skip-btn w190">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Delete Modal -->
+<div class="modal fade modal-custom" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+            <div class="title"><i><img src="src/assets/img/admin-icons/alert-circle.png" alt="" srcset=""></i> Want to Delete?</div>
+            <p class="text">Are you sure you want to remove this user?</p>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190">Yes</button>
+                <button class="skip-btn w190">No! Go back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal End -->

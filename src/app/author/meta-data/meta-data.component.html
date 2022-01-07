@@ -1,0 +1,399 @@
+<app-loader *ngIf="showload"></app-loader>
+<div class="col-md-12" style="padding: 0px;">
+  <header style="background: #fff;">
+      <p class="head"><span>Meta Data</span> - Configure the parameter values to match your organisation's standard.</p>
+      <hr class="headerLine">
+    </header>
+</div>
+
+<!-- success message popup -->
+<!-- <p class="successMsg" [@dialog1] *ngIf="saveMsg">{{showMsg}}</p> -->
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+<div *ngFor="let alert of alerts" class="alertPOPup">
+    <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+  </div>
+
+<!-- tab -->
+<div>
+    <ul class="nav nav-tabs col-lg-12 col-md-12 col-sm-6" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link " id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" (click)="activeTab =1" [ngClass]="{'active' : activeTab ==1}">Attributes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" (click)="activeTab =2" [ngClass]="{'active' : activeTab ==2}">Linked Attributes</a>
+      </li>
+      <div class="addSubBtn" *ngIf="activeTab ==2">
+
+        <button class="btn btn-primary btnCss" (click)="BulkUploadBtn()">Add from CSV<span>
+            <i class="fa fa-sort-down" aria-hidden="true" style="font-size:18px;position: relative;top: -2px;"></i>
+        </span></button>
+          <!-- <button class="btn btn-primary btnCss" (click)="openMultipleUserModal(multipleuser)">Add Multiple User</button> -->
+
+          <div class="dropdown-autoclose1" *ngIf="showBulkUploadDiv">
+              <div class="triangle-up"></div>
+            <ul id="" class="dropdown-visbility"
+                role="menu" aria-labelledby="button-visbility">
+                <div class="fileUpload" >
+                    <span>Upload Template</span>
+                    <input type="file" (change)="uploadUsers($event)" placeholder="Upload file" accept=".xlsx" name="file" class="upload" >
+                </div>
+              <a class="dropdown-item" href="../../../../assets/file/Bulk Attributes Import.xlsx" [ngClass]="{'disable' : planExpires == true}">Download Template</a>
+
+            </ul>
+          </div>
+        <button class="btn btn-primary btnCss" (click)="openAddMetaData2(MetaData2)" >Add New</button>
+      </div>
+    </ul>
+
+
+
+    <div class="tab-content" id="myTabContent">
+        <!-- normal  attributes table -->
+        <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab"  [ngClass]="{'active' : activeTab ==1}">
+
+          <table class="table table-hover viewTable">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Attribute Name</th>
+                <th style="width: 32%;">Attribute Value</th>
+                <th style="width: 16%;">Type</th>
+                <th style="width: 16%;">Module Used</th>
+                <th style="width: 21%;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                <!-- <tr *ngIf=" tenantMetaData.normal_metadatas == undefined || tenantMetaData.normal_metadatas.length ==0" style="text-align: center;margin-top: 10px;opacity: 0.7;">No data found</tr> -->
+              <tr *ngFor = "let data of tenantMetaData?.normal_metadatas;let i=index">
+                <td style="border-right: 1px solid rgba(161, 170, 178, 0.43); width: 20%;">{{data.parameter_name}}</td>
+                <td style="word-wrap: break-word;border-right: 1px solid rgba(161, 170, 178, 0.43);width: 32%;" >{{data.parameter_identifier > 4 && data.parameter_identifier < 25 ? '-' : data.parameter_values}}</td>
+                <td style="border-right: 1px solid rgba(161, 170, 178, 0.43); width: 16%;">Text</td>
+                <td style="border-right: 1px solid rgba(161, 170, 178, 0.43);width: 16%;">Author</td>
+                <td style="border-right: 1px solid rgba(161, 170, 178, 0.43);width: 16%;" class="cursor" (click)="editableParameterValue(data.parameter_value,data.parameter_name,data.parameter_identifier,editParams,i)"><span><fa [name]="'pencil'" [size]=1 tooltip="Edit" placement="top" [ngClass]="{'disableDelete' : planExpires == true}"></fa></span></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Subject-topic-subtopic table -->
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" [ngClass]="{'active' : activeTab ==2,'show':activeTab ==2}">
+          <table class="table" *ngIf="tenantMetaData != undefined">
+            <thead>
+              <tr>
+                <th style="width: 2% !important;">{{tenantMetaData.addtional_metadatas.linked_attribute_1}}</th>
+                <th style="width: 1% !important;">{{tenantMetaData.addtional_metadatas.linked_attribute_2}}</th>
+                <th style="width: 3% !important;">{{tenantMetaData.addtional_metadatas.linked_attribute_3}}</th>
+              </tr>
+            </thead>
+            <tbody class="item-dist">
+                  <!-- <tr><td style="width: 19%;border-right: 1px solid #ffffff;vertical-align: middle !important;" *ngIf="sectName?.subjects.length==0">--</td></tr> -->
+                    <tr *ngFor ="let sub of tenantMetaData?.addtional_metadatas.parameter_value;let i=index" rowspan="sectName?.subjects.length" [hidden]="sub.subject == 'Generic'">
+                      <td style="width: 31%;border-right: 1px solid rgba(174, 204, 218, 0.58);vertical-align: middle !important;background:rgba(226, 238, 251, 0.43);" (mouseenter)="addCssSub(i)" (mouseleave)="removeCssSub(i)">{{sub.subject}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" tooltip="Edit" placement="top" *ngIf="showEditIcon && i==editSubIndex && editTopicIndex == -1 && editSubTopIndex == -1" (click)="editSubject(sub,1,subeditParams)" [ngClass]="{'disableDelete' : planExpires == true}"></fa></td>
+                      <table>
+                        <tbody style="height:0px !important; background:rgba(226, 238, 251, 0.43);">
+                        <tr *ngFor ="let top of sub?.topics;let a=index" rowspan="sub?.topics.length" >
+                          <td style="width: 28%;border-right: 1px solid rgba(174, 204, 218, 0.58);vertical-align: middle !important;" (mouseenter)="addCssTop(a,i)" (mouseleave)="removeCssTop(a,i)">{{top.topic}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" tooltip="Edit" placement="top" (click)="editSubject(top,2,subeditParams)" *ngIf="showEditIcon && a==editTopicIndex && i==editSubIndex && editSubTopIndex == -1" [ngClass]="{'disableDelete' : planExpires == true}"></fa></td>
+                          <table>
+                              <tbody style="height:0px !important; background:rgba(226, 238, 251, 0.43);">
+                                <tr> <td style="width: 19%;border-right: 1px solid rgba(174, 204, 218, 0.58);vertical-align: middle !important;" *ngIf=" top?.subtopics.length==0">--</td></tr>
+                              <tr *ngFor ="let subtop of top?.subtopics;let b=index" rowspan="top?.subtopics.length">
+                                <td style="width: 22%;border-right: 1px solid rgba(174, 204, 218, 0.58);vertical-align: middle !important;" *ngIf="subtop.subtopic != null"  (mouseenter)="addCssSubTop(b,a,i)" (mouseleave)="removeCssSubTop(b,a,i)">{{subtop.subtopic}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" tooltip="Edit" placement="top" (click)="editSubject(subtop,3,subeditParams)" *ngIf="showEditIcon && b==editSubTopIndex && a==editTopicIndex && i==editSubIndex" [ngClass]="{'disableDelete' : planExpires == true}"></fa></td>
+                                <td style="width: 22%;border-right: 1px solid rgba(174, 204, 218, 0.58);vertical-align: middle !important;" *ngIf="subtop.subtopic == null">--</td>
+
+                              </tr>
+                            </tbody>
+                            </table>
+                        </tr>
+                      </tbody>
+                      </table>
+                  </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+
+  <!-- tab ends -->
+
+
+  <!-- list Table -->
+  <!-- <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>Parameter Name</th>
+        <th>Parameter Value</th>
+        <th>Type</th>
+        <th>Module Used</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr *ngFor = "let data of tenantMetaData?.normal_metadatas;let i=index">
+        <td style="border-right: 1px solid #cfd8dc;">{{data.parameter_name}}</td>
+        <td style="word-break: break-word;border-right: 1px solid #cfd8dc;">{{data.parameter_values}}</td>
+        <td style="border-right: 1px solid #cfd8dc;">Text</td>
+        <td style="border-right: 1px solid #cfd8dc;">Author</td>
+        <td style="border-right: 1px solid #cfd8dc;" class="cursor" (click)="editableParameterValue(data.parameter_value,data.parameter_name)"><p><fa [name]="'pencil'" [size]=1></fa></p></td>
+      </tr>
+
+    </tbody>
+  </table> -->
+
+  <!-- <hr class="headerLine"> -->
+
+  <!-- sub top subtop -->
+  <!-- <div class="addSubBtn">
+    <button class="btn btn-primary btnCss" (click)="MetaData = true">Add New</button>
+  </div> -->
+
+
+  <!-- <table class="table ">
+    <thead >
+      <tr>
+        <th style="width: 2% !important;">Subject</th>
+        <th style="width: 2% !important;">Topic</th>
+        <th style="width: 4% !important;">Sub Topic</th>
+      </tr>
+    </thead>
+    <tbody class="item-dist">
+
+            <tr *ngFor ="let sub of tenantMetaData?.addtional_metadatas.parameter_value;let i=index" rowspan="sectName?.subjects.length">
+              <td style="width: 31%;border-right: 1px solid #cfd8dc;vertical-align: middle !important;" (mouseenter)="addCssSub(i)" (mouseleave)="removeCssSub(i)">{{sub.subject}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" *ngIf="showEditIcon && i==editSubIndex" (click)="editSubject(sub,1)"></fa></td>
+              <table>
+                <tbody style="height:0px !important">
+                <tr *ngFor ="let top of sub?.topics;let a=index" rowspan="sub?.topics.length">
+                  <td style="width: 28%;border-right: 1px solid #cfd8dc;vertical-align: middle !important;" (mouseenter)="addCssTop(a,i)" (mouseleave)="removeCssTop(a,i)">{{top.topic}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" (click)="editSubject(top,2)" *ngIf="showEditIcon && a==editTopicIndex"></fa></td>
+                  <table>
+                      <tbody style="height:0px !important">
+
+                      <tr *ngFor ="let subtop of top?.subtopics;let b=index" rowspan="top?.subtopics.length">
+                        <td style="width: 22%;border-right: 1px solid #cfd8dc;vertical-align: middle !important;" *ngIf="subtop.subtopic != null"  (mouseenter)="addCssSubTop(b,a,i)" (mouseleave)="removeCssSubTop(b,a,i)">{{subtop.subtopic}}&nbsp;<fa [name]="'pencil'" [size]=1 class="editIcon" (click)="editSubject(subtop,3)" *ngIf="showEditIcon && b==editSubTopIndex"></fa></td>
+                        <td style="width: 22%;border-right: 1px solid #cfd8dc;vertical-align: middle !important;" *ngIf="subtop.subtopic == null">--</td>
+
+                      </tr>
+                    </tbody>
+                    </table>
+                </tr>
+              </tbody>
+              </table>
+          </tr>
+    </tbody>
+  </table> -->
+  <!-- table ends -->
+
+
+  <!-- parameter edit popup -->
+
+    <!-- <div *ngIf="editParams" class="paramsEdit">
+      <button  aria-label="Close" class="dialog__close-btn" (click)="cancelAdditionalParameter()">X</button>
+      <p class="modalHead">{{parameterName}}</p>
+        <div class="paramsAlign">
+          <div *ngFor="let data of editableParams;let i=index" class="col-md-12 inputValue">
+            <div class="row">
+                  <input type="text" autocomplete="off" class="form-control col-md-6" value="{{data}}" id="par" [(ngModel)]="data.parameter" #par="ngModel" required name="parameterValue"> &nbsp;<fa [name]="'trash'" [size]=1 class="col-md-1 deleteIcon" (click)="deleteMetaData(i)" [ngClass]="{'disableDelete':data.delete == false}"></fa>
+
+            </div>
+            <p class="alertDanger" *ngIf="(!par.valid && par.touched) || (parameterErr == true && i ==errIndex)" style="margin-bottom: -2px;">This field is required</p>
+          </div>
+        </div>
+      <button class="btn btn-primary btnCss addNewBtn" (click)="addNewParams()">Add New</button>
+      <div class="saveBtn">
+        <button class="btn btn-primary btnCss" (click)="save(editableParams)" >Save</button>
+        <button class="btn btn-primary btnCss" (click)="cancelAdditionalParameter()">Cancel</button>
+      </div>
+    </div>
+    <div *ngIf="editParams" class="overlay_edit"></div> -->
+
+
+    <!-- edit normal attribute -->
+  <ng-template #editParams>
+    <div class="modal-header">
+      <p class="modalHead">{{parameterName}}</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="cancelAdditionalParameter()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="paramsAlign" #scrollMe [scrollTop]="scrollMe.scrollHeight"  id="content">
+          <p *ngIf="parameterName != 'Linked Attributes'"><b>Attribute Name</b></p>
+          <input type="text" autocomplete="off" class="form-control col-md-6 offset-md-3" maxlength="100" value="{{saveMetaData.parameter_label}}" id="parname" [(ngModel)]="saveMetaData.parameter_label" #parname="ngModel" required name="parname" [ngClass]="{'hideInputField':parameterName == 'Linked Attributes'}">
+          <p class="alertDanger1" *ngIf="(!parname.valid && parname.touched) || (parameterLabelErr == true && saveMetaData.parameter_label == '')" style="margin-bottom: -2px;text-align:center">This field is mandatory. Please complete.</p>
+        <p [ngClass]="{'hideValueOfCA' : hideCustom_Attr_Values === true }" class="AttrHEad"><b>Attribute Values</b></p>
+        <div [ngClass]="{'hideValueOfCA' : hideCustom_Attr_Values === true}">
+          <div *ngFor="let data of editableParams;let i=index" class="col-md-12 inputValue">
+            <div class="row">
+                <input type="text" autocomplete="off" class="form-control col-md-6" maxlength="25" value="{{data}}" id="par{{i}}" [(ngModel)]="data.parameter" #par="ngModel" required name="parameterValue"> &nbsp;<fa [name]="'trash'" [size]=1 class="col-md-1 deleteIcon" (click)="deleteMetaData(i,data)" [ngClass]="{'disableDelete':data.delete == false}" tooltip="Delete" placement="top"></fa>
+  
+            </div>
+            <p class="alertDanger1" *ngIf="parameterErr == true && i ==errIndex" style="margin-bottom: -2px;">This field is mandatory. Please complete.</p>
+          </div>
+        </div>
+        
+      </div>
+      <button [ngClass]="{'hideValueOfCA' : hideCustom_Attr_Values === true}" class="btn btn-primary btnCss addNewBtn" (click)="addNewParams($event)" *ngIf="parameterName != 'Linked Attributes'" (activate)="onActivate()">Add New</button>
+      <div class="saveBtn">
+        <button class="btn btn-primary btnCss" (click)="save(editableParams)" >Save</button>
+        <button class="btn btn-primary btnCss" (click)="cancelAdditionalParameter()">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
+
+
+
+
+  <!-- sub top subtopic edit -->
+
+
+  <ng-template #subeditParams>
+    <div class="modal-header">
+      <p class="modalHead">{{EditTitle}}</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="cancelAddtionalMetaData()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="metaDataAlign">
+        <div class="col-md-12 inputValue">
+          <div class="row">
+            <input type="text" autocomplete="off" class="form-control col-md-6" value="{{editSubAttribute.parameter_value}}" id="editableValuesub" #editableValuesub="ngModel" required [(ngModel)]="editSubAttribute.parameter_value"  name="editableValuesub">
+            <!-- <input type="text" autocomplete="off" class="form-control col-md-6" value="{{editSubAttribute.parameter_value}}" id="editableValuetop" [(ngModel)]="editSubAttribute.parameter_value"  name="editableValuetop" *ngIf="EditTitle == 'Topic Edit'">
+            <input type="text" autocomplete="off" class="form-control col-md-6" value="{{editSubAttribute.parameter_value}}" id="editableValueSubtop" [(ngModel)]="editSubAttribute.parameter_value"  name="editableValueSubtop" *ngIf="EditTitle == 'SubTopic Edit'"> -->
+            </div>
+          </div>
+          <p class="alertDanger" *ngIf="(editableValuesub.errors && (editableValuesub.dirty || editableValuesub.touched)) || editLinkedAttrErr == true" style="margin-bottom: -2px;">Please complete all mandatory fields before saving.</p>
+
+      </div>
+
+      <div class="saveBtn">
+        <button class="btn btn-primary btnCss" (click)="editAdditionalMetaData()">Save</button>
+        <button class="btn btn-primary btnCss" (click)="cancelAddtionalMetaData()">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
+
+
+
+  <!-- <div *ngIf="subeditParams" class="subparamsEdit">
+      <button  aria-label="Close" class="dialog__close-btn" (click)="subeditParams = false">X</button>
+      <p class="modalHead">{{EditTitle}}</p>
+        <div class="metaDataAlign">
+          <div class="col-md-12 inputValue">
+            <div class="row">
+              <input type="text" autocomplete="off" class="form-control col-md-6" value="{{editSubAttribute.parameter_value}}" id="editableValuesub" #editableValuesub="ngModel" required [(ngModel)]="editSubAttribute.parameter_value"  name="editableValuesub">
+
+
+            </div>
+            <p class="alertDanger" *ngIf="editableValuesub.errors && (editableValuesub.dirty || editableValuesub.touched)" style="margin-bottom: -2px;">This field is required</p>
+          </div>
+        </div>
+
+      <div class="saveBtn">
+        <button class="btn btn-primary btnCss" (click)="editAdditionalMetaData()">Save</button>
+        <button class="btn btn-primary btnCss" (click)="subeditParams = false">Cancel</button>
+      </div>
+  </div>
+  <div *ngIf="subeditParams" class="overlay_edit"></div> -->
+
+
+  <!-- addnew sub top subtopic popup -->
+
+  <ng-template #MetaData2>
+    <div class="modal-header">
+      <p class="modalHead">Add New</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="metaDataAlign2">
+        <div class="col-md-12 metaDataForm">
+          <div class="row">
+              <form class="form-inline col-md-12">
+                  <div class="form-group col-md-12 formMArgin">
+                    <label class="control-label col-md-4" for="sub">{{tenantMetaData.addtional_metadatas.linked_attribute_1}}<sup>*</sup></label>
+                    <div class="col-md-6">
+                      <input  class="form-control" id="sub" name="sub"  [(ngModel)]="addnewSubAttribute.subject" #sub="ngModel" required (ngModelChange)="SearchAttributes(addnewSubAttribute.subject,'subject')" placeholder="Enter Subject" [typeahead]="subjectSearch">
+                      <!-- <datalist id="browsers">
+                          <option [value]="data" *ngFor="let data of subjectSearch">
+                      </datalist> -->
+                      <p class="alertDanger1" *ngIf="sub.errors && (sub.dirty || sub.touched) || subjectErr == true" style="margin-bottom: -2px;">This field is mandatory. Please complete.</p>
+                    </div>
+
+                  </div>
+                  <div class="form-group col-md-12 formMArgin">
+                      <label class="control-label col-md-4" for="topic">{{tenantMetaData.addtional_metadatas.linked_attribute_2}}<sup>*</sup></label>
+                      <div class="col-md-6">
+                        <input  class="form-control" id="topic" name="topic" #topic="ngModel" required [(ngModel)]="addnewSubAttribute.topic" (ngModelChange)="SearchAttributes(addnewSubAttribute.topic,'topic')" placeholder="Enter Topic" [typeahead]="topicSearch">
+                        <!-- <datalist id="browsers">
+                            <option [value]="data" *ngFor="let data of topicSearch">
+                        </datalist> -->
+                        <p class="alertDanger1" *ngIf="topic.errors && (topic.dirty || topic.touched) || topicErr == true" style="margin-bottom: -2px;">This field is mandatory. Please complete.</p>
+                      </div>
+
+                  </div>
+                  <div class="form-group col-md-12 formMArgin">
+                      <label class="control-label col-md-4" for="subtop">{{tenantMetaData.addtional_metadatas.linked_attribute_3}}</label>
+                      <div class="col-md-6">
+                        <input type="text" autocomplete="off" class="form-control" id="subtop" name="subtop" [(ngModel)]="addnewSubAttribute.subtopic" placeholder="Enter Subtopic">
+                      </div>
+                  </div>
+              </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="saveBtn btnMArgin">
+        <button class="btn btn-primary btnCss" (click)="saveAdditionalMetadata()">Save</button>
+        <button class="btn btn-primary btnCss" (click)="cancelMetaData()">Cancel</button>
+      </div>
+    </div>
+  </ng-template>
+
+    <!-- <div *ngIf="MetaData" class="metaDataEdit">
+        <button  aria-label="Close" class="dialog__close-btn" (click)="cancelMetaData()">X</button>
+        <p class="modalHead">Add New</p>
+          <div class="metaDataAlign2">
+            <div class="col-md-12 metaDataForm">
+              <div class="row">
+                  <form class="form-inline col-md-12">
+                      <div class="form-group col-md-12 formMArgin">
+                        <label class="control-label col-md-4" for="sub">Subject</label>
+                        <div class="col-md-6">
+                          <input list="browsers" class="form-control" id="sub" name="sub" [(ngModel)]="addnewSubAttribute.subject" #sub="ngModel" required (ngModelChange)="SearchAttributes(addnewSubAttribute.subject,'subject')" placeholder="Enter Subject">
+                          <datalist id="browsers">
+                              <option [value]="data" *ngFor="let data of subjectSearch">
+                          </datalist>
+                          <p class="alertDanger" *ngIf="sub.errors && (sub.dirty || sub.touched) || subjectErr == true" style="margin-bottom: -2px;">This field is required</p>
+                        </div>
+
+                      </div>
+                      <div class="form-group col-md-12 formMArgin">
+                          <label class="control-label col-md-4" for="topic">Topic</label>
+                          <div class="col-md-6">
+                            <input list="browsers" class="form-control" id="topic" name="topic" #topic="ngModel" required [(ngModel)]="addnewSubAttribute.topic" (ngModelChange)="SearchAttributes(addnewSubAttribute.topic,'topic')" placeholder="Enter Topic">
+                            <datalist id="browsers">
+                                <option [value]="data" *ngFor="let data of topicSearch">
+                            </datalist>
+                            <p class="alertDanger" *ngIf="topic.errors && (topic.dirty || topic.touched) || topicErr == true" style="margin-bottom: -2px;">This field is required</p>
+                          </div>
+
+                      </div>
+                      <div class="form-group col-md-12 formMArgin">
+                          <label class="control-label col-md-4" for="subtop">SubTopic</label>
+                          <div class="col-md-6">
+                            <input type="text" autocomplete="off" class="form-control" id="subtop" name="subtop" [(ngModel)]="addnewSubAttribute.subtopic" placeholder="Enter Subtopic">
+                          </div>
+                      </div>
+                  </form>
+              </div>
+            </div>
+          </div>
+
+          <div class="saveBtn btnMArgin">
+            <button class="btn btn-primary btnCss" (click)="saveAdditionalMetadata()">Save</button>
+            <button class="btn btn-primary btnCss" (click)="cancelMetaData()">Cancel</button>
+          </div>
+    </div>
+    <div *ngIf="MetaData" class="overlay_edit"></div> -->
+</div>

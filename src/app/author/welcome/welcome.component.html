@@ -1,0 +1,117 @@
+<app-loader *ngIf="showload"></app-loader>
+<div class="wrapper">
+    <div class="full-width">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- Left navbar links -->
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a  class="logo">
+                                    <img src="src/assets/img/scora-icon.png" alt="scora Logo" class="brand-image">
+                                    <span class="brand-text font-weight-light"><img src="src/assets/img/admin-img/scora-beta.svg" alt="" class="img-fluid"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6" *ngIf = "universityall">
+                        <!-- Right navbar links -->
+                        <div class="profile-menu dropdown mt-2">
+                            <a data-toggle="dropdown"  aria-expanded="true">
+                                <div class="profile-blk">
+                                    <figure>
+                                        <img height="40px" class="mr-2" [src]="universityall.profile_picture" onError="this.onerror=null;this.src='../../assets/img/userProfile.png';" alt="">
+                                    </figure>
+                                    <div class="text">
+                                        <div class="name">{{universityall.profile_name}}</div>
+                                        <div class="email">{{universityall.profile_email}}</div>
+                                    </div>
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right uk-border-rounded border-0">
+                                <!-- <div class="profile-link">
+                                  <a>
+                                    <img src="src/assets/img/user-icon.png" alt="" class="user-icon">
+                                    <span >My Organization(s)</span>
+                                  </a>
+                                </div> -->
+                                <span class="my-org">My Organizations</span>
+                                <ul class="org">
+                                  <li *ngFor="let university of universityall?.available_organization; let i=index" class="university-details"
+                                    [ngClass]="{'university-details-highlight':userOrgId == university.org_id}"
+                                    (click)="nextOrganisation(university.org_id)">
+                                    <figure>
+                                      <img [src]="university.organization_img"
+                                        onError="this.onerror=null;this.src='../../assets/img/scoralogo.png';"
+                                        style="float: left; max-width: 85px;margin: 11px 5px;" alt="">
+                                    </figure>
+                                    <div class="cont">
+                                      <div class="name">{{university.organization_name}}</div>
+                                      <a *ngFor="let adminame of university.organization_roles">{{adminame}}</a>
+                                    </div>
+                                  </li>
+                                </ul>
+                                <a  class="sign-out"><img src="src/assets/img/sign-out-icon.svg" class="mr-2"><span (click)="logout()">Sign Out</span></a>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+        <!-- /.navbar -->
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card select-theme">
+                        <div class="card-header pt-5 pl-5 pr-5 border-0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 *ngIf = "universityall" class="card-title">Congratulations, {{universityall.profile_name}}!</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-1 pl-5 pr-5 pb-5">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>If you are here, you have already completed Step 1 of 4S–Seven Simple Steps of SCORA! Nicely done!</p>
+                                    <br>
+                                    <p>The next few steps will take your colleagues and you on a journey through SCORA–the first-of-its-kind, collabborative platform for assessment-led learning and credentialing.</p>
+                                    <figure class="text-center w-100 mt-5 mb-5">
+                                        <img src="src/assets/img/welcome-img.png" alt="" class="img-fluid">
+                                    </figure>
+                                    <p>By clicking on the NEXT button below, you can choose your company colours and add your logo to build your own personalized version of SCORA! Then go ahead and invite your team members to create and deliver
+                                        quality tests and assessments.</p>
+
+                                    <p>If you need any help, holler or write to us at <a href="" class="take-test">cx@scora.io</a> and we will be sure to holler back with helpful tips and assistance.</p>
+
+                                    <p class="d-block w-100">Welcome to SCORA!</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <a  [routerLink]="['/select-theme']" class="default-btn">Next</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col-md-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+</div>
+</div>

@@ -1,0 +1,655 @@
+<app-loader *ngIf="showload"></app-loader>
+<div class="content-wrapper">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header p-4">
+                          <h3 class="card-title mt-2">Manage Users
+                              <a class="info pointer" [popover]="popTemplate" triggers="mouseenter:mouseleave" [placement]="'top'" [outsideClick]="true" #popOver>
+                                  <span data-toggle="modal" data-target="#userrole">
+                                    <img src="src/assets/img/info-circle.png" alt=""> 
+                                  </span>
+                              </a>
+                              <ng-template #popTemplate>
+                                <a (click)="closePopover()" class="pointer" >Click to know user roles</a>
+                              </ng-template>
+                          </h3>
+                          <a href="" class="take-test float-right mt-3" data-toggle="modal" data-target="#inviteuser">Invite User</a>
+                          <a href="" class="white-btn float-right mr-4" data-toggle="modal" data-target="#importdata">Import</a>
+                          <a href="" class="skip-btn float-right mr-4" data-toggle="modal" data-target="#createfields" (click)="showcreatfield()">Create Fields</a>
+
+                      </div>
+                      <div class="card-body pt-0">
+                          <div class="table-responsive">
+                              <table class="custom-table v-top">
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>Email Id</th>
+                                          <th>Mobile No.</th>
+                                          <th>Role</th>
+                                          <th>Edit</th>
+                                          <th>Delete</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr *ngFor="let data of pagedItems">
+                                        <td *ngIf="data.username != 'Undefined'">{{data.username}}</td>
+                                        <td *ngIf="data.username == 'Undefined'">--</td>
+                                        <td *ngIf="data.email != 'Undefined'">{{data.email}}</td>
+                                        <td *ngIf="data.email == 'Undefined'">--</td>
+                                        <!-- <td *ngIf="data.gender != null">{{data.gender}}</td> -->
+                                        <!-- <td *ngIf="data.gender == null">--</td> -->
+                                        <td *ngIf="data.mobile_no != null && data.mobile_no != ''">{{data.country_code}}&nbsp;{{data.mobile_no}}</td>
+                                        <td *ngIf="data.mobile_no == null || data.mobile_no == ''">--</td>
+                                        <td>{{data.roles}}</td>
+                                          <td>
+                                              <a (click)="editUser(data,updateUser,data.edit_access,data.alert_message)"><img src="src/assets/img/admin-icons/edit-icon.png" alt=""></a>
+                                          </td>
+                                          <td>
+                                              <a (click)="RemoveTenantUsers(data.user_id,deleteUsersPopup,data.delete_access,data.alert_message)"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                              <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!allUsersList || allUsersList.length==0">
+                                <figure>
+                                    <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                </figure>
+                                <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                            </div>
+                              <div class="pagination-custom">
+                                <ul  *ngIf="pager.pages && pager.pages.length">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}" class="disabled">
+                                        <a  (click)="setPage(pager.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages" class="active">
+                                        <a [class.active-selected-page]="page==currentPage" (click)="setPage(page)">{{page}}</a>
+                                      <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                    </li>
+                                   
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.currentPage + 1)"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                </ul>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>
+ <!-- /.content-wrapper -->
+
+  <!-- Modal Create Fields Start -->
+  <div class="modal fade modal-custom" id="createfields" tabindex="-1" role="dialog" aria-labelledby="createfieldsLabel" aria-hidden="true" *ngIf="showCFMD == true">
+    <div class="modal-dialog" role="document" [ngClass]="{'w620':getAllCusFields.length == 0, 'w920': getAllCusFields.length > 0 }">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Create Fields
+                <div class="gren">Max (6) fields ({{Fieldsleft}} fields left)</div>
+            </div>
+            <div class="text">
+                <div class="row">
+                    <div  [ngClass]="{'col-md-12':getAllCusFields.length == 0, 'col-md-6': getAllCusFields.length > 0 }">
+                        <div class="form-group">
+                            <div class="switch-wrap">
+                                <label>Mandatory Field</label>
+                                <div class="switch-btn" (change)="LabelCheckbox()">
+                                    <!-- Rounded switch -->
+                                    <label class="switch">
+                                        <input type="checkbox" [(ngModel)]="mandatoryFieldCheckBoxFlag">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Label</label>
+                            <input type="text" name="" id="" class="form-control" autocomplete="off" [ngClass]="{'valBorder' : customFieldValidate}" 
+                            (keyup)="CFinput(newFieldLabel)" [(ngModel)]="newFieldLabel" value="Write here" placeholder="Write here">
+                        </div>
+                        <div class="form-group">
+                            <label>Field Type</label>
+                            <select name="" id="" #selVal class="select h52 w-100" [ngClass]="{'valBorder' : customFieldValidateType}"
+                            (change)="selValNewField(selVal.value)">
+                            <option value="" [selected]="newFieldType == ''" disabled>Please select</option>
+                            <option value="{{field.datatype}}" *ngFor="let field of customFieldsMeta">{{field.datatype}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Placeholder Text</label>
+                            <input type="text" name="" id="" class="form-control" autocomplete="off" [ngClass]="{'valBorder' : customFieldValidate}" 
+                            (keyup)="CFinput(newPlaceholdername)" [(ngModel)]="newPlaceholdername" value="Write here" placeholder="Write here">
+                        </div>
+                        <div class="form-group mt-4">
+                            <a (click)="addNewField(newFieldLabel,newPlaceholdername)" class="take-test" [ngClass]="{'gray': getAllCusFields.length>=6}" [class.disabledAnchor]="getAllCusFields.length>=6">Add More Fields</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 customFieldsDiv" *ngIf="getAllCusFields.length != 0" >
+                        <div class="add-newfields">
+                            <div class="form-group" *ngFor="let data of getAllCusFields">
+                                <label>{{data.label }}</label>
+                                <input [type]="data.datatype | lowercase" name="" id="" class="form-control" [class.mandatory]="data.is_required==1" placeholder="{{data.placeholder_name}}">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190" [disabled]="getAllCusFields.length>=6" (click)="addNewField(newFieldLabel,newPlaceholdername,'yes')" [class.disabledAnchor]="getAllCusFields.length>=6">Create</button>
+                <button class="skip-btn w190" (click)="cancelNewField()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Import Data Start -->
+<div class="modal fade modal-custom" id="importdata" tabindex="-1" role="dialog" aria-labelledby="importdataLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 490px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Import</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>File Type</label>
+                            <select name="" id="" class="select h52 w-100">
+                                <option value="Please select">Please select</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload File</label>
+                            <div class="custom-files">
+                                <input type="file"  accept=".xlsx" name="file" id="" (change)="handleFileInput($event.target.files)">
+                                <div class="file-chose">
+                                    <span>Please select</span>
+                                    <span class="upload">Upload</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="0">
+                            <div class="scan"><img src="src/assets/img/scan-loader.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Your file is infected. Please clean-up, quarantine and attempt upload again.</span></div>
+                            <div class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
+                        </div>
+                        <div class="form-group">
+                            <div *ngIf = "virusScanning == true" style="line-height: 87px" class="scan"><img src="src/assets/img/scan-loader.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div *ngIf="virus" style="line-height: 87px"  class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Your file is infected. Please clean-up, quarantine and attempt upload again.</span></div>
+                            <div *ngIf="size" style="line-height: 87px" class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Files beyond 5MB cannot be uploaded.</span></div>
+                            <div *ngIf="extension" style="line-height: 87px" class="virus"><img src="src/assets/img/virus.png" alt=""> <span>File type allowed only:jpeg, jpg, png.</span> </div>
+                            <div *ngIf = "virusScanning == false && extension == false && size== false && virus == false" style="line-height: 87px" class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div *ngIf = "uploadedsuccessfully" style="line-height: 87px" class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Successfully Uploaded!</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190" (click)="uploadUsers($event)">Done</button>
+                <button class="skip-btn w190" (click)="close()" >Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal userrole -->
+<div class="modal fade modal-custom" id="userrole" tabindex="-1" role="dialog" aria-labelledby="userroleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">User Roles</div>
+            <div class="text user-role">
+                <div class="row p-0">
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="src/assets/img/admin-icons/super-admin.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Tenant Admin</div>
+                                <div class="txt">Set-up tenant account, brand and personalise UI by choosing themes; create users for various functions and assign rights and privileges to users.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="src/assets/img/admin-icons/author.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Author</div>
+                                <div class="txt">Develop item banks by creating different types of reusable question items of different types including MCQs, True/False, Matching, Passage-based, Short-answer, Assignments etc., with customizable attribute tags, multi-media
+                                    elements, mathematical formulae and chemical equations or simply import questions using standard excel templates.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="src/assets/img/admin-icons/Examiner.svg" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Examiner</div>
+                                <div class="txt">View and mark constructed response items such as short answers, essays or assignments based on a pre-defined rubric.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="src/assets/img/admin-icons/test.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Test Admin</div>
+                                <div class="txt">Define test blueprints, marking schemes and rubrics, generate test banks and publish formative or summative test papers, schedule and deliver tests to individual participants or groups. </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="user">
+                            <figure>
+                                <img src="src/assets/img/admin-icons/participant.png" alt="">
+                            </figure>
+                            <div class="content">
+                                <div class="name">Participant</div>
+                                <div class="txt">Take formative tests, view and analyse performance, understand strengths and weaknesses and improve learning; take summative tests and receive certificates. </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+<!-- Modal Invite User Start -->
+<div class="modal fade modal-custom" id="inviteuser" tabindex="-1" role="dialog" aria-labelledby="inviteuserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close" (click)="cancelSingleUser()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Invite User</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" autocomplete="off" class="form-control" id="fname" name="fname" maxlength="100" #fname="ngModel" required [(ngModel)]="userList.first_name" [class.mandatory]="userList.first_name.length==0" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email ID</label>
+                            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userList.email" [class.mandatory]="userList.email.length==0" #email="ngModel" placeholder="Enter Email">
+                            <p class="text-danger" *ngIf="userList.email.length >= 1 && emailerr" style="margin-bottom: -2px;">Invalid Email</p>
+                            <p class="text-danger" *ngIf="(email.touched || userList.email.length == 0) && (emailerr == true && userList.email.length == 0)" style="margin-bottom: -2px;">This field is mandatory. Please complete.</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <div class="clearfix">
+                                <select name="country_code"  id="country_code"  required [(ngModel)]="userList.country_code" class="select h52" style="width: 30%; min-width: auto; float: left; padding-left: 10px;">
+                                    <option [ngValue]=null  [disabled] = "true" [selected]="userList.country_code == null">Select Code</option>
+                                    <option *ngFor="let code of countryCodes;let i=index"  [value]="code.dial_code">{{code.name}}({{code.dial_code}})</option>
+                                  </select>
+                                <input type="text" autocomplete="off" class="form-control" id="Mob" name="Mob" [(ngModel)]="userList.mobile_no" (keypress)="onlyNumberKey($event)" maxlength="15" (focus)="onlyNumberKey($event)" placeholder="Enter Mobile Number" style="width: 65%; margin-left: 5%; float: left;">
+                            </div>
+                        </div>
+                    <!--   <div class="form-group">
+                            <a href="" class="take-test">Add Custom Field</a>
+                        </div>--> 
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Roles</label>
+                            <div class="table-responsive">
+                                <table class="custom-table border th10">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>View</th>
+                                            <th>Create</th>
+                                            <th>Edit</th>
+                                            <th>Retire</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of roleLists">
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" (change)="selectRoles(data)">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span>{{data.itemName}}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                     </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="custum-filed">Custom Fields added by you</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Organisation</label>
+                                    <input type="text" name="" id="" class="form-control" placeholder="Write here">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <input type="text" name="" id="" class="form-control" placeholder="Write here">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190" (click)="addSingleUser()">Invite</button>
+                <button class="skip-btn w190" (click)="cancelSingleUser()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+
+<!-- Modal update user Start -->
+<div class="modal fade modal-custom" id="updatesingle" tabindex="-1" role="dialog" aria-labelledby="updatesingleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 960px;">
+        <div class="modal-content" style=" min-width: auto;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close" (click)="cancelUpdateUser()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <div class="title">Update User</div>
+            <div class="text">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <!-- <input type="text" name="" id="" class="form-control" placeholder="Enter Name"> -->
+                            <input type="text" autocomplete="off" class="form-control" id="fname" name="fname" #fname="ngModel" required [(ngModel)]="userList.first_name" placeholder="Enter Name" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Email ID</label>
+                            <!-- <input type="text" name="" id="" class="form-control" placeholder="Enter Email"> -->
+                            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userList.email" #email="ngModel" required pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" placeholder="Enter Email" disabled>
+                            <p class="alertDanger" *ngIf="email.errors && (email.dirty || email.touched) || emailerr == true" style="margin-bottom: -2px;">Invalid Email</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile number</label>
+                            <div class="clearfix">
+                                <select class="select h52" style="width: 30%; min-width: auto; float: left; padding-left: 10px;"  name="country_code"  id="country_code"  required [(ngModel)]="userList.country_code">
+                                    <option [ngValue]=null  [disabled] = "true" [selected]="userList.country_code == null">Select Code</option>
+                                    <option *ngFor="let code of countryCodes;let i=index"  [value]="code.dial_code">{{code.name}}({{code.dial_code}})</option>
+                                  </select>
+                                <!-- <select class="select h52" style="width: 30%; min-width: auto; float: left; padding-left: 10px;"> 
+                                 <option value="">Select code</option>
+                            </select>-->
+                            <input type="text" autocomplete="off" class="form-control" style="width: 65%; margin-left: 5%; float: left;" id="Mob" name="Mob" [(ngModel)]="userList.mobile_no" (keypress)="onlyNumberKey($event)" maxlength="15" (focus)="onlyNumberKey($event)" placeholder="Enter Mobile Number">
+                            <p class="alertDanger" *ngIf="mobErr == true" style="margin-bottom: -2px;">Enter a valid mobile number.</p>
+                                <!-- <input type="text" name="" id="" class="form-control" placeholder="Enter Mobile Number" style="width: 65%; margin-left: 5%; float: left;"> -->
+                            </div>
+                        </div>
+                        <label class="custum-filed">Custom Fields added by you</label>
+                        <div *ngIf="userList.custom_fields.length != 0">
+
+                            <div *ngFor="let cusFill of userList.custom_fields;let index=index">
+                              <!-- For Text -->
+                              <div class="form-group" *ngIf="cusFill.datatype == 'Text'">
+                                <label for="CFfname{{index}}">{{cusFill.label}}</label>
+                                <input type="text" name="CFfname{{index}}" id="CFfname{{index}}" #CFfname="ngModel" [(ngModel)]="cusFill.value" autocomplete="off" class="form-control" placeholder="{{cusFill?.placeholder_name}}">
+                            </div>
+                               <!-- For Date -->
+                              <div class="form-group" *ngIf="cusFill.datatype == 'Date'">
+                                <label for="CFfname{{index}}"> {{cusFill.label}}</label>
+                         
+                                  <input type="date" autocomplete="off" class="form-control" id="CFfname{{index}}" name="CFfname{{index}}" #CFfname="ngModel" [(ngModel)]="cusFill.value" placeholder="{{cusFill?.placeholder_name}}">
+                             
+                              </div>
+                              <!-- For Email -->
+                              <div class="form-group" *ngIf="cusFill.datatype == 'Email'">
+                                <label for="email" style="text-align: right !important;">{{cusFill.label}}</label>
+                                  <input type="email" class="form-control" id="email" name="email" [(ngModel)]="cusFill.value" #email="ngModel" pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$" placeholder="{{cusFill?.placeholder_name}}">
+                                  <p class="alertDanger" *ngIf="email.errors && (email.dirty || email.touched) || emailerr == true" style="margin-bottom: -2px;">Invalid Email</p>
+                              </div>
+                              <!-- For Number -->
+                              <div class="form-group" *ngIf="cusFill.datatype == 'Number'">
+                                <label  for="CFfname"> {{cusFill.label}}</label>
+                                  <input type="number" class="form-control" id="CFfname" name="CFfname" #CFfname="ngModel" [(ngModel)]="cusFill.value" placeholder="" maxlength="100">
+                              </div>
+                             
+                              <!-- For Text Area -->
+                              <div class="form-group col-md-12 formMArgin" *ngIf="cusFill.datatype == 'Textarea'">
+                                <label class="control-label col-md-4" for="CFfname" style="text-align: right !important;"> {{cusFill.label}}</label>
+                            
+                                  <textarea name="" id="" cols="30" rows="10" [(ngModel)]="cusFill.value"></textarea>
+                                
+                              </div>
+    
+    
+                            </div>
+    
+                          </div>
+                       
+                        <!--<div class="form-group">
+                            <a href="" class="take-test">Add Custom Field</a>
+                        </div>-->
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Roles</label>
+                            <div class="table-responsive">
+                                <table class="custom-table border th10">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>View</th>
+                                            <th>Create</th>
+                                            <th>Edit</th>
+                                            <th>Retire</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of roleLists">
+                                            <td style="min-width: 180px;">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="" (change)="selectRoles(data)" >
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                        <span >{{data.itemName}}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" name="check" id="">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+
+                    </div>
+                </div>
+            </div>
+            <div class="button-groups">
+                <button class="default-btn mr-3 w190" (click)="UpdateSingleUser()">Update</button>
+                <button class="skip-btn w190" (click)="cancelUpdateUser()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End modal -->
+
+
+
+<!-- Delete Modal -->
+<div class="modal fade delete-modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close" (click)="cancelDeleteUser()">
+                <span aria-hidden="true">×</span>
+            </button>
+            <figure class="delete-img">
+                <img src="src/assets/img/delete-img.png" alt="">
+            </figure>
+            <div class="title">Delete?</div>
+            <p class="text">This will delete the user permanently.<br> Are you sure you want to proceed?</p>
+            <div class="button-groups">
+                <button class="delete-btn w190 mb-3" (click)="deleteUserConfirm()">Delete</button>
+                <button class="white-btn w190" (click)="cancelDeleteUser()">No! Go back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal End -->
+<button data-toggle="modal" data-target="#updatesingle" id="updateSingle" #updatesingle class="btn" [hidden]="1"></button>
+<button data-toggle="modal" data-target="#inviteuser" id="inviteSingle" #inviteSingle class="btn" [hidden]="1"></button>
+<button data-toggle="modal" data-target="#delete" id="deleteSingle" #deleteSingle class="btn" [hidden]="1"></button>
+<button data-toggle="modal" data-target="#createfields" id="createfields" #createfields class="btn" [hidden]="1"></button>
+<simple-notifications></simple-notifications>

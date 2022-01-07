@@ -1,0 +1,31 @@
+
+<!-- <router-outlet></router-outlet> -->
+
+<app-loader *ngIf="fullpageload"></app-loader>
+
+
+
+
+<div class="app flex-row align-items-center" style="    background: rgba(96, 165, 234, 0.05);">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="clearfix" style=" border: 1px solid #e8eff724;
+          padding: 10px;    background: #cee6ff7a;
+          border-radius: 3px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;">
+            <div>
+                <div class="col-md-12" style="text-align:center;    margin: 30px 0px;"><img src="../../../assets/img/Default-Logo.png"></div>
+               <h5 style="text-align:center;color: #0098be;">Dear user, Thank you for trying SCORA</h5>
+                <h6 style="text-align:center;color: black;line-height: 1.7;">Hope you have enjoyed your free trial. Well, looks like your trial plan has expired. Subscribe to our services to enjoy uninterrupted usage of SCORA</h6>
+                <div class="col-md-12" style="text-align:center;    margin: 30px 0px;"><button type="button" class="btn btn-primary renewBtn" [routerLink]="['/checkout']">Renew Now</button></div>
+            </div>
+          </div>
+        
+         
+        </div>
+      </div>
+    </div>
+  </div>  
+  
+

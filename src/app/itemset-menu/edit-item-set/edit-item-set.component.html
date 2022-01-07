@@ -1,0 +1,1225 @@
+<app-loader *ngIf="showLoad"></app-loader>
+<div class="col-lg-12 col-md-12 col-sm-6">
+  <div class="row">
+    <!-- success message popup -->
+<!-- <p class="successMsg" [@dialog1] *ngIf="saveMsg">{{showMsg}}</p> -->
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+<div *ngFor="let alert of alerts" class="alertPOPup">
+  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+</div>
+
+<!-- <div class="alertMyPop" *ngIf="addSectionDisableKey">Please fill the previous section(s) data to create the new section.</div> -->
+
+
+    <div class="col-md-12 col-lg-12 col-sm-6  bg-clr">
+      <div class="row">
+      <header class="itemHead">
+        <p class="head" style="display: flex;">
+          <span style="text-align: left;flex:1;">Edit Item Set</span>
+          <span style="display: inline-flex;" *ngIf="ABCD == true">
+            <span>Review Workflow : </span>
+
+            <!-- <span *ngIf="enableRWFToggle == true" class="_rwfToggleNewF" style="margin: 1px 0 0 10px;" tooltip="{{rWFTooltip}}" placement="bottom" (click)="showRWFPopup(askPermissionToRWF)"> TURN OFF </span>
+            <span *ngIf="enableRWFToggle == false" class="_rwfToggleNewT" style="margin: 1px 0 0 10px;" tooltip="{{rWFTooltip}}" placement="bottom" (click)="showRWFPopup(askPermissionToRWF)"> TURN ON </span> -->
+
+            <!-- RWF Toggle Start -->
+            <label class="switch1" tooltip="{{rWFTooltip}}" placement="bottom" (change)="showRWFPopup(askPermissionToRWF,RWFToggleStatus)" style="margin: 1px 0 0 10px;">
+              <input type="checkbox" [checked]="RWFToggleStatus" [(ngModel)]="RWFToggleStatus">
+              <span class="slider1"></span>
+            </label>
+            <!-- RWF Toggle End -->
+
+            <!-- <label class="switchCk" (change)="showRWFPopup(askPermissionToRWF)">
+              <input type="checkbox" [checked]="enableRWFToggle == true && RWFTogglePair == true">
+              <span class="sliderCk roundCk"></span>
+            </label> -->
+          </span>
+          <span *ngIf="ABCD == true" style="visibility: hidden;" [ngClass]="{'visibilityShow': enableRWFToggle == true }" (click)="showSettings(showSettingPopup)"><i class="fa fa-cog _settings" title="Review Workflow Settings"></i></span>
+        </p>
+        <!-- <fa [name]="'comments'" [size]=1 style="float: right; margin-right: 51px;" tooltip="Comments" placement="left"></fa> -->
+        <hr class="headerLine">
+      </header>
+
+      <div class="" *ngIf="createItemSet != undefined">
+        <form class="form-inline" style="align-items: initial;">
+          <!-- My Code Start -->
+          <div class="form-group formMargin  col-md-6 col-lg-6 col-sm-3">
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="title">Item Set Title<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <input type="text" autocomplete="off" class="form-control" id="title" placeholder="Enter Item Set Title" maxlength="250" name="title" [(ngModel)]= "createItemSet.itemset_name" [ngClass]="{'valBorder': itemsetname == true && !pattern1.test(createItemSet.itemset_name)}">
+                  </div>
+              </div>
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="pwd">Description<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <textarea placeholder="Enter Description" style="max-height: 70px;min-height: 70px;" rows="4" class="form-control" name="des" maxlength="500" [(ngModel)]= "createItemSet.description" [ngClass]="{'valBorder': descval  && !pattern1.test(createItemSet.description)}"></textarea>
+                  </div>
+              </div>
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12" style="display: none;">
+                <label class="control-label col-md-4 col-sm-2" for="pwd">Question Bank</label>
+                <div class="col-md-8 col-sm-4" style="display: inline-flex;">
+                  <label class="switch1" (change)="enableQuesBankToggle(questionBankToggle)" style="margin: 1px 0 0 10px;">
+                    <input type="checkbox" [checked]="questionBankToggle">
+                    <span class="slider1"></span>
+                  </label>
+                  <span>
+                    <i class="fa fa-info-circle" tooltip="Enable this toggle button to create Question Bank." placement="right" aria-hidden="true" style="padding: 3px;font-size: 16px;color: #64676b;margin-left: 10px;"></i>
+                  </span>
+                </div>
+              </div>
+          </div>
+          <div class="form-group formMargin  col-md-6 col-lg-6 col-sm-3">
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="pwd">Number of Sections<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <input type="text" autocomplete="off" class="form-control" id="noofsec"  name="section" [value]= "createItemSet.sections.length" [(ngModel)]="createItemSet.no_of_sections"  [disabled]="true">
+                  </div>
+              </div>
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="pwd">{{subLabelName}}<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <input type="text" autocomplete="off" class="form-control" id="subject" placeholder="Subject(s) selected" name="subject" [(ngModel)]="createItemSet.subjects" [disabled]="true">
+                  </div>
+              </div>
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="pwd">{{topLabelName}}<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <input type="text" autocomplete="off" class="form-control" id="topic" placeholder="Topic(s) selected" name="topic" [disabled]="true" [(ngModel)]="createItemSet.topics">
+                  </div>
+              </div>
+              <div class="form-group formMargin  col-md-12 col-lg-12 col-sm-12">
+                  <label class="control-label col-md-4 col-sm-2" for="pwd">Search Keywords<sup>*</sup></label>
+                  <div class="col-md-8 col-sm-4">
+                    <input type="text" autocomplete="off" class="form-control" id="key" placeholder="Enter Search Keywords" maxlength="250"  name="key" [(ngModel)]= "createItemSet.keywords" [ngClass]="{'valBorder': keyval == true  && !pattern1.test(createItemSet.keywords)}">
+                  </div>
+              </div>
+          </div>
+          <!-- My Code End -->
+
+          <!-- My Code Start (Commented By Sakkeer) -->
+          <!-- <div class="form-group formMargin  col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="title">Item Set Title<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="title" placeholder="Enter Item Set Title" maxlength="250" name="title" [(ngModel)]= "createItemSet.itemset_name" [ngClass]="{'valBorder': itemsetname == true && !pattern1.test(createItemSet.itemset_name)}">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">Author<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="author" placeholder="Enter Author" name="author" title="{{createItemSet.author}}" [(ngModel)]= "createItemSet.author" [disabled]="true" *ngIf="!reviewWorkFlowFlag">
+              <input type="text" autocomplete="off" class="form-control" id="author" placeholder="Enter Author" name="author" title="{{createItemSet.author}}"  [(ngModel)]= "createItemSet.author" [disabled]="true" *ngIf="reviewWorkFlowFlag">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="reviewer">Reviewer</label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="reviewer" placeholder="Enter Reviewer" name="reviewer" title="{{createItemSet.author}}" [(ngModel)]= "createItemSet.author" [disabled]="true" *ngIf="!reviewWorkFlowFlag">
+              <input type="text" autocomplete="off" class="form-control" id="reviewer" placeholder="Enter Reviewer" name="reviewer" title="{{createItemSet.reviewer}}" [(ngModel)]= "createItemSet.reviewer" [disabled]="true" *ngIf="reviewWorkFlowFlag">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">Number of Sections<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="noofsec"  name="section" [value]= "createItemSet.sections.length" [(ngModel)]="createItemSet.no_of_sections"  [disabled]="true">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">Search Keywords<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="key" placeholder="Enter Search Keywords" maxlength="250"  name="key" [(ngModel)]= "createItemSet.keywords" [ngClass]="{'valBorder': keyval == true  && !pattern1.test(createItemSet.keywords)}">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">{{subLabelName}}<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="subject" placeholder="Subject(s) selected" name="subject" [(ngModel)]="createItemSet.subjects" [disabled]="true">
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">Description<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <textarea placeholder="Enter Description" rows="4" class="form-control" name="des" maxlength="500" [(ngModel)]= "createItemSet.description" [ngClass]="{'valBorder': descval  && !pattern1.test(createItemSet.description)}"></textarea>
+            </div>
+          </div>
+          <div class="form-group  formMargin col-md-6 col-lg-6 col-sm-3">
+            <label class="control-label col-md-4 col-sm-2" for="pwd">{{topLabelName}}<sup>*</sup></label>
+            <div class="col-md-8 col-sm-4">
+              <input type="text" autocomplete="off" class="form-control" id="topic" placeholder="Topic(s) selected" name="topic" [disabled]="true" [(ngModel)]="createItemSet.topics">
+            </div>
+          </div> -->
+          <!-- My Code End (Commented By Sakkeer) -->
+
+
+          <!-- <div class="form-group  formMargin col-md-6">
+            <label class="control-label col-sm-4" for="pwd">Comments</label>
+            <div class="col-sm-8">
+              <textarea placeholder="Enter Comments to Author (if any)" class="form-control" name="comment" [(ngModel)]= "createItemSet.comments"></textarea>
+            </div>
+          </div> -->
+        </form>
+
+      </div>
+      </div>
+    </div>
+    <!-- table without author/reviewer -->
+    <div class="col-md-12 col-lg-12 col-sm-6 respLay_W_A tblList" *ngIf="!reviewWorkFlowFlag">
+      <table class="table respLayer_W_A">
+        <thead class="tbleHeadBG">
+          <tr style="display: table;width: 100%;">
+            <th class="headingStyle sectHeadWidth" style="width: 13%;padding: 7px 8px !important;">Section Name<sup>*</sup></th>
+            <th class="headingStyle" style="width: 15%;padding: 7px 8px !important;">{{subLabelName}}<sup>*</sup></th>
+            <th class="headingStyle" style="width: 15%;padding: 7px 8px !important;">{{topLabelName}}<sup>*</sup></th>
+            <th class="headingStyle" style="width: 10%;padding: 7px 8px !important;">Duration<sup>*</sup></th>
+            <th class="headingStyle" style="width: 8%;padding: 7px 8px !important;">Score<sup>*</sup></th>
+            <th class="headingStyle" style="width: 8%;padding: 7px 8px !important;">Items<sup>*</sup></th>
+            <th class="headingStyle" style="width: 9%;padding: 7px 8px !important;">Items in Pool<sup>*</sup></th>
+            <th style="width: 7%;padding: 7px 8px !important;">Action(s)</th>
+         </tr>
+        </thead>
+        <tbody style="height: auto !important;">
+          <tr *ngFor="let data of createItemSet?.sections;let i=index">
+            <td style="width: 13%;padding: 7px 8px !important;" class="sectionWidth"><input type="text" autocomplete="off" class="form-control" id="secName{{i}}" style="height: 33px !important;" maxlength="15" title="{{data.section_name}}"  [(ngModel)]="data.section_name" placeholder="Section Name">
+              <!-- <div> -->
+                <div class="alertdanger"  *ngIf="secName && valIndex ==i && !pattern1.test(data.section_name)" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              <!-- </div> -->
+            </td>
+            <td style="width: 15%;padding: 7px 8px !important;" class="subWidth">
+              <angular2-multiselect style="font-size:12px" [data]="subjectList" (ngModelChange)="getTopic($event,i)"
+                [(ngModel)]="data.subjects" [ngModelOptions]="{standalone: true}" [settings]="settings1" id="Subjects{{i}}"
+                #Subjects="ngModel" required [selected]="data.subjects == subjectList">
+
+              </angular2-multiselect>
+              <div>
+                <div class="alertdanger" *ngIf="(subErr && valIndex ==i && data.subjects.length == 0)" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td style="width: 15%;padding: 7px 8px !important;" class="topWidth">
+              <angular2-multiselect [data]="data.topicList" [(ngModel)]="data.topics" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="bindTopic($event)" [settings]="settings2" id="topics{{i}}" #topics="ngModel" required
+                [selected]="data.topics == data.topicList">
+              </angular2-multiselect>
+              <div>
+                <div class="alertdanger" *ngIf="(topErr && valIndex ==i && data.topics.length == 0)" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td style="width: 10%;padding: 7px 8px !important;" class="timeWidth ">
+              <!-- <input id="settime" type="time" step="1" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;" value="00:00:00" [(ngModel)]="data.time" (blur)="calculateTime($event)"  (keypress)="onlyNumberKey($event)"> -->
+              <timepicker [(ngModel)]="data.time" id="start_time{{i}}" name="duration" (ngModelChange)="calculateTime(data.time,i)"
+                class="timepickerTbl"></timepicker>
+              <div>
+                <div class="alertdanger" *ngIf="timeErr && valIndex ==i" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">Enter Valid Time</div>
+              </div>
+
+            </td>
+            <td style="width: 8%;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" id="score{{i}}"  [(ngModel)]="data.score" (ngModelChange)="calculateScore()"  (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Score">
+              <div>
+                <div class="alertdanger" *ngIf="scoreErr == true && valIndex == i && data.score == '' || itemPoolerr == true && valIndex == i && data.score == undefined" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td style="width: 8%;padding: 7px 8px !important;"><input type="text" autocomplete="off" class="form-control" id="itemcount{{i}}"  [(ngModel)]="data.no_of_items" (ngModelChange)="calculateItems()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="No of Items">
+              <div>
+                 <div class="alertdanger" *ngIf="itemErr == true && valIndex == i && data.no_of_items == '' || itemPoolerr == true && valIndex == i && data.no_of_items == undefined" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+                <!-- <div class="alertdanger"  *ngIf="rangeErr && valIndex ==i">No of Items Must be Less than No of Items in Pool</div> -->
+               </div>
+            </td>
+            <td style="width: 9%;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" id="poolCount{{i}}" [(ngModel)]="data.no_of_items_in_pool" (ngModelChange)="calculatePool()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Items in Pool">
+              <div>
+                <div class="alertdanger"  *ngIf="itemPoolerr == true && valIndex == i && data.no_of_items_in_pool == '' || itemPoolerr == true && valIndex == i && data.no_of_items_in_pool == undefined" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td style="vertical-align: middle;width: 7%;padding: 7px 8px !important;">
+              <!-- <button *ngIf="reviewType != 'Sequential' && enableRWFToggle == true" type="button" id="addBtn{{i}}" class="addBtn" (click)="showAddAuthorsReviewersRan(i,AddAuthorsAndReviewersRan)" style="border: none;background: no-repeat;color: #535252;margin: 0;"><i class="fa fa-user" aria-hidden="true"></i></button>
+              <button *ngIf="reviewType == 'Sequential' && enableRWFToggle == true" type="button" id="addBtn{{i}}" class="addBtn" (click)="showAddAuthorsReviewersSeq(i,AddAuthorsAndReviewersSeq)" style="border: none;background: no-repeat;color: #535252;margin: 0;"><i class="fa fa-user" aria-hidden="true"></i></button> -->
+              <button *ngIf="enableRWFToggle == true && reviewType == 'Sequential'" [ngClass]="{'_inCompPop': data.check_validations == true}" type="button" id="addBtn{{i}}" class="addBtn addBtnFaUser" (click)="showUserRolePopup(i,showUserRolePopupModelSeq,uncheckSameAsPrevious)"><i class="fa fa-user" aria-hidden="true"></i></button>
+              <button *ngIf="enableRWFToggle == true && reviewType != 'Sequential'" [ngClass]="{'_inCompPop': data.check_validations == true}" type="button" id="addBtn{{i}}" class="addBtn addBtnFaUser" (click)="showUserRolePopup(i,showUserRolePopupModelRan,uncheckSameAsPrevious)"><i class="fa fa-user" aria-hidden="true"></i></button>
+              <button  type="button" id="addBtn{{i}}" class="addBtn addBtnFaUser" (click)="showAddAuthorsPopup(i,AddAuthorsPopup,uncheckSameAsPrevious)"><i class="fa fa-user" aria-hidden="true"></i></button>
+              
+              <span style="padding: 0 3px;" *ngIf="createItemSet.sections.length>=2" (click)="deleteSection(i)" class="cursor" tooltip="Delete" placement="top"> <i class="fa fa-times" aria-hidden="true"></i> </span>
+            </td>
+            <!-- <td  style="width:30px;padding: 19px 15px;padding-left: 5px;"></td> -->
+          </tr>
+          <tr style="background: transparent !important;">
+            <td colspan="8"><button type="button"  class="btn btn-primary addBtnSec" (click)="addSections()" tooltip="Add Section" placement="top" [hidden]="createItemSet.sections.length>=5">+</button></td>
+          </tr>
+          <tr *ngIf="createItemSet.sections.length>=2" style="width:100%">
+            <td style="width: 13%;visibility:hidden;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" style="height: 33px !important;"><br>
+            </td>
+            <td style="width: 15%;visibility:hidden;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" style="height: 33px !important;"><br>
+            </td>
+            <td style="width: 15%;padding: 7px 8px !important;" class="totalWidth">Total</td>
+            <td style="width: 10%;text-align:center;padding: 7px 8px !important;" class="totalTimeWidth1">
+              <input type="text" autocomplete="off" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;"
+                [(ngModel)]="createItemSet.total_time" [disabled]="true">
+              <div class="alertdanger" *ngIf="totalTimeErr == true">Total hours should not be greater than 5</div>
+            </td>
+            <td style="width: 11%;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" [(ngModel)]="createItemSet.total_score" [disabled]="true">
+            </td>
+            <td style="width: 11%;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" [(ngModel)]="createItemSet.no_of_items_count" [disabled]="true">
+            </td>
+            <td style="width: 13%;padding: 7px 8px !important;">
+              <input type="text" autocomplete="off" class="form-control" [(ngModel)]="createItemSet.no_of_items_in_pool_count" [disabled]="true">
+            </td>
+            <td style="width: 7%;visibility:hidden;padding: 7px 8px !important;">X</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+      <!-- <div class="col-md-12">
+        <div class="row">
+            <div style="display: -webkit-box;">
+        <ul class="" style="width: 183px;">
+          <li class="list_title">Title</li>
+          <li class="list_title">Subject(s)</li>
+          <li class="list_title">Topic(s)</li>
+          <li class="list_title">Time</li>
+          <li class="list_title">Score</li>
+          <li class="list_title">Number of Items</li>
+          <li class="list_title">Number of Items in Pool</li>
+        </ul>
+
+        <ul *ngFor="let data of createItemSet?.sections;let i=index"  class="" style="width: 223px;">
+          <li  class="list_section"><input type="text" autocomplete="off" class="form-control" style="height: 33px !important;"  [(ngModel)]="data.section_name" placeholder="Enter Section Name">
+            <div>
+              <div class="alertdanger"  *ngIf="secName && valIndex ==i && (data.section_name == '' || data.section_name == undefined)">This field is required</div>
+            </div></li>
+          <li class="list_section"><angular2-multiselect style="font-size:12px" [data]="subjectList"  (ngModelChange)="getTopic($event,i)"
+            [(ngModel)]="data.subjects" [ngModelOptions]="{standalone: true}"
+                [settings]="settings1" id="Subjects" #Subjects="ngModel" required [selected]="data.subjects == subjectList">
+
+            </angular2-multiselect>
+            <div>
+              <div class="alertdanger"  *ngIf="subErr && valIndex ==i && (data.subjects.length == 0)">This field is required</div>
+            </div></li>
+          <li class="list_section"><angular2-multiselect  [data]="data.topicList"
+            [(ngModel)]="data.topics" [ngModelOptions]="{standalone: true}" (ngModelChange)="bindTopic($event)"
+                  [settings]="settings2" id="topics" #topics="ngModel" required [selected]="data.topics == data.topicList">
+          </angular2-multiselect>
+          <div>
+            <div class="alertdanger"  *ngIf="topErr && valIndex ==i && (data.topics.length == 0)">This field is required</div>
+          </div></li>
+          <li class="list_section"><input id="settime" type="time" step="1" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="data.time" (ngModelChange)="calculateTime($event)">
+            <div>
+              <div class="alertdanger"  *ngIf="timeErr && valIndex ==i && (data.time == '' || data.time == undefined)">This field is required</div>
+            </div></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="data.score" (ngModelChange)="calculateScore()"  (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Enter Score">
+            <div>
+              <div class="alertdanger"  *ngIf="scoreErr && valIndex ==i && (data.score == '' || data.score == undefined)">This field is required</div>
+            </div></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="data.no_of_items" (ngModelChange)="calculateItems()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Enter No of Items">
+            <div>
+              <div class="alertdanger"  *ngIf="itemErr && valIndex ==i && (data.no_of_items == '' || data.no_of_items == undefined)">This field is required</div>
+              <div class="alertdanger"  *ngIf="rangeErr && valIndex ==i">No Of Items Must be Less than No Of Items in Pool</div>
+            </div></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="data.no_of_items_in_pool" (ngModelChange)="calculatePool()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Enter No of Items in Pool">
+            <div>
+              <div class="alertdanger"  *ngIf="itemPoolerr && valIndex ==i && (data.no_of_items_in_pool == '' || data.no_of_items_in_pool == undefined)">This field is required</div>
+            </div></li>
+            <li *ngIf="createItemSet.sections.length>=2" (click)="deleteSection(i)" class="cursor list_title delSec">X</li>
+        </ul>
+        <ul *ngIf="createItemSet.sections.length>=2" class="" style="width: 223px;">
+          <li class="list_section"></li>
+          <li class="list_section"></li>
+          <li class="list_section totalValues">Total</li>
+          <li class="list_section"><input id="settime" type="time" step="1" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="createItemSet.total_time" [disabled]="true"></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="createItemSet.total_score" [disabled]="true"></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="createItemSet.no_of_items_count" [disabled]="true"></li>
+          <li class="list_section"><input type="text" autocomplete="off" class="form-control" [(ngModel)]="createItemSet.no_of_items_in_pool_count" [disabled]="true"></li>
+        </ul>
+      </div>
+      </div>
+      </div>-->
+
+
+    </div>
+
+    <!-- table with author/reviewer -->
+
+    <div class="tblList respLay" *ngIf="reviewWorkFlowFlag">
+      <table class="table respLayor tbl_without_AR">
+        <thead class="tbleHeadBG">
+          <tr>
+            <th class="headingStyle sectHeadWidth1" style="width: 10%;">Section Name<sup>*</sup></th>
+            <th class="headingStyle" style="width: 8%;">{{subLabelName}}<sup>*</sup></th>
+            <th class="headingStyle" style="width: 9%;">{{topLabelName}}<sup>*</sup></th>
+            <th class="headingStyle" style="width: 9%;">Duration<sup>*</sup></th>
+            <th class="headingStyle">Score<sup>*</sup></th>
+            <th class="headingStyle">No of Items<sup>*</sup></th>
+            <th class="headingStyle">No of Items in Pool<sup>*</sup></th>
+            <!-- <th class="headingStyle">Author<sup>*</sup></th>
+            <th class="headingStyle" style="width: 3%;">Reviewer<sup>*</sup></th> -->
+            <th class="headingStyle" style="width: 5%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of createItemSet?.sections;let i=index">
+            <td  class="sectionWidth1" style="width: 16%;"><input type="text" autocomplete="off" id="secname{{i}}" class="form-control" style="height: 33px !important;" maxlength="15" title="{{data.section_name}}"  [(ngModel)]="data.section_name" placeholder="Section Name">
+              <!-- <div> -->
+                <div class="alertdanger"  *ngIf="secName && valIndex ==i" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              <!-- </div> -->
+            </td>
+            <td  class="subWidth1" style="width: 18%;"><angular2-multiselect style="font-size:12px" [data]="subjectList"  (ngModelChange)="getTopic($event,i)"
+              [(ngModel)]="data.subjects" [ngModelOptions]="{standalone: true}"
+                  [settings]="settings1" id="Subjects{{i}}" #Subjects="ngModel" required [selected]="data.subjects == subjectList">
+
+              </angular2-multiselect>
+              <div>
+                <div class="alertdanger"  *ngIf="(subErr && valIndex ==i)" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td  class="topWidth1" style="width: 16%;"><angular2-multiselect  [data]="data.topicList"
+              [(ngModel)]="data.topics" [ngModelOptions]="{standalone: true}" (ngModelChange)="bindTopic($event)"
+                    [settings]="settings2" id="topics{{i}}" #topics="ngModel" required [selected]="data.topics == data.topicList">
+             </angular2-multiselect>
+             <div>
+              <div class="alertdanger"  *ngIf="(topErr && valIndex ==i)" style="position: absolute;width: 13.5%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+            </div>
+            </td>
+
+            <td  class="timeWidth1" style="width: 17%;">
+              <!-- <input id="settime" type="time" step="1" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="data.time" (blur)="calculateTime($event)"  (keypress)="onlyNumberKey($event)"> -->
+              <timepicker [(ngModel)]="data.time" id="start_time{{i}}" name="duration"  (ngModelChange)="calculateTime(data.time,i)" class="timepickerTbl"></timepicker>
+              <div>
+                <div class="alertdanger"  *ngIf="timeErr && valIndex ==i" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">Enter Valid Time</div>
+              </div>
+
+            </td>
+            <td style="width: 17%;"><input type="text" autocomplete="off" class="form-control" id="score{{i}}" [(ngModel)]="data.score" (ngModelChange)="calculateScore()"  (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="Score">
+              <div>
+                <div class="alertdanger"  *ngIf="(scoreErr && valIndex ==i && (data.score == '' || data.score == undefined)) || (scoreErr && valIndex ==i && (data.score != '' || data.score != undefined))" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <td style="width: 18%;"><input type="text" autocomplete="off" class="form-control" id="itemcount{{i}}"  [(ngModel)]="data.no_of_items" (ngModelChange)="calculateItems()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="No of Items">
+              <div>
+                 <div class="alertdanger"  *ngIf="(itemErr && valIndex ==i && (data.no_of_items == '' || data.no_of_items == undefined) || itemErr && valIndex ==i && (data.no_of_items != '' || data.no_of_items != undefined))" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+                <!-- <div class="alertdanger"  *ngIf="rangeErr && valIndex ==i">No of Items Must be Less than No of Items in Pool</div> -->
+               </div>
+            </td>
+            <td style="width: 18%;"><input type="text" autocomplete="off" id="poolCount{{i}}" class="form-control"  [(ngModel)]="data.no_of_items_in_pool" (ngModelChange)="calculatePool()" (keypress)="onlyNumberKey($event)" maxlength="4" placeholder="No of Items in Pool">
+              <div>
+                <div class="alertdanger"  *ngIf="(itemPoolerr && valIndex ==i && (data.no_of_items_in_pool == '' || data.no_of_items_in_pool == undefined) || (itemPoolerr && valIndex ==i && (data.no_of_items_in_pool != '' || data.no_of_items_in_pool != undefined)))" style="position: absolute;width: 9%;background: white;margin-top: 10px;box-shadow: 0px 0px 5px #ebebeb;padding: 5px;border: 1px solid #efefef;border-radius: 3px;">All fields marked '*' are mandatory. Please complete to proceed.</div>
+              </div>
+            </td>
+            <!-- <td  class="subWidth1" style="width: 16%;">
+              <select class="form-control"  name="author" id="author{{i}}" *ngIf="reviewer != undefined" [(ngModel)]="data.author" (change)="bindAuthor()" >
+                  <option [ngValue]="null" disabled [selected]="data.author == null">Select Author</option>
+                  <option *ngFor="let auth of reviewer" [value]="auth" [disabled]="auth == data.reviewer">{{auth}}</option>
+              </select>
+              <div>
+                <div class="alertdanger"  *ngIf="Sectionauthorval && valIndex ==i && (data.author == null)">This field is required</div>
+              </div>
+            </td>
+            <td  class="subWidth1" style="width: 17%;">
+                <select class="form-control"  name="review" id="review{{i}}" *ngIf="reviewer != undefined"  [(ngModel)]="data.reviewer" (change)="bindReviewer()">
+                    <option  [ngValue]="null" [selected]="data.reviewer == null" disabled>Select reviewer</option>
+                    <option *ngFor="let rev of reviewer" [value]="rev" [disabled]="rev == data.author">{{rev}}</option>
+                </select>
+              <div>
+                <div class="alertdanger"  *ngIf="SectionreviewerVal && valIndex ==i && (data.reviewer == null)">This field is required</div>
+              </div>
+            </td> -->
+            <td style="vertical-align: middle;    width: 30px;">
+              <button *ngIf="reviewType != 'Sequential'" type="button" id="addBtn{{i}}" class="addBtn" (click)="showAddAuthorsReviewersRan(i,AddAuthorsAndReviewersRan)" style="border: none;background: no-repeat;color: #535252;margin: 0;"><i class="fa fa-user" aria-hidden="true"></i></button>
+              <button *ngIf="reviewType == 'Sequential'" type="button" id="addBtn{{i}}" class="addBtn" (click)="showAddAuthorsReviewersSeq(i,AddAuthorsAndReviewersSeq)" style="border: none;background: no-repeat;color: #535252;margin: 0;"><i class="fa fa-user" aria-hidden="true"></i></button>
+              <span  *ngIf="createItemSet.sections.length>=2" (click)="deleteSection(i)" class="cursor" tooltip="Delete" placement="top">X</span>
+            </td>
+
+            <!-- <td class="alignAdd" style="width: 5%;"><button type="button" id="addBtn{{i}}" class="btn btn-primary reAddBtn" (click)="addSections()" tooltip="Add Section" placement="top" [hidden]="createItemSet.sections.length>=5">+</button> </td> -->
+          </tr>
+
+          <tr>
+            <td colspan="7"><button type="button"  class="btn btn-primary addBtnSec" (click)="addSections()" tooltip="Add Section" placement="top" [hidden]="createItemSet.sections.length>=5">+</button></td>
+          </tr>
+
+          <tr *ngIf="createItemSet.sections.length>=2">
+            <td style="visibility:hidden;width:8%;" ><input type="text" autocomplete="off" class="form-control" style="height: 33px !important;"><br></td>
+            <td style="visibility:hidden;width:5%;"><input type="text" autocomplete="off" class="form-control" style="height: 33px !important;"><br></td>
+            <td class="sizeRed" style="width:5%;">Total</td>
+            <td class="" style="width:7%;"><input  type="text" autocomplete="off" class="form-control" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="createItemSet.total_time" [disabled]="true">
+            <div class="alertdanger"  *ngIf="totalTimeErr == true">Total hours should not be greater than 5
+
+            </div>
+            </td>
+            <td style="width:6%;"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="createItemSet.total_score" [disabled]="true"></td>
+            <td style="width:7%;"><input type="text" autocomplete="off" class="form-control"  [(ngModel)]="createItemSet.no_of_items_count" [disabled]="true"></td>
+            <td style="width:7%;"><input type="text" autocomplete="off" class="form-control" [(ngModel)]="createItemSet.no_of_items_in_pool_count" [disabled]="true"></td>
+            <td style="visibility:hidden;" >X</td>
+            <td style="width:0%;"></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+
+
+
+    <div style="text-align: center;" class="col-md-12">
+      <button type="button" class="btn btn-primary createBtn" (click)="create_Item_Set()">Save</button>
+      <a class="btnCss" style="color: #00aed9;" (click)="cancelItemsetPopup(deleteItemsetPopup)">Cancel</a>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- //cancel itemset -->
+
+<!-- <div *ngIf="deleteItemsetPopup" class="deleteitemsetPopupCss">
+  <button  aria-label="Close" class="dialog__close-btn" (click)="deleteItemsetPopup = false">X</button>
+  <p class="modalHead">Alert!</p>
+    <div class="formAlign">
+        <p class="" style="text-align:center">Are You Sure Want To Cancel ?</p>
+
+    </div>
+  <div class="saveBtn">
+    <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelItemset()">Ok</button>
+    <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteItemsetPopup = false">Cancel</button>
+  </div>
+</div>
+<div *ngIf="deleteItemsetPopup" class="overlay_edit"></div> -->
+
+<ng-template #deleteItemsetPopup>
+    <div class="modal-header">
+        <p class="modalHead">Alert!</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="formAlign">
+            <p class="" style="text-align:center">Are you sure you want to cancel?</p>
+        </div>
+      <div class="saveBtn">
+        <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelItemset()">Yes</button>
+        <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+      </div>
+    </div>
+</ng-template>
+
+
+  <ng-template #showSettingPopup>
+    <div class="modal-header">
+        <p class="modalHead">Review Workflow Settings</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRWFSettings()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="_rWFContDivOA">
+            <div class="_rWFContDiv">
+              <table class="_rWFContT">
+                <tbody class="_rWFContTBODY">
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">Review Type</td>
+                    <td class="_rWFContTD">
+                      <select #reviewTypeRef [(ngModel)]="reviewType" (change)="setRWFSettings(1, reviewTypeRef.value)" class="_rWFContSel" name="" id="">
+                        <!-- <option value="" selected disabled>Select Type</option> -->
+                        <option value="Sequential">Sequential</option>
+                        <option value="Concurrent">Concurrent</option>
+                      </select>
+                      <span style="margin: 7px 5px 5px 5px;position: absolute;width: 40%;display:none;">
+                        <i class="fa fa-info-circle" tooltip="If you change the review type after add authors and reviewers then your previous authors and reviewers data will be lost." placement="right" aria-hidden="true" style="padding: 6px;font-size: 16px;color: #64676b;"></i>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class="_rWFContTR">
+
+                    <td *ngIf="reviewType == 'Sequential'" class="_rWFContTD">Level of Review</td>
+                    <td *ngIf="reviewType == 'Sequential'" class="_rWFContTD">
+                      <select #levelOfReviewRef [(ngModel)]="levelOfReview" (change)="setRWFSettings(21, levelOfReviewRef.value)" class="_rWFContSel" name="" id="">
+                        <!-- <option value="" selected disabled>Select the Value</option> -->
+                        <!-- <option value="1">1</option> -->
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    </td>
+
+                    <!-- <td *ngIf="reviewType != 'Sequential'" class="_rWFContTD">Number of Reviewers</td>
+                    <td *ngIf="reviewType != 'Sequential'" class="_rWFContTD">
+                      <select #noOfReviewersRef [(ngModel)]="noOfReviewers" (change)="setRWFSettings(22, noOfReviewersRef.value)" class="_rWFContSel" name="" id="">
+
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </td> -->
+
+                  </tr>
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">On-the-go Review</td>
+                    <td class="_rWFContTD">
+                      <label class="switch" (change)="setRWFSettings(3, onTheGoReviewToggle)">
+                        <input type="checkbox" [checked]="onTheGoReviewToggle">
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">Reviewers Can Edit Items</td>
+                    <td class="_rWFContTD">
+                      <label class="switch" (change)="setRWFSettings(4, reviewerCanEditItemsToggle)">
+                        <input type="checkbox" [checked]="reviewerCanEditItemsToggle">
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">View Comments History</td>
+                    <td class="_rWFContTD">
+                      <label class="switch" (change)="setRWFSettings(5, showPreCommentsToggle)">
+                        <input type="checkbox" [checked]="showPreCommentsToggle">
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">Show Items & Itemset for Author after review</td>
+                    <td class="_rWFContTD">
+                      <label class="switch" (change)="setRWFSettings(6, showItemsItemsetForAuthorToggle)">
+                        <input type="checkbox" [checked]="showItemsItemsetForAuthorToggle">
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr class="_rWFContTR">
+                    <td class="_rWFContTD">Default Item Status</td>
+                    <td class="_rWFContTD">
+                      <select #itemStatusRef [(ngModel)]="defaultItemStatus" (change)="setRWFSettings(7, itemStatusRef.value)" class="_rWFContSel" name="" id="">
+                        <!-- <option value="" selected disabled>Select the Value</option> -->
+                        <option value="Approved" selected>Approved</option>
+                        <option value="Unapproved">Un Approved</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <!-- <tr class="_rWFContTR">
+                    <td class="_rWFContTD">Multiple Author Per Section</td>
+                    <td class="_rWFContTD">
+                      <label class="switch" (change)="setRWFSettings(8, multipleAuthorPerSectionToggle)">
+                        <input type="checkbox" [checked]="multipleAuthorPerSectionToggle">
+                        <span class="slider"></span>
+                      </label>
+                    </td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+            <div class="" style="padding-bottom: 25px;text-align: center;">
+                <button class="_resetRWF" (click)="resetRWFSettings()">Reset to default</button>
+                <button class="btn btn-primary _saveRWF" style="padding: 3px 20px;" (click)="saveRWFSettings(showUserRolePopupModelSeq,showUserRolePopupModelRan)">Done</button>
+                <!-- <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button> -->
+            </div>
+        </div>
+
+    </div>
+  </ng-template>
+
+
+  <ng-template #AddAuthorsAndReviewersRan>
+      <div class="modal-header">
+          <p class="modalHead">Add Authors & Reviewers (Review Type - Concurrent) - {{wo_RWF_AddAuthorBase.section_name}}</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="_aarContDivOA">
+              <div class="_aarContDiv">
+                <div *ngFor="let section of rwfSettingsRequest.section_details">
+                  <table class="table _aarContTab">
+                    <thead class="_aarContTHEAD">
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <th class="_aarContTH" style="width: 11% !important;">Section Name</th>
+                        <th class="_aarContTH" style="width: 17% !important;">Authors</th>
+                        <th class="_aarContTH" style="width: 7% !important;"></th>
+                        <th class="_aarContTH" style="width: 8% !important;"></th>
+                        <th class="_aarContTH" style="width: 17% !important;">Reviewers</th>
+                        <th colspan="3" class="_aarContTH" style="width: 17% !important;">Reviewer Privileges</th>
+                        <th colspan="2" class="_aarContTH" style="width: 9% !important;">Attributes</th>
+                        <th class="_aarContTH" style="width: 7% !important;"></th>
+                        <th class="_aarContTH" style="width: 7% !important;">Mandatory</th>
+                      </tr>
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <th class="_aarContTH" style="width: 11% !important;"></th>
+                        <th class="_aarContTH" style="width: 17% !important;"></th>
+                        <th class="_aarContTH" style="width: 7% !important;"> <span >Primary</span> </th>
+                        <th class="_aarContTH" style="width: 8% !important;"> <span >Add Attributes</span> </th>
+                        <th class="_aarContTH" style="width: 17% !important;"></th>
+                        <th class="_aarContTH" style="width: 8% !important;"> <span >Comment</span> </th>
+                        <th class="_aarContTH" style="width: 4% !important;"> <span >Edit</span> </th>
+                        <th class="_aarContTH" style="width: 5% !important;"> <span >Reject</span> </th>
+                        <th class="_aarContTH" style="width: 5% !important;"> <span >View</span> </th>
+                        <th class="_aarContTH" style="width: 4% !important;"> <span >Edit</span> </th>
+                        <th class="_aarContTH" style="width: 7% !important;"> <span >Final Reviewer</span> </th>
+                        <th class="_aarContTH" style="width: 7% !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="_aarsContTBODY">
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <td class="_aarContTD" style="width: 11% !important;">
+                          <p >{{section.section_name}}</p>
+                        </td>
+                        <td class="_aarContTD" style="width: 17% !important;">
+                          <span >
+                            <p *ngFor="let eachAuthName of section.authors;let rowI=index" style="display: inline-flex;">
+                              <input type="text" autocomplete="off" (keyup)="addAuthorObject(section.authors, eachAuthName)" [(ngModel)]="eachAuthName.name_or_email" class="_arrContTextBox" placeholder="Enter email address">
+                              <span class="_clrEMFHide" [ngClass]="{'_clrEMFShow': eachAuthName.name_or_email != ''}" (click)="deleteAuthorObject(section.authors, rowI)">x</span>
+                            </p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 7% !important;">
+                          <span>
+                            <p *ngFor="let eachAuthPrimary of section.authors;let authInd=index" style="height: 29px;"><input type="checkbox" [checked]="eachAuthPrimary.primary" [disabled]="eachAuthPrimary.name_or_email == '' || eachAuthPrimary.primary == true" style="height: 29px;" (click)="togglePrimary(authInd)" class="_arrContCheckBox"></p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 8% !important;">
+                          <span >
+                            <p *ngFor="let eachAuthPrimary of section.authors;let authInd=index" style="height: 29px;"><input type="checkbox" [checked]="eachAuthPrimary.add_attribute" [disabled]="eachAuthPrimary.name_or_email == ''" style="height: 29px;" (click)="toggleAddAttributes(authInd)" class="_arrContCheckBox"></p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 17% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let rowI=index" style="display: inline-flex;">
+                            <input type="text" autocomplete="off" (keyup)="addReviewersObject(section.reviewers, eachReviewers, rowI)" [(ngModel)]="eachReviewers.name_or_email" class="_arrContTextBox" placeholder="Enter email address">
+                            <span class="_clrEMFHide" [ngClass]="{'_clrEMFShow': eachReviewers.name_or_email != ''}" (click)="deleteReviewersObject(section.reviewers, rowI)">x</span>
+                          </p>
+                        </td>
+                        <td class="_aarContTD" style="width: 8% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let comInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleComment(eachReviewers)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == ''" [checked]="eachReviewers.can_comment" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 4% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let editInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleEdit(eachReviewers)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == ''" [checked]="eachReviewers.can_edit" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 5% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let rejInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleReject(eachReviewers)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == ''" [checked]="eachReviewers.can_reject" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 5% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let viewAttInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleViewAttributes(eachReviewers)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == ''" [checked]="eachReviewers.view_attribute" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 4% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let editAttInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleEditAttributes(eachReviewers)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == ''" [checked]="eachReviewers.edit_attribute" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 7% !important;">
+                          <p *ngFor="let eachReviewers of section.reviewers;let finalAttInd=index" style="height: 29px;"><input type="checkbox" (click)="toggleFinalAttributes(section.reviewers, finalAttInd)"  style="height: 29px;" [disabled]="eachReviewers.name_or_email == '' || eachReviewers.final_reviewer == true" [checked]="eachReviewers.final_reviewer" class="_arrContCheckBox"></p>
+                        </td>
+                        <td class="_aarContTD" style="width: 7% !important;">
+                          <label class="switch" *ngFor="let eachReviewers of section.reviewers;let rowI=index">
+                            <input type="checkbox"[checked]="eachReviewers.is_mandatory" [disabled]="eachReviewers.name_or_email == ''" (click)="toggleMandatory(eachReviewers)">
+                            <span class="slider"></span>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <p style="padding: 0px 20px;position: absolute;margin-top: 14px;"> <input type="checkbox"> Same as previous section? </p>
+              <div class="" style="padding: 14px 10px;text-align: center;">
+                  <button class="_saveRWF" (click)="saveRWFAddAuthorReviewers()">Done</button>
+                  <!-- <button class="btn btn-primary " (click)="cancelItemset()">Yes</button> -->
+                  <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button>
+              </div>
+          </div>
+      </div>
+  </ng-template>
+
+
+
+    <ng-template #AddAuthorsAndReviewersSeq>
+      <div class="modal-header">
+          <p class="modalHead">Add Authors & Reviewers (Review Type - Sequential) - {{wo_RWF_AddAuthorBase.section_name}}</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="_aarContDivOA">
+              <div class="_aarContDiv" *ngIf="rwfSettingsRequest != undefined">
+
+                    <div *ngFor="let section of rwfSettingsRequest.section_details">
+                      <table class="table _aarContTab" *ngFor="let eachLevel of section.levels;let ind=index">
+                        <thead class="_aarContTHEAD">
+                          <tr class="_aarContTR" *ngIf="ind == 0" style="display: inline-table;">
+                            <th class="_aarContTH" style="width: 11% !important;">Section Name</th>
+                            <th class="_aarContTH" style="width: 17% !important;">Authors</th>
+                            <th class="_aarContTH" style="width: 7% !important;"></th>
+                            <th class="_aarContTH" style="width: 8% !important;"></th>
+                            <th class="_aarContTH" style="width: 17% !important;">Reviewers</th>
+                            <th colspan="3" class="_aarContTH" style="width: 17% !important;">Reviewer Privileges</th>
+                            <th colspan="2" class="_aarContTH" style="width: 9% !important;">Attributes</th>
+                            <th class="_aarContTH" style="width: 7% !important;"></th>
+                            <th class="_aarContTH" style="width: 7% !important;">Mandatory</th>
+                          </tr>
+                          <tr class="_aarContTR" style="display: inline-table;">
+                            <th class="_aarContTH" style="width: 11% !important;"></th>
+                            <th class="_aarContTH" style="width: 17% !important;"></th>
+                            <th class="_aarContTH" style="width: 7% !important;"> <span *ngIf="ind == 0">Primary</span> </th>
+                            <th class="_aarContTH" style="width: 8% !important;"> <span *ngIf="ind == 0">Add Attributes</span> </th>
+                            <th class="_aarContTH" style="width: 17% !important;">Level {{eachLevel.level}}</th>
+                            <th class="_aarContTH" style="width: 8% !important;"> <span *ngIf="ind == 0">Comment</span> </th>
+                            <th class="_aarContTH" style="width: 4% !important;"> <span *ngIf="ind == 0">Edit</span> </th>
+                            <th class="_aarContTH" style="width: 5% !important;"> <span *ngIf="ind == 0">Reject</span> </th>
+                            <th class="_aarContTH" style="width: 5% !important;"> <span *ngIf="ind == 0">View</span> </th>
+                            <th class="_aarContTH" style="width: 4% !important;"> <span *ngIf="ind == 0">Edit</span> </th>
+                            <th class="_aarContTH" style="width: 7% !important;"> <span *ngIf="ind == 0">Final Reviewer</span> </th>
+                            <th class="_aarContTH" style="width: 7% !important;"></th>
+                          </tr>
+                        </thead>
+                        <tbody class="_aarsContTBODY">
+                          <tr class="_aarContTR" style="display: inline-table;">
+                            <td class="_aarContTD" style="width: 11% !important;">
+                              <p *ngIf="ind == 0">{{section.section_name}}</p>
+                            </td>
+                            <td class="_aarContTD" style="width: 17% !important;">
+                              <span *ngIf="ind == 0">
+                                <p *ngFor="let eachAuthName of section.authors;let rowI=index" style="display: inline-flex;">
+                                  <input type="text" autocomplete="off" (keyup)="addAuthorObject(section.authors, eachAuthName)" [(ngModel)]="eachAuthName.name_or_email" class="_arrContTextBox" placeholder="Enter email address">
+                                  <span class="_clrEMFHide" [ngClass]="{'_clrEMFShow': eachAuthName.name_or_email != ''}" (click)="deleteAuthorObject(section.authors, rowI)">x</span>
+                                </p>
+                              </span>
+                            </td>
+                            <td class="_aarContTD" style="width: 7% !important;">
+                              <span *ngIf="ind == 0">
+                                <p *ngFor="let eachAuthPrimary of section.authors;let authInd=index" style="height: 29px;"><input type="checkbox" [checked]="eachAuthPrimary.primary" [disabled]="eachAuthPrimary.name_or_email == '' || eachAuthPrimary.primary == true" style="height: 29px;" (click)="togglePrimary(authInd)" class="_arrContCheckBox"></p>
+                              </span>
+                            </td>
+                            <td class="_aarContTD" style="width: 8% !important;">
+                              <span *ngIf="ind == 0">
+                                <p *ngFor="let eachAuthPrimary of section.authors;let authInd=index" style="height: 29px;"><input type="checkbox" [checked]="eachAuthPrimary.add_attribute" [disabled]="eachAuthPrimary.name_or_email == ''" style="height: 29px;" (click)="toggleAddAttributes(authInd)" class="_arrContCheckBox"></p>
+                              </span>
+                            </td>
+                            <td class="_aarContTD" style="width: 17% !important;">
+                              <p *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let rowI=index" style="display: inline-flex;">
+                                <input type="text" autocomplete="off" (keyup)="addReviewersObject(eachLevel.reviewers_in_level, eachLevelDet, rowI)" [(ngModel)]="eachLevelDet.name_or_email" class="_arrContTextBox" placeholder="Enter email address">
+                                <span class="_clrEMFHide" [ngClass]="{'_clrEMFShow': eachLevelDet.name_or_email != ''}" (click)="deleteReviewersObject(eachLevel.reviewers_in_level, rowI)">x</span>
+                              </p>
+                            </td>
+                            <td class="_aarContTD" style="width: 8% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let comInd=index"><input type="checkbox" (click)="toggleComment(eachLevelDet)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == ''" [checked]="eachLevelDet.can_comment" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 4% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let editInd=index"><input type="checkbox" (click)="toggleEdit(eachLevelDet)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == ''" [checked]="eachLevelDet.can_edit" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 5% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let rejInd=index"><input type="checkbox" (click)="toggleReject(eachLevelDet)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == ''" [checked]="eachLevelDet.can_reject" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 5% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let rejInd=index"><input type="checkbox" (click)="toggleViewAttributes(eachLevelDet)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == ''" [checked]="eachLevelDet.view_attribute" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 4% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let rejInd=index"><input type="checkbox" (click)="toggleEditAttributes(eachLevelDet)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == ''" [checked]="eachLevelDet.edit_attribute" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 7% !important;">
+                              <p  style="height: 29px;" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let finalReviewInd=index"><input type="checkbox" (click)="toggleFinalAttributes(eachLevel.reviewers_in_level, finalReviewInd)"  style="height: 29px;" [disabled]="eachLevelDet.name_or_email == '' || eachLevelDet.final_reviewer == true" [checked]="eachLevelDet.final_reviewer" class="_arrContCheckBox"></p>
+                            </td>
+                            <td class="_aarContTD" style="width: 7% !important;">
+                              <label class="switch" *ngFor="let eachLevelDet of eachLevel.reviewers_in_level;let manInd=index">
+                                <input type="checkbox"[checked]="eachLevelDet.is_mandatory" [disabled]="eachLevelDet.name_or_email == ''" (click)="toggleMandatory(eachLevelDet)">
+                                <span class="slider"></span>
+                              </label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+              </div>
+              <p style="padding: 0px 20px;position: absolute;margin-top: 14px;"> <input type="checkbox"> Same as previous section? </p>
+              <div class="" style="padding: 14px 10px;text-align: center;">
+                  <button class="_saveRWF" (click)="saveRWFAddAuthorReviewers()">Done</button>
+                  <!-- <button class="btn btn-primary " (click)="cancelItemset()">Yes</button> -->
+                  <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </ng-template>
+
+
+    <ng-template #askPermissionToRWF>
+      <div class="modal-header">
+          <p class="modalHead">Alert!</p>
+        <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="reviewWorkFlowCancelToggle(enableRWFToggle)">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="modal-body">
+          <div class="formAlign">
+              <p class="" *ngIf="!!showToggleAlert" style="text-align:center;margin: 0;">Are you sure you want to turn on the review workflow? </p>
+              <p class="" *ngIf="!showToggleAlert" style="text-align:center;margin: 0;">Are you sure you want to turn off the review workflow? </p>
+              <p style="font-size: 13px;color: #bf1d1d;text-align: center;margin: 10px 0 0 0;">Note: Any assigned users will be removed from the workflow.</p>
+          </div>
+        <div class="saveBtn" style="margin-bottom: 15px;">
+          <button class="btn btn-primary btnCss creategrpBtn" style="width: 18%;" (click)="reviewWorkFlowEnableToggle(enableRWFToggle,showSettingPopup,RWFToggleStatus)">Yes</button>
+          <button class="btn btn-primary btnCss creategrpBtn" style="width: 18%;" (click)="reviewWorkFlowCancelToggle(enableRWFToggle,RWFToggleStatus)">No</button>
+        </div>
+      </div>
+    </ng-template>
+
+
+    <ng-template #AddAuthorsPopup>
+      <div class="modal-header" *ngIf="wo_RWF_AddAuthorBase !== undefined">
+          <p class="modalHead">Add Authors - {{wo_RWF_AddAuthorBase.section_name}}</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="_aarContDivOA">
+              <!-- Error Display Section -->
+              <div class="_errWRWFDiv" *ngIf="allErrorsInWRWF.length != 0">
+                <span class="_errWRWF" *ngFor="let error of allErrorsInWRWF"> <i class="fa fa-times-circle _errWRWFIcon" aria-hidden="true"></i> {{error}} </span>
+              </div>
+              <div class="_aarContDiv" >
+                <div>
+                  <table class="table _aarContTab">
+                    <thead class="_aarContTHEAD">
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <!-- <th class="_aarContTH" style="width: 20% !important;">Section Name</th> -->
+                        <th class="_aarContTH" style="width: 25% !important;">Author(s)</th>
+                        <th class="_aarContTH" style="width: 10% !important;">Primary</th>
+                        <th class="_aarContTH" style="width: 20% !important;">Co-Author Privileges</th>
+                        <th class="_aarContTH" style="width: 20% !important;">Attribute Privileges</th>
+                        <th class="_aarContTH" style="width: 4% !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="_aarsContTBODY" *ngIf="wo_RWF_AddAuthorBase !== undefined">
+                      <tr class="_aarContTR" style="display: inline-table;" *ngFor="let user of wo_RWF_AddAuthorBase.section_user_details;let userInd=index">
+                        <!-- <td class="_aarContTD" style="width: 20% !important;">
+                          <p *ngIf="userInd == 0" style="margin:0;">{{wo_RWF_AddAuthorBase.section_name}}</p>
+                        </td> -->
+                        <td class="_aarContTD" style="width: 25% !important;">
+                          <span>
+                            <p style="display: inline-flex;margin:0;">
+                              <input type="text" autocomplete="off"  class="_arrContTextBoxNew"  [ngClass]="{'_showAFInCompF': woRWF_Val_Username == true && user.name_or_email == ''}" [(ngModel)]="user.name_or_email" placeholder="Enter email address" (keyup)="enterAuthorWoRWF(user,userInd,wo_RWF_AddAuthorBase.section_user_details)">
+                            </p>
+                            <div class="_srchANDiv" *ngIf="AuthorsNameList.length != 0 && currentUserIndWoRWF == userInd">
+                                <span class="_srchAN" (click)="assignAuthorNameWoRWF(wo_RWF_AddAuthorBase.section_user_details,userInd,user,authorsName)" *ngFor="let authorsName of AuthorsNameList">{{authorsName}}</span>
+                            </div>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 10% !important;">
+                          <span>
+                            <p style="height: 29px;margin:0;"><input type="checkbox" [disabled]="user.is_primary == true || user.name_or_email == ''" [checked]="user.is_primary == true" (click)="toggleAuthorIsPrimary(user,userInd,wo_RWF_AddAuthorBase.section_user_details)" style="height: 29px;" class="_arrContCheckBox"></p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 20% !important;">
+                          <select class="_wo_rwf_AARPMSel" [ngClass]="{'disabledTemp': user.name_or_email == '', '_showAFInCompF': woRWF_Val_Privileges == true && user.author_privileges == null }" #selectPrivileges [disabled]="user.name_or_email == '' || user.is_primary == true" (change)="chooseWoRWFPrivileges(userInd, user, selectPrivileges.value,wo_RWF_AddAuthorBase.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_privileges == null" >Select Privileges</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_privileges == 'View'">View</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Edit" [selected]="user.author_privileges == 'Edit'">Edit</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 20% !important;">
+                          <select class="_wo_rwf_AARPMSel" [ngClass]="{'disabledTemp': user.name_or_email == '', '_showAFInCompF': woRWF_Val_Attributes == true && user.author_attributes == null }" [disabled]="user.name_or_email == '' || user.is_primary == true" #selectAttributes  (change)="chooseWoRWFAttributes(userInd, user, selectAttributes.value,wo_RWF_AddAuthorBase.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_attributes == null" >Select Attributes</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_attributes == 'View'">View</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Assign" [selected]="user.author_attributes == 'Assign'">Assign</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.author_attributes == 'Noaccess'">No Access</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 4% !important;">
+                          <span [ngClass]="{'visibilityShow': wo_RWF_AddAuthorBase.section_user_details.length > 1 }" (click)="removeCurrentUserWoRWF(wo_RWF_AddAuthorBase.section_user_details, userInd)" style="visibility: hidden; font-weight: 400;color: #ff0000c7;padding: 0px 3px;cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p style="margin: 10px 0 0 0;text-align: center;" *ngIf="wo_RWF_AddAuthorBase.section_user_details.length < 5"><button class="_saveRWFcircle" (click)="addNewAuthorWoRWF(wo_RWF_AddAuthorBase)"> <span class="fa fa-user-plus"></span></button></p>
+              </div>
+              <p *ngIf="currentSectionIndex > 0" style="padding: 0px 20px;position: absolute;margin-top: 14px;"> <input type="checkbox" [(ngModel)]="uncheckSameAsPrevious" [checked]="sameAsPreviousCheck == currentSectionIndex && sameAsPreviousToggle == true && uncheckSameAsPrevious" (click)="sameAsPrevious(1, sameAsPreviousToggle)"> Same as previous section? </p>
+              <div class="" style="padding: 14px 10px;text-align: center;">
+                  <button class="_saveRWF" (click)="saveWoRWFAddAuthors(AddAuthorsPopup)">Done</button>
+                  <!-- <button class="btn btn-primary " (click)="cancelItemset()">Yes</button> -->
+                  <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </ng-template>
+
+
+    <ng-template #showUserRolePopupModelSeq>
+      <div class="modal-header">
+          <p class="modalHead">Add Authors & Reviewers - {{withRWF_SeqAndRanSettings.section_name}}</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="_aarContDivOA">
+            <!-- Error Display Section -->
+            <div class="_errWRWFDiv" *ngIf="allErrorsInWRWF.length != 0">
+              <span class="_errWRWF" *ngFor="let error of allErrorsInWRWF"> <i class="fa fa-times-circle _errWRWFIcon" aria-hidden="true"></i> {{error}} </span>
+            </div>
+              <div class="_aarContDiv" style="padding: 10px 5px;">
+                <div>
+                  <table class="table _aarContTab">
+                    <thead class="_aarContTHEAD">
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <!-- <th class="_aarContTH" style="width: 15% !important;">Section Name</th> -->
+                        <th class="_aarContTH" style="width: 20% !important;">User(s)</th>
+                        <th class="_aarContTH" style="width: 11% !important;">Author/<br>Reviewer</th>
+                        <th class="_aarContTH" style="width: 11% !important;">Level of <br>Review</th>
+                        <th class="_aarContTH" style="width: 7% !important;">Primary/<br>Final</th>
+                        <th colspan="2" class="_aarContTH" style="width: 17% !important;">Co-Author Privileges</th>
+                        <th colspan="3" class="_aarContTH" style="width: 17% !important;">Attributes Privileges</th>
+                        <th class="_aarContTH" style="width: 10% !important;">Mandatory</th>
+                        <th class="_aarContTH" style="width: 3% !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="_aarsContTBODY">
+                      <tr class="_aarContTR" style="display: inline-table;" *ngFor="let user of withRWF_SeqAndRanSettings.section_user_details;let usrInd=index">
+                        <!-- <td class="_aarContTD" style="width: 15% !important;">
+                          <p *ngIf="usrInd == 0" style="margin: 0;">{{withRWF_SeqAndRanSettings.section_name}}</p>
+                        </td> -->
+                        <td class="_aarContTD" style="width: 20% !important;">
+                          <span >
+                            <p  style="display: inline-flex;margin: 0;">
+                              <input type="text" autocomplete="off" [ngClass]="{'_showAFInCompF': wRWF_Val_Username == true && user.name_or_email == ''}" class="_arrContTextBoxNew" [(ngModel)]="user.name_or_email" placeholder="Enter email address" (keyup)="enterAuthorReviewer(user,usrInd,withRWF_SeqAndRanSettings.section_user_details)">
+                              <!-- <span class="_clrEMFHide">x</span> -->
+                            </p>
+                            <div class="_srchANDivw" *ngIf="AuthorsNameList.length != 0 && currentUserIndWoRWF == usrInd">
+                              <span class="_srchANw" (click)="assignAuthorNameWRWF(withRWF_SeqAndRanSettings.section_user_details,usrInd,user,authorsName)" *ngFor="let authorsName of AuthorsNameList">{{authorsName}}</span>
+                            </div>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 11% !important;">
+                          <select #getUserRole class="_wo_rwf_AARPMSel" [ngClass]="{'_showAFInCompF': wRWF_Val_UserRole == true && user.user_role == null}" (change)="chooseUserRole(usrInd, user, getUserRole.value,withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.user_role == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Author" [selected]="user.user_role == 'Author'">Author</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Reviewer" [selected]="user.user_role == 'Reviewer'">Reviewer</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 11% !important;">
+                          <select class="_wo_rwf_AARPMSel" *ngIf="user.user_role != 'Reviewer'" disabled style="background: #efefef;cursor: not-allowed;">
+                            <option class="_wo_rwf_AARPMOpt" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" [ngClass]="{'_showAFInCompF': wRWF_Val_LevelCheck == true && user.level == null}" #getUserLevel class="_wo_rwf_AARPMSel" (change)="chooseUserLevel(usrInd, user, getUserLevel.value,withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.level == null" disabled>Select one</option>
+                            <option *ngFor="let levelList of levelOfReviewArray;let levInd=index" class="_wo_rwf_AARPMOpt" [selected]="user.level == levInd+1" value="{{levInd+1}}">Level {{levInd+1}}</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 7% !important;">
+                          <span >
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == null"><input type="checkbox" [disabled]="user.user_role == null" style="height: 29px;" class="_arrContCheckBox"></p>
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == 'Author'"><input type="checkbox" [checked]="user.key_authority == 'Primary'" (click)="toggleAuthorKeyAuthority(user, usrInd, withRWF_SeqAndRanSettings.section_user_details)" [disabled]="user.user_role == null || user.key_authority == 'Primary'" style="height: 29px;" class="_arrContCheckBox"></p>
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == 'Reviewer'"><input type="checkbox" [checked]="user.key_authority == 'Final'" (click)="toggleReviewerKeyAuthority(user, usrInd, withRWF_SeqAndRanSettings.section_user_details)" [disabled]="user.user_role == null || user.key_authority == 'Final' || user.level == null" style="height: 29px;" class="_arrContCheckBox"></p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 17% !important;">
+                          <select *ngIf="user.user_role == null" class="_wo_rwf_AARPMSel" disabled style="background: #efefef;cursor: not-allowed;">
+                              <option class="_wo_rwf_AARPMOpt" value="0" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Author'" [ngClass]="{'_showAFInCompF': wRWF_Val_Privileges == true && user.author_privileges == null}" class="_wo_rwf_AARPMSel" #selectPrivileges  (change)="choosePrivileges(usrInd, user, selectPrivileges.value, withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_privileges == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_privileges == 'View'">View Co-Author's Item</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Edit" [selected]="user.author_privileges == 'Edit'">Edit Co-Author's Item</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.author_privileges == 'Noaccess'">No Access</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" [ngClass]="{'_showAFInCompF': wRWF_Val_Privileges == true && user.reviewer_privileges == null}" class="_wo_rwf_AARPMSel" #selectPrivileges  (change)="choosePrivileges(usrInd, user, selectPrivileges.value,withRWF_SeqAndRanSettings.section_user_details)">
+                              <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.reviewer_privileges == null" disabled>Select one</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Comment" [selected]="user.reviewer_privileges == 'Comment'">Comment Item</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Edit" *ngIf="reviewerCanEditItemsToggle == true" [selected]="user.reviewer_privileges == 'Edit'">Edit Item</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Reject" [selected]="user.reviewer_privileges == 'Reject'">Reject Item</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 17% !important;">
+                          <select *ngIf="user.user_role == null" class="_wo_rwf_AARPMSel" disabled style="background: #efefef;cursor: not-allowed;">
+                              <option class="_wo_rwf_AARPMOpt" value="0" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Author'" [ngClass]="{'_showAFInCompF': wRWF_Val_Attributes == true && user.author_attributes == null}" class="_wo_rwf_AARPMSel" #selectAttributes  (change)="chooseAttributes(usrInd, user, selectAttributes.value,withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_attributes == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_attributes == 'View'">Read</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Assign" [selected]="user.author_attributes == 'Assign'">Write</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.author_attributes == 'Noaccess'">No Access</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" class="_wo_rwf_AARPMSel" [ngClass]="{'_showAFInCompF': wRWF_Val_Attributes == true && user.reviewer_attributes == null}" #selectAttributes  (change)="chooseAttributes(usrInd, user, selectAttributes.value,withRWF_SeqAndRanSettings.section_user_details)">
+                              <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.reviewer_attributes == null" disabled>Select one</option>
+                              <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.reviewer_attributes == 'View'">Read</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Assign" [selected]="user.reviewer_attributes == 'Assign'">Write</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.reviewer_attributes == 'Noaccess'">No Access</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 10% !important;">
+                          <span >
+                            <p style="height: 29px;margin: 0;">
+                              <!-- <input type="checkbox" style="height: 29px;" [disabled]="user.user_role == null" class="_arrContCheckBox"> -->
+
+                              <label class="switch">
+                                  <input type="checkbox" [checked]="user.is_mandatory == true" [disabled]="user.user_role == null || user.user_role != 'Reviewer'" (click)="toggleReviewerMandatory(user)">
+                                  <span class="slider"></span>
+                              </label>
+                            </p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 3% !important;">
+                          <span [ngClass]="{'visibilityShow': withRWF_SeqAndRanSettings.section_user_details.length > 1 }" (click)="removeCurrentUser(withRWF_SeqAndRanSettings.section_user_details, usrInd)" style="visibility: hidden; font-weight: 400;color: #ff0000c7;padding: 0px 3px;cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p style="margin: 15px 0 10px 0;text-align: center;"><button class="_saveRWFcircle" (click)="addNewUserForNewRWF(withRWF_SeqAndRanSettings)"> <span class="fa fa-user-plus"></span></button></p>
+              </div>
+              <p *ngIf="currentSectionIndex > 0" style="padding: 0px 20px;position: absolute;margin-top: 14px;"> <input type="checkbox" [(ngModel)]="uncheckSameAsPrevious" [checked]="sameAsPreviousCheck == currentSectionIndex && sameAsPreviousToggle == true && uncheckSameAsPrevious" (click)="sameAsPrevious(2, sameAsPreviousToggle)"> Same as previous section? </p>
+              <div class="" style="padding: 14px 10px;text-align: center;">
+                  <!-- <button class="_saveRWF" style="margin-right: 10px;" (click)="addNewUserForNewRWF(withRWF_SeqAndRanSettings)"> <span class="fa fa-user-plus"></span> Add new user</button> -->
+                  <button class="_saveRWF" (click)="saveRWFAddAuthorReviewers()">Done</button>
+                  <!-- <button class="btn btn-primary " (click)="cancelItemset()">Yes</button> -->
+                  <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </ng-template>
+
+    <ng-template #showUserRolePopupModelRan>
+      <div class="modal-header">
+          <p class="modalHead">Add Authors & Reviewers - {{withRWF_SeqAndRanSettings.section_name}}</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="_aarContDivOA">
+            <!-- Error Display Section -->
+            <div class="_errWRWFDiv" *ngIf="allErrorsInWRWF.length != 0">
+              <span class="_errWRWF" *ngFor="let error of allErrorsInWRWF"> <i class="fa fa-times-circle _errWRWFIcon" aria-hidden="true"></i> {{error}} </span>
+            </div>
+              <div class="_aarContDiv" style="padding: 10px 5px;">
+                <div>
+                  <table class="table _aarContTab">
+                    <thead class="_aarContTHEAD">
+                      <tr class="_aarContTR" style="display: inline-table;">
+                        <!-- <th class="_aarContTH" style="width: 193px !important;">Section Name</th> -->
+                        <th class="_aarContTH" style="width: 193px !important;">User(s)</th>
+                        <th class="_aarContTH" style="width: 142px !important;">Author/<br>Reviewer</th>
+                        <!-- <th class="_aarContTH" style="width: 11% !important;">Level of <br>review</th> -->
+                        <th class="_aarContTH" style="width: 90px !important;">Primary/<br>Final</th>
+                        <!-- <th colspan="3" class="_aarContTH" style="width: 154px !important;">Attributes</th>
+                        <th colspan="2" class="_aarContTH" style="width: 154px !important;">Privileges</th> -->
+                        <th colspan="2" class="_aarContTH" style="width: 17% !important;">Co-Author Privileges</th>
+                        <th colspan="3" class="_aarContTH" style="width: 17% !important;">Attributes Privileges</th>
+                        <th class="_aarContTH" style="width: 128px !important;">Mandatory</th>
+                        <th class="_aarContTH" style="width: 38px !important;"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="_aarsContTBODY">
+                      <tr class="_aarContTR" style="display: inline-table;" *ngFor="let user of withRWF_SeqAndRanSettings.section_user_details;let usrInd=index">
+                        <!-- <td class="_aarContTD" style="width: 15% !important;">
+                          <p *ngIf="usrInd == 0" style="margin: 0;">{{withRWF_SeqAndRanSettings.section_name}}</p>
+                        </td> -->
+                        <td class="_aarContTD" style="width: 15% !important;">
+                          <span >
+                            <p  style="display: inline-flex;margin: 0;">
+                              <input type="text" autocomplete="off" [ngClass]="{'_showAFInCompF': wRWF_Val_Username == true && user.name_or_email == ''}" class="_arrContTextBoxNew" [(ngModel)]="user.name_or_email" placeholder="Enter email address" (keyup)="enterAuthorReviewer(user,usrInd,withRWF_SeqAndRanSettings.section_user_details)">
+                              <!-- <span class="_clrEMFHide">x</span> -->
+                            </p>
+                            <div class="_srchANDivw" *ngIf="AuthorsNameList.length != 0 && currentUserIndWoRWF == usrInd">
+                              <span class="_srchANw" (click)="assignAuthorNameWRWF(withRWF_SeqAndRanSettings.section_user_details,usrInd,user,authorsName)" *ngFor="let authorsName of AuthorsNameList">{{authorsName}}</span>
+                            </div>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 11% !important;">
+                          <select #getUserRole class="_wo_rwf_AARPMSel" [ngClass]="{'_showAFInCompF': wRWF_Val_UserRole == true && user.user_role == null}" (change)="chooseUserRole(usrInd, user, getUserRole.value,withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.user_role == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Author" [selected]="user.user_role == 'Author'">Author</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Reviewer" [selected]="user.user_role == 'Reviewer'">Reviewer</option>
+                          </select>
+                        </td>
+                        <!-- <td class="_aarContTD" style="width: 11% !important;">
+                          <select class="_wo_rwf_AARPMSel" *ngIf="user.user_role != 'Reviewer'" disabled>
+                            <option class="_wo_rwf_AARPMOpt" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" [ngClass]="{'_showAFInCompF': wRWF_Val_LevelCheck == true && user.level == null}" #getUserLevel class="_wo_rwf_AARPMSel" (change)="chooseUserLevel(usrInd, user, getUserLevel.value)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.level == null" disabled>Select one</option>
+                            <option *ngFor="let levelList of levelOfReviewArray;let levInd=index" class="_wo_rwf_AARPMOpt" [selected]="user.level == levInd+1" value="{{levInd+1}}">Level {{levInd+1}}</option>
+                          </select>
+                        </td> -->
+                        <td class="_aarContTD" style="width: 7% !important;">
+                          <span >
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == null"><input type="checkbox" [disabled]="user.user_role == null" style="height: 29px;" class="_arrContCheckBox"></p>
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == 'Author'"><input type="checkbox" [checked]="user.key_authority == 'Primary'" (click)="toggleAuthorKeyAuthority(user, usrInd, withRWF_SeqAndRanSettings.section_user_details)" [disabled]="user.user_role == null || user.key_authority == 'Primary'" style="height: 29px;" class="_arrContCheckBox"></p>
+                            <p style="height: 29px;margin: 0;" *ngIf="user.user_role == 'Reviewer'"><input type="checkbox" [checked]="user.key_authority == 'Final'" (click)="toggleReviewerKeyAuthority(user, usrInd, withRWF_SeqAndRanSettings.section_user_details)" [disabled]="user.user_role == null || user.key_authority == 'Final'" style="height: 29px;" class="_arrContCheckBox"></p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 12% !important;">
+                          <select *ngIf="user.user_role == null" class="_wo_rwf_AARPMSel" disabled style="background: #efefef;cursor: not-allowed;">
+                              <option class="_wo_rwf_AARPMOpt" value="0" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Author'" [ngClass]="{'_showAFInCompF': wRWF_Val_Privileges == true && user.author_privileges == null}" class="_wo_rwf_AARPMSel" #selectPrivileges  (change)="choosePrivileges(usrInd, user, selectPrivileges.value, withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_privileges == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_privileges == 'View'">View Co-Author's Item</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Edit" [selected]="user.author_privileges == 'Edit'">Edit Co-Author's Item</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.author_privileges == 'Noaccess'">No Access</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" [ngClass]="{'_showAFInCompF': wRWF_Val_Privileges == true && user.reviewer_privileges == null}" class="_wo_rwf_AARPMSel" #selectPrivileges  (change)="choosePrivileges(usrInd, user, selectPrivileges.value,withRWF_SeqAndRanSettings.section_user_details)">
+                              <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.reviewer_privileges == null" disabled>Select one</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Comment" [selected]="user.reviewer_privileges == 'Comment'">Comment</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Edit" *ngIf="reviewerCanEditItemsToggle == true" [selected]="user.reviewer_privileges == 'Edit'">Edit</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Reject" [selected]="user.reviewer_privileges == 'Reject'">Reject</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 12% !important;">
+                          <select *ngIf="user.user_role == null" class="_wo_rwf_AARPMSel" disabled style="background: #efefef;cursor: not-allowed;">
+                              <option class="_wo_rwf_AARPMOpt" value="0" selected disabled>Select one</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Author'" [ngClass]="{'_showAFInCompF': wRWF_Val_Attributes == true && user.author_attributes == null}" class="_wo_rwf_AARPMSel" #selectAttributes  (change)="chooseAttributes(usrInd, user, selectAttributes.value,withRWF_SeqAndRanSettings.section_user_details)">
+                            <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.author_attributes == null" disabled>Select one</option>
+                            <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.author_attributes == 'View'">Read</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Assign" [selected]="user.author_attributes == 'Assign'">Write</option>
+                            <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.author_attributes == 'Noaccess'">No Access</option>
+                          </select>
+                          <select *ngIf="user.user_role == 'Reviewer'" class="_wo_rwf_AARPMSel" [ngClass]="{'_showAFInCompF': wRWF_Val_Attributes == true && user.reviewer_attributes == null}" #selectAttributes  (change)="chooseAttributes(usrInd, user, selectAttributes.value,withRWF_SeqAndRanSettings.section_user_details)">
+                              <option class="_wo_rwf_AARPMOpt" value="0" [selected]="user.reviewer_attributes == null" disabled>Select one</option>
+                              <option class="_wo_rwf_AARPMOpt" value="View" [selected]="user.reviewer_attributes == 'View'">Read</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Assign" [selected]="user.reviewer_attributes == 'Assign'">Write</option>
+                              <option class="_wo_rwf_AARPMOpt" value="Noaccess" [selected]="user.reviewer_attributes == 'Noaccess'">No Access</option>
+                          </select>
+                        </td>
+                        <td class="_aarContTD" style="width: 10% !important;">
+                          <span >
+                            <p style="height: 29px;margin: 0;">
+                              <!-- <input type="checkbox" style="height: 29px;" [disabled]="user.user_role == null" class="_arrContCheckBox"> -->
+
+                              <label class="switch">
+                                  <input type="checkbox" [checked]="user.is_mandatory == true" [disabled]="user.user_role == null || user.user_role != 'Reviewer'" (click)="toggleReviewerMandatory(user)">
+                                  <span class="slider"></span>
+                              </label>
+                            </p>
+                          </span>
+                        </td>
+                        <td class="_aarContTD" style="width: 3% !important;">
+                          <span [ngClass]="{'visibilityShow': withRWF_SeqAndRanSettings.section_user_details.length > 1 }" (click)="removeCurrentUser(withRWF_SeqAndRanSettings.section_user_details, usrInd)" style="visibility: hidden; font-weight: 400;color: #ff0000c7;padding: 0px 3px;cursor: pointer;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p style="margin: 15px 0 10px 0;text-align: center;"><button class="_saveRWFcircle" (click)="addNewUserForNewRWF(withRWF_SeqAndRanSettings)"> <span class="fa fa-user-plus"></span></button></p>
+              </div>
+              <p *ngIf="currentSectionIndex > 0" style="padding: 0px 20px;position: absolute;margin-top: 14px;"> <input type="checkbox" [(ngModel)]="uncheckSameAsPrevious" [checked]="sameAsPreviousCheck == currentSectionIndex && sameAsPreviousToggle == true && uncheckSameAsPrevious" (click)="sameAsPrevious(2, sameAsPreviousToggle)"> Same as previous section? </p>
+              <div class="" style="padding: 14px 10px;text-align: center;">
+                  <!-- <button class="_saveRWF" style="margin-right: 10px;" (click)="addNewUserForNewRWF(withRWF_SeqAndRanSettings)"> <span class="fa fa-user-plus"></span> Add new user</button> -->
+                  <button class="_saveRWF" (click)="saveRWFAddAuthorReviewers()">Done</button>
+                  <!-- <button class="btn btn-primary " (click)="cancelItemset()">Yes</button> -->
+                  <button class="btn btn-primary _cancelRWF" (click)="modalRef.hide()">Cancel</button>
+              </div>
+          </div>
+      </div>
+    </ng-template>

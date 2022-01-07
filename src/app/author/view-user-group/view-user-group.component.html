@@ -1,0 +1,144 @@
+<app-loader *ngIf="showload"></app-loader>
+ <!-- Content Wrapper. Contains page content -->
+ <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <h3 class="card-title mt-2"><a (click)= "backClicked()"><i   class="fa fa-angle-left mr-3"></i></a>{{grp_name}} <span class="u-no">({{addedUsersCount}})</span></h3>
+                            <a [routerLink]="['/author/add-user-group',Group_Id,grp_name ]" class="take-test float-right mt-3" >Add User</a>
+                            <a  *ngIf = "finalUsers.length == 0" class="white-btn disbale-btn float-right mr-4 " >Delete Users</a>
+                            <a *ngIf = "finalUsers.length > 0" (click)= "deleteSelected()" class="white-btn float-right mr-4  primary-btn">Delete Selected</a>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="custom-table v-top" >
+                                    <thead>
+                                        <tr>
+                                            <th class="th10">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" (click)= "selectAllUsers(pagedItems)" class="abc" id="selectAll">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th>S.No</th>
+                                            <th>User</th>
+                                            <th>Email Id</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor = "let data of pagedItems;let i=index">
+                                        <tr [class.disabledAnchor]="data.User_Status == 'Deactive'">
+                                            <td class="th10">
+                                                <div class="cust-check">
+                                                    <!-- Repeat -->
+                                                    <div class="repeat-check">
+                                                        <input type="checkbox" [disabled]="data.User_Status == 'Debar'" name="check"  (change)="getFinalUsers($event.target.value)" id="{{data.user_id}}" value="{{data.user_id}}">
+                                                        <div class="check-btn">
+                                                            <span><i class="fa fa-check"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{i+1}} {{data.User_Status}}</td>
+                                            <td>
+                                                <a [popover]="popTemplate" [placement]="'top'" [outsideClick]="true" #popOver triggers="mouseenter:mouseleave" *ngIf = "data.User_Status == 'Debar'" class="mr-2">
+                                                    <img src="src/assets/img/admin-icons/debarred-user.png" alt="" >
+                                                </a>
+                                                <ng-template #popTemplate>
+                                                    Debarred User
+                                                </ng-template>
+                                                <a [popover]="popTemplate2" [placement]="'top'" [outsideClick]="true" #popOver triggers="mouseenter:mouseleave" *ngIf = "data.User_Status == 'Deactive'" class="mr-2">
+                                                    <img src="src/assets/img/admin-icons/deactivated.png" alt="">
+                                                </a>
+                                                <ng-template #popTemplate2>
+                                                    Deactivated
+                                                </ng-template>
+                                                {{data.username}}</td>
+                                            <td>{{data.user_email}}</td>
+                                            <td >
+                                                <a [class.disabledAnchor]="disableDelete == true" (click) = "getUserId(data.user_id)"  data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!IndividualGroupUsers || IndividualGroupUsers.length==0">
+                                    <figure>
+                                        <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                    </figure>
+                                    <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                                </div>
+                                <div class="pagination-custom">
+                                    <ul  *ngIf="pager.pages && pager.pages.length">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}" class="disabled">
+                                    <a  (click)="setPage(pager.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages" class="active">
+                                    <a  (click)="setPage(page)"  >{{page}}</a>
+                                    <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                    </li>
+                                                                       
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                    </ul>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col-md-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+    <!-- Delete Modal -->
+    <div class="modal fade delete-modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <button type="button" (click)="notDeleteUserPopup()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <figure class="delete-img">
+                    <img src="src/assets/img/delete-img.png" alt="">
+                </figure>
+                <div class="title">Delete?</div>
+                <p class="text">This will delete the user permanently.<br> Are you sure you want to proceed?</p>
+                <div class="button-groups">
+                    <button (click)="deleteUserPopup()" class="delete-btn w190 mb-3">Delete</button>
+                    <button (click)="notDeleteUserPopup()" class="white-btn w190">No! Go back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--multiple Delete success model -->
+    <div class="modal fade delete-modal" id="multi-delete-succ" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <button type="button" (click)="closeSucessDelete()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <figure class="delete-img">
+                    <img src="src/assets/img/delete-success.svg" alt="">
+                </figure>
+                <div class="title">Successfully Deleted!</div>
+            </div>
+        </div>
+    </div>
+     <!--multiple Delete success model end-->

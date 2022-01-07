@@ -1,0 +1,254 @@
+.header{
+  margin: 9px 10px;
+  width: 100%;
+}
+.headerLine{
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+.uploadPos{
+  position: absolute;
+  top: 43%;
+  left: 43%;
+}
+
+.btn{
+  transition: ease-in 0.25s;
+}
+.fileUploadExcel{
+  // position: relative;
+  // overflow: hidden;
+  // margin-left: -23px;
+  // padding: 5px 18px;
+  border-radius: 5px;
+  padding: 28px 113px;
+  margin-top: 12px;
+  cursor: pointer !important;
+  border: 2px dashed #00aed9;
+  position: relative;
+
+
+}
+.fileUploadExcel input.upload {
+  position: absolute;
+  /* top: 0; */
+  /* right: 0; */
+  /* margin: 0; */
+  /* padding: 0; */
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  left: 0px;
+  width: 100%;
+  padding: 0px;
+  height: 100%;
+  top: 0%;
+}
+.fileUploadExcel  span{
+  font-size: 16px;
+}
+.fileUploadExcel:hover{
+  background: #00aed9;
+  border: 2px dashed #fff;
+  color: white;
+
+}
+.alertMSg{
+  color: rgb(245, 38, 38);
+  text-align: center;
+}
+
+.noteMsg{
+  width: 100%;
+  text-align: center;
+  margin: 30px 0px;
+  font-size: 14px;
+}
+.noteMsg span{
+  color: #d90028;
+  font-weight: 600;
+}
+.dropdown-menu li{
+  text-align: center;
+}
+.dropdown-toggle{
+  background: transparent;
+  border: none;
+  color: #00aed9;
+}
+.contentbtn button::after{
+  content: ' \25BE';
+}
+
+
+// new css
+
+.jobFileUploadDiv{
+  width: 50%;
+  margin: 6% auto 2% auto;
+  border: 1px solid #dbe7f1;
+  background: aliceblue;
+  padding: 50px 10px;
+  // margin-top: 10%;
+  // box-shadow: inset 0px 0px 4px 0px rgba(0,0,0,.2) !important;
+}
+.lable{
+  margin: 17px 0px;
+}
+.lable p{
+  margin: 0px;
+  text-align: right;
+  line-height: 2.5;
+}
+select{
+  border-radius: 5px;
+}
+
+.fileUploadExcelJOB{
+  border-radius: 3px;
+  padding: 20px 45px;
+  margin-top: 0px;
+  cursor: pointer;
+  border: 2px dashed #00aed9;
+}
+.fileUploadExcelJOB:hover{
+  background: #00aed9;
+  border: 2px dashed #00aed9;
+  color:#fff;
+}
+.btn:disabled{
+  cursor: not-allowed;
+}
+.fileUploadExcelJOB span {
+  font-size: 15px;
+}
+.fileUploadExcelJOB input.upload {
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  left: 0px;
+  width: 100%;
+  padding: 0px;
+  height: 100%;
+  top: 0%;
+}
+.btnp{
+  margin: 7px 30px;
+  text-align: right;
+  cursor: pointer;
+  display: flex;
+  float: right;
+
+}
+.btnp button{
+  padding: 0px 10px;
+  cursor: pointer;
+
+  height: 26px;
+  margin-top: 6px;
+
+}
+input:disabled{
+  cursor: not-allowed !important;
+}
+
+.dropdown-menu a:hover{
+  text-decoration: none;
+}
+.dropClass{
+  padding: 10px;
+  text-align: center;
+}
+.dropClass a{
+  display: block;
+}
+
+a._DnTemp {
+  color: white;
+  background: #20a8d8;
+  padding: 5px 10px;
+  margin: 0;
+  line-height: 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+._selText {
+  margin: auto;
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4e4c4c;
+  margin: 0;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: #e4e4e4;
+}
+
+span._SelClose {
+  position: relative;
+  padding: 0px 5px 2px 4px;
+  border-radius: 100px;
+  color: white;
+  background: gray;
+  margin-left: 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+button._DnTemp {
+  color: white;
+  background: #20a8d8;
+  padding: 5px 10px;
+  margin: 0;
+  line-height: 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  margin: 0 10px;
+  cursor: pointer;
+}
+p._actField {
+  margin-top: 3%;
+}
+
+._DnTempA {
+  color: white;
+  background: #20a8d8;
+  padding: 6.5px 10px;
+  margin: 0;
+  line-height: 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+._dis {
+  cursor: not-allowed;
+  background: gray;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+p._uploadMsg {
+  position: absolute;
+  left: 40%;
+  top: 52%;
+  z-index: 9999;
+  font-size: 20px;
+}
+
+p._uploadMsgP {
+  position: absolute;
+  left: 22%;
+  top: 52%;
+  z-index: 9999;
+  font-size: 20px;
+}

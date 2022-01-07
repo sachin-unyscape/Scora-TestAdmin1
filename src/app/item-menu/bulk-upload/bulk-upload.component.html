@@ -1,0 +1,82 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+<div class="col-md-12">
+  <div class="row">
+    <div class="col-md-12" style="padding: 0px;">
+      <header style="background: #fff;">
+          <p class="head">Bulk Upload</p>
+          <hr class="headerLine">
+        </header>
+    </div>
+
+   <!-- success message popup -->
+   <!-- <p class="successMsg" [@dialog1] *ngIf="saveMSg">{{showMsg}}</p> -->
+   
+
+
+
+    <div class="col-md-12">
+      <!-- <button class="btn btn-primary btncss" href="../../../../assets/file/Bulk Item Import Using Excel Sheet.xlsx">Download</button> -->
+      <!-- <p class="dwnldalertMsgs" *ngIf="dwnldalertMsgs">Looks like your plan is expired.. Please contact your Super Admin</p> -->
+      <a class="btn btn-primary btncss dwldBtn" href="../../../../assets/file/Scora Bulk Items Import Using MS Excel Sheet - V1.xlsx" [ngClass]="{'disable' : planExpires == true}" >Download</a> 
+      <!-- <p class="uploadalertMsgs" *ngIf="uploadalertMsgs">Looks like your plan is expired.. Please contact your Super Admin</p> -->
+      <div class="fileUpload btn btn-primary">
+        <span>Upload</span>
+        <input type="file" onclick="this.value = null" (change)="uploadExcel($event)" placeholder="Upload file" accept=".xlsx" name="file" class="upload" [disabled]="planExpires">
+      </div>
+    </div>
+  
+    <p *ngIf="showError != ''" class="alertMSg col-md-12">{{showError}}</p>
+    <div class="col-md-12" style="margin: 15px 0px;">
+      <div class="overallBorder">
+        <h5 class="instHead">Instructions</h5>
+        <ol>
+          <li>Download the template by clicking on download button. </li>
+          <li>Fill all the required details and save the template.</li>
+          <li>Images can be mapped to the Items once the template is uploaded.</li>
+          <li>Click on upload button and upload the appropriate file.</li>
+        </ol>
+        <!-- uploaded items table -->
+        <div class="col-md-12 tableDiv" *ngIf="uploadedItemsDetails">
+          <table class="table table-hover viewTable" *ngIf="uploadedItemsDetails!= undefined && uploadedItemsDetails.length != 0">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>File Name</th>
+                <th>Type</th>
+                <th>Date of Upload</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody class="userListTable">
+              
+              <tr *ngFor = "let data of uploadedItemsDetails;let i=index" class="cursor" (click)="getUploadInstanceItem(data.upload_id)">
+                <td>{{i+1}}</td>
+                <td>{{data.title}}</td>
+                <td>{{data.type}}</td>
+                <td>{{data.upload_on}}</td>
+                <td>{{data.status}}</td>
+                
+              </tr>
+            
+            </tbody>
+          </table>
+        </div>
+
+        <!-- no items uploaded image -->
+        <div class="col-md-12" style="text-align:center;padding:0px;" *ngIf="uploadedItemsDetails == undefined || uploadedItemsDetails.length == 0">
+            <img src="../../../../assets/img/uploadImage.png" class="uploadImage">
+            <p class="uploadtext1">No files uploaded yet</p>
+            <p class="uploadtext2"><a href="../../../../assets/file/Scora Bulk Items Import Using MS Excel Sheet - V1.xlsx"  [ngClass]="{'disable' : planExpires == true}">Download</a> the template,fill & upload items quickly</p>
+        </div>
+      </div>
+      
+    </div>
+  
+  
+
+  </div>
+</div>
+
+

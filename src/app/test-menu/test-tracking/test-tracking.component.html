@@ -1,0 +1,647 @@
+<app-loader *ngIf="showLoad"></app-loader>
+
+
+
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+<div class="col-md-12 headPadd">
+  <header *ngIf="viewSolutionItems == false">
+    <p class="head">Test Tracking Lists
+      <span [routerLink]="['/Tests/ManageTests']"> < Back</span>
+    </p>
+  </header>
+
+  <div *ngIf="viewSolutionItems == false" style="padding: 10px;">
+    <table class="table table-hover viewTable fold-table" id="myTable" >
+        <thead>
+            <tr>
+              <th style="width:2% !important"></th>
+              <th>User Name</th>
+              <th>Email Id</th>
+              <th>Test Name</th>
+              <th>Attempts</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="testdata">
+
+            <tr *ngIf=" scheduleInstanceDet == undefined || scheduleInstanceDet?.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found</td></tr>
+            <div  class="instance" *ngFor="let test of scheduleInstanceDet;let i = index;"> 
+				<tr *ngIf="test.test_attended_attempt_details.length ==0 && showAttempt == test.user_id" style="text-align: center;opacity: 0.7;background: rgb(250, 255, 250);">No data found</tr>
+				
+				<tr  class="cursor" *ngFor="let attempt of test.test_attended_attempt_details;let i = index;"> 
+					<td (click)="showAttempt = test.user_id" *ngIf="showAttempt == undefined || showAttempt == -1 || showAttempt != test.user_id" style="width:4% !important"><i class="fa fa-plus" aria-hidden="true"></i></td>
+					<td (click)="showAttempt = -1" *ngIf="showAttempt != -1 && showAttempt != undefined && showAttempt == test.user_id" style="width:4% !important"><i class="fa fa-minus" aria-hidden="true"></i></td>
+					<td>{{test.username}}</td>
+					<td>{{test.email}}</td>
+					<td>{{test.test_name}}</td>
+					<td>{{test.test_attended_attempts}} / {{test.test_total_attempts}}</td>
+					<td>{{test.test_status}}</td>
+					<td><i class="fa fa-times" *ngIf="test.user_current_status == 'Active'" aria-hidden="true" tooltip="Deactivate" placement="top" [ngClass]="{'disableICon':test.user_current_status == 'Debar' || test.user_current_status == 'Deactive'}"
+					  (click)="terminateStatus(test.user_current_status,test.schedule_id,test.user_id,2,alertPopup,'deactivate')"></i> &nbsp;
+					  <i class="fa fa-check" *ngIf="test.user_current_status == 'Deactive'" aria-hidden="true" tooltip="Activate" placement="top" [ngClass]="{'disableICon':test.user_current_status == 'Terminate' || test.user_current_status == 'Active' || test.user_current_status == 'Debar'}" (click)="terminateStatus(test.user_current_status,test.schedule_id,test.user_id,4,alertPopup,'activate')"></i> &nbsp;
+					  <i class="fa fa-ban" aria-hidden="true" [tooltip]="(test.user_current_status == 'Debar' || test.user_current_status == 'Deactive') && (test.user_current_status == 'Terminate' || test.user_current_status == 'Active'  || test.user_current_status == 'Debar')?'Debarred' : 'Debar'" placement="top"  [ngClass]="{'disableICon':test.user_current_status == 'Debar'}" (click)="terminateStatus(test.user_current_status,test.schedule_id,test.user_id,3,alertPopup,'debar')"></i>
+					  
+					  <i class="fa fa-file-text-o" (click)="viewSolutionsApiCall(i,attempt.attempt,attempt.schedule_id,attempt.test_id,attempt.test_instance_id,attempt.user_id)" tooltip="View Solutions" style="cursor: pointer;margin-left:14px"></i>
+					</td>
+                  
+                  <!-- view solution -->
+                  
+               
+               
+                </tr>
+              <tr *ngIf="test.test_attended_attempt_details.length ==0 && showAttempt == test.user_id" style="text-align: center;opacity: 0.7;background: rgb(250, 255, 250);">No data found</tr>
+              <tr class="fold" *ngIf="showAttempt == test.user_id">
+                <div *ngFor="let attmpDet of test.test_attended_attempt_details">
+                  <table class="testInstancecss">
+                    <thead>
+                      <tr style="background: rgb(189, 217, 247) !important;font-weight:bold !important;">
+                          <th style="width:2% !important"></th>
+                          <th>Attempt</th>
+                          <th>Attempt Live Status</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Attempt Status</th>
+                          <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="test.test_attended_attempt_details.length ==0" style="text-align: center;opacity: 0.7;background: rgb(250, 255, 250);">No data found</tr>
+
+                      <tr  class="cursor" style="background: rgb(242, 248, 253) !important;" >
+                        <td (click)="showInstance = attmpDet.test_instance_id" *ngIf="showInstance == undefined || showInstance == -1 || showInstance != attmpDet.test_instance_id" style="width:4% !important"><i class="fa fa-plus" aria-hidden="true"></i></td>
+                        <td (click)="showInstance = -1" *ngIf="showInstance != -1 && showInstance != undefined && showInstance == attmpDet.test_instance_id" style="width:4% !important"><i class="fa fa-minus" aria-hidden="true"></i></td>
+                        <td class="instTblPAdd">Attempt {{attmpDet.attempt}}</td>
+                        <td class="instTblPAdd">{{attmpDet.attempt_live_status}}</td>
+                        <td class="instTblPAdd">{{attmpDet.attempt_start_date}}</td>
+                        <td class="instTblPAdd"><span *ngIf="attmpDet.attempt_end_date != null">{{attmpDet.attempt_end_date}}</span><span *ngIf="attmpDet.attempt_end_date == null">--</span></td>
+                        <td class="instTblPAdd">{{attmpDet.attempt_status}}</td>
+                        <td>
+                          <!-- <fa [name]="'television'" class="faIcons" [size]=1  tooltip="View real time status" placement="top" (click)="etmInfo(attmpDet.test_instance_id,ViewTest)" ></fa>&nbsp; -->
+                          <fa [name]="'download'" class="faIcons" [size]=1  tooltip="Download ETM" placement="top" (click)="downlaod_etmInfo(attmpDet.test_instance_id)" ></fa>&nbsp;
+                        </td>
+                      </tr>
+                      <tr class="fold" *ngIf="showInstance == attmpDet.test_instance_id">
+                        <div>
+                          <table class="testInstancecss">
+                            <thead>
+                              <tr style="background: rgb(236, 242, 247) !important;font-weight:bold !important;">
+                                  <th>IP Address</th>
+                                  <th>MAC Address</th>
+                                  <th>Device</th>
+                                  <th>OS</th>
+                                  <th>Browser</th>
+                                  <th>Start Date</th>
+                                  <th>End Date</th>
+                                  <th>Status</th>
+                                  <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngIf="attmpDet.attempt_instance.length ==0" style="text-align: center;opacity: 0.7;background: rgb(250, 255, 250);">No data found</tr>
+                              <tr  class="cursor" style="background: rgb(250, 255, 250);" *ngFor="let attmInst of attmpDet.attempt_instance;">
+
+                                <td class="instTblPAdd">{{attmInst.ip_address}}</td>
+                                <td class="instTblPAdd"><span *ngIf="attmInst.mac_address == null">--</span><span *ngIf="attmInst.mac_address != null">{{attmInst.mac_address}}</span></td>
+                                <td class="instTblPAdd">{{attmInst.device}}</td>
+                                <td class="instTblPAdd">{{attmInst.os}}</td>
+                                <td class="instTblPAdd">{{attmInst.browser}}</td>
+                                <td class="instTblPAdd">{{attmInst.instance_start_date}}</td>
+                                <td class="instTblPAdd"><span *ngIf="attmInst.instance_end_date != null">{{attmInst.instance_end_date}}</span><span *ngIf="attmInst.instance_end_date == null">--</span></td>
+                                <td class="instTblPAdd">{{attmInst.attempt_ins_live_status}}</td>
+                                <td><i class="fa fa-times" aria-hidden="true" tooltip="Terminate" placement="top" [ngClass]="{'disableICon':attmInst.attempt_ins_live_status == 'Offline'}" (click)="terminateStatus(attmInst.attempt_ins_live_status,test.schedule_id,test.user_id,1,alertPopup,'terminate')"></i></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </tr>
+              <span *ngIf="test.test_attended_attempt_details.length >  0" style="margin-left: 0px;color: red;background-color: #ededed; font-size: 11px;">Date & Time are in {{timeZoneName}}</span>
+            </div>
+        </tbody>
+    </table>
+  </div>
+
+
+
+  <div *ngIf="attempWise == true" class="tabDiv">
+    <ul class="nav nav-tabs col-md-12" id="myTab" role="tablist">
+      <li class="nav-item">
+      <a class="nav-link " id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" (click)="activeTab =1" [ngClass]="{'active' : activeTab ==1}">Attempt 1</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" (click)="activeTab =2" [ngClass]="{'active' : activeTab ==2}">Attempt 2</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link" id="Customisation-tab" data-toggle="tab" role="tab" aria-controls="Customisation" aria-selected="false" (click)="activeTab =3" [ngClass]="{'active' : activeTab ==3}">Attempt 3</a>
+      </li>
+
+    </ul>
+
+
+
+    <div class="tab-content" id="myTabContent" >
+
+        <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab"  [ngClass]="{'active' : activeTab ==1}">
+            <div class="text-right btnMargin">
+                <button class="btn btn-danger decaCBTN"> DeActivate</button>
+                <button class="btn btn-danger decaCBTN"> Terminate</button>
+            </div>
+          <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                  <th>Ip Address</th>
+                  <th>OS</th>
+                  <th>Browser</th>
+                  <th>Device</th>
+                  <th>MAC Address</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Session</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+
+                <!-- <tr *ngIf=" testDetails == undefined || testDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found</td></tr> -->
+                <!-- <div *ngFor = "let data of testDetails;let i=index" class="instance"> -->
+                <tr  class="cursor">
+
+                  <td>192.168.1.13</td>
+                  <td>Windows 10</td>
+                  <td>Chrome</td>
+                  <td>Desktop</td>
+                  <td>00-14-22-01-23-45</td>
+                  <td>04-Mar-2019 09:00 AM</td>
+                  <td>--</td>
+                  <td class="ActiveSession">Active</td>
+                </tr>
+
+                <!-- </div> -->
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" [ngClass]="{'active' : activeTab ==2,'show':activeTab ==2}">
+            <div class="text-right btnMargin">
+                <button class="btn btn-danger decaCBTN"> DeActivate</button>
+                <button class="btn btn-danger decaCBTN"> Terminate</button>
+            </div>
+          <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                  <th>Ip Address</th>
+                  <th>OS</th>
+                  <th>Browser</th>
+                  <th>Device</th>
+                  <th>MAC Address</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Session</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+
+                <!-- <tr *ngIf=" testDetails == undefined || testDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found</td></tr> -->
+                <!-- <div *ngFor = "let data of testDetails;let i=index" class="instance"> -->
+                <tr  class="cursor">
+
+                  <td>192.168.1.13</td>
+                  <td>Windows 10</td>
+                  <td>Chrome</td>
+                  <td>Desktop</td>
+                  <td>00-14-22-01-23-45</td>
+                  <td>04-Mar-2019 09:00 AM</td>
+                  <td>--</td>
+                  <td class="ActiveSession">Active</td>
+                </tr>
+
+                <!-- </div> -->
+            </tbody>
+          </table>
+        </div>
+
+
+<!-- view solution starts -->
+     
+
+        <div class="tab-pane fade" id="Customisation" role="tabpanel" aria-labelledby="Customisation-tab" [ngClass]="{'active' : activeTab ==3,'show':activeTab ==3}">
+            <div class="text-right btnMargin">
+                <button class="btn btn-danger decaCBTN"> DeActivate</button>
+                <button class="btn btn-danger decaCBTN"> Terminate</button>
+            </div>
+          <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                  <th>Ip Address</th>
+                  <th>OS</th>
+                  <th>Browser</th>
+                  <th>Device</th>
+                  <th>MAC Address</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+                  <th>Session</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+
+                <!-- <tr *ngIf=" testDetails == undefined || testDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found</td></tr> -->
+                <!-- <div *ngFor = "let data of testDetails;let i=index" class="instance"> -->
+                <tr  class="cursor">
+
+                  <td>192.168.1.13</td>
+                  <td>Windows 10</td>
+                  <td>Chrome</td>
+                  <td>Desktop</td>
+                  <td>00-14-22-01-23-45</td>
+                  <td>04-Mar-2019 09:00 AM</td>
+                  <td>--</td>
+                  <td class="ActiveSession">Active</td>
+                </tr>
+
+                <!-- </div> -->
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12" style="padding: 0px; height: 35px;">
+    <!-- <h5 *ngIf="viewSolutionItems == false" style="padding-left: 20px;font-weight: 500;font-size: 14px;margin: 0px;border-bottom: 1px solid #e6e5e5a3;line-height: 35px;background-color: white;">Test History</h5> -->
+    <h5 *ngIf="viewSolutionItems == true" class="v_s_title">View Solution 
+        <!-- <button (click)="viewSolutionItems = false"  style="border: none;padding: 0px 15px;float: right;position: relative;right: 20px;background: #3d464fab;cursor: pointer;color: #ffffff;height: 27px;line-height: 1;top: 4px;">< BACK
+        </button> -->
+        <span (click)="viewSolutionItems = false" title="Go to Back" class="b_Icon"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>&nbsp; Back</span>
+    </h5>
+    <span *ngIf="certificateDataStatus == true" style="text-align: center;position: fixed;left: 46%;z-index: 10;top: 63px;padding: 10px 20px;border: 1px solid #afaeae4a;background: #ff5252;color: white;font-size: 15px;border-radius: 5px;font-weight: 500;">Please try again after some times. </span>
+</div>
+
+  <div *ngIf="viewSolutionItems == true" style="margin-top: 20px;">
+    <div>
+        <p style="text-align: center;margin: 0;font-size: 16px;color: #41acd6;text-transform: uppercase;"> {{viewSolutionsData.test_name}} </p>
+        <tabset>
+
+            <tab heading={{displaySolution.section_name}} *ngFor="let displaySolution of viewSolutionsData.itemset_sections;let ind = index">
+
+                <div>
+                    <div style="text-align:center;color:263238;">
+                        <p>Total Questions - {{displaySolution.no_of_items}}  <span style="position: absolute;right: 35px;"><span class="menuOption menuOptionActive"> All </span>&nbsp;
+                             <!-- | &nbsp;<span class="menuOption"> Correct Answers </span>&nbsp;
+                              | &nbsp;<span class="menuOption"> Incorrect Answers </span> -->
+                            </span>  </p>                        
+                    </div>
+
+                    <!-- Questions Binding -->
+                    <div class="itemsDisDiv" style="margin-top: 15px;background: #f5f5f5c7;padding: 20px 0px 10px 0px;" *ngFor="let items of displaySolution.section_items;let seq = index">
+
+                        <div *ngIf="items.item_deleted_from_trash == true">
+                            <div>
+                                <p style="color: red;text-align: center;opacity: 0.7;pointer-events: none;">This Item has been deleted by Admin</p>
+                            </div>
+                        </div>
+
+                        <div *ngIf="items.item_deleted_from_trash == false">
+                            <p style="margin: 0;text-align: right;padding: 0 30px 0 0;color: #0f81d3;">Score : 1</p>
+                            <div class="itemsDisDiv col-lg-12 col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-1 col-md-1" style="text-align: right;width: 10%;max-width: 10%;">
+                                        <span>{{seq+1}}.</span>
+                                    </div>
+                                    <div class="col-lg-10 col-md-10" style="width: 100%;max-width: 100%;">
+                                        <div *ngIf="items.item_type == 1 || items.item_type == 2">
+                                            <!-- Question Binding For MCQ & True or False -->
+                                            <div *ngFor="let element of items.item">
+                                                <!-- Statement Element -->
+                                                <p *ngIf="element.data_format_id == 1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(element.data_format_value)">{{element.data_format_value}}</p>
+
+                                                <!-- Image Element -->
+                                                <img [src]="element.data_format_value" *ngIf="element.data_format_id == 6" align="center" style="margin-top:10px; margin-left:3%; height:170px; max-width:300px; width: auto; border-radius:5px;" class="QuesDisplayImageSize">
+
+                                                <!-- Audio Element -->
+                                                <div *ngIf="element.data_format_id == 10" style="margin: 10px 0px">
+                                                    <audio controls disablePictureInPicture controlsList="nodownload nofullscreen" class="audioRes" style="margin-left: 15px;margin-top: 10px;">
+                                                        <source [src]="element.data_format_value" type="audio/mpeg">
+                                                    </audio>
+                                                </div>
+                                                
+                                                <!-- Video Element -->
+                                                <div *ngIf="element.data_format_id == 11" style="margin: 10px 0px">
+                                                    <video class="videoRes" style="width: auto;height: 140px;margin: 10px 0px;background: black;margin-top: 10px;margin-left: 3%;border-radius: 5px;outline: none;" controls disablePictureInPicture controlsList="nodownload nofullscreen">
+                                                        <source [src]="element.data_format_value" type="video/mp4">
+                                                    </video>
+                                                </div>
+                                            </div>
+                                            <!-- Answer Choice Binding For MCQ & True or False -->
+                                            <div *ngIf="items.answer_choices.length != 0">
+                                                <div *ngIf="items.item_type == 1">
+                                                    <div *ngFor="let choice of items.answer_choices" style="display: flex;">
+                                                        <label class="" [ngClass]="{'containCheck': choice.correct_answer == false && choice.choosed_answer == false, 'containCheckR': choice.correct_answer == false && choice.choosed_answer == true, 'containCheckG': choice.correct_answer == true }">
+                                                            <span *ngFor="let eachChoice of choice.choice_elements">
+                                                                <span *ngIf="eachChoice.data_format_id == 1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachChoice.data_format_value)">{{eachChoice.data_format_value}}</span>
+                                                            </span>
+                                                            <input *ngIf="choice.choosed_answer == true" type="checkbox" checked="checked">
+                                                            <input *ngIf="choice.choosed_answer == false" type="checkbox">
+                                                            <span class=""  [ngClass]="{'checkmark': choice.correct_answer == false && choice.choosed_answer == false, 'checkmarkR': choice.correct_answer == false && choice.choosed_answer == true, 'checkmarkG': choice.correct_answer == true }"></span>
+                                                        </label>
+                                                        <span *ngIf="choice.correct_answer == true"><i class="fa fa-check correctHelp" aria-hidden="true" tooltip="Correct Answer"></i></span>
+                                                        <span *ngIf="choice.choosed_answer == true && choice.correct_answer == false"><i class="fa fa-times wrongHelp" aria-hidden="true" tooltip="Incorrect Answer"></i></span>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="items.item_type == 2">
+                                                    <div *ngFor="let choice of items.answer_choices" style="display: flex;">
+                                                        <label [ngClass]="{'containCheck': choice.correct_answer == false && choice.choosed_answer == false, 'containCheckR': choice.correct_answer == false && choice.choosed_answer == true, 'containCheckG': choice.correct_answer == true }">                                                
+                                                            <span *ngIf="choice.data_format_id == 1"
+                                                                [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(choice.data_format_value)">{{choice.data_format_value}}</span>                                                
+                                                            <input *ngIf="choice.choosed_answer == true" type="checkbox" checked="checked">
+                                                            <input *ngIf="choice.choosed_answer == false" type="checkbox">
+                                                            <span [ngClass]="{'checkmark': choice.correct_answer == false && choice.choosed_answer == false, 'checkmarkR': choice.correct_answer == false && choice.choosed_answer == true, 'checkmarkG': choice.correct_answer == true }"></span>
+                                                        </label>
+                                                        <span *ngIf="choice.correct_answer == true"><i class="fa fa-check correctHelp" aria-hidden="true"  tooltip="Correct Answer"></i></span>
+                                                        <span *ngIf="choice.choosed_answer == true && choice.correct_answer == false"><i class="fa fa-times wrongHelp" aria-hidden="true" tooltip="Incorrect Answer"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Explanation For The Item -->
+                                            <!-- <div style="background: #e8eff785;padding: 5px 25px;border-radius: 5px;margin: 10px 0 10px 0;" *ngIf="items.answer_choices != ''">
+                                                <p class="explainClass" (click)="openExplanation(seq,displaySolution.section_id)" >Explanation &nbsp;<span class="ExplainIconClass"><i class="fa fa-sort-desc" aria-hidden="true"></i></span></p>                                            
+                                                <div *ngIf="curItemIndex == seq && curSecId == displaySolution.section_id">
+                                                    <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(items.explanation)"> {{items.explanation}} </p>
+                                                   
+                                                </div>
+                                            </div> -->
+                                            
+                                        </div>
+                                        <div *ngIf="items.item_type == 3">
+                                            <!-- Question Binding For Match Type -->
+                                            <div *ngFor="let element of items.item">
+                                        
+                                                <!-- Statement Element -->
+                                                <p *ngIf="element.data_format_id == 1"
+                                                    [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(element.data_format_value)">
+                                                    {{element.data_format_value}}</p>
+                                        
+                                                <!-- Image Element -->
+                                                <img [src]="element.data_format_value" *ngIf="element.data_format_id == 6" align="center"
+                                                    style="margin-top:10px; margin-left:3%; height:170px; max-width:300px; width: auto; border-radius:5px;"
+                                                    class="QuesDisplayImageSize">
+                                        
+                                                <!-- Audio Element -->
+                                                <div *ngIf="element.data_format_id == 10" style="margin: 10px 0px">
+                                                    <audio controls disablePictureInPicture controlsList="nodownload nofullscreen" class="audioRes"
+                                                        style="margin-left: 15px;margin-top: 10px;">
+                                                        <source [src]="element.data_format_value" type="audio/mpeg">
+                                                    </audio>
+                                                </div>
+                                        
+                                                <!-- Video Element -->
+                                                <div *ngIf="element.data_format_id == 11" style="margin: 10px 0px">
+                                                    <video class="videoRes"
+                                                        style="width: auto;height: 140px;margin: 10px 0px;background: black;margin-top: 10px;margin-left: 3%;border-radius: 5px;outline: none;"
+                                                        controls disablePictureInPicture controlsList="nodownload nofullscreen">
+                                                        <source [src]="element.data_format_value" type="video/mp4">
+                                                    </video>
+                                                </div>
+                                        
+                                                <!-- Match Item Type Binding -->
+                                                <div *ngIf="element.data_format_id == 9" style="margin: 10px 0px">
+                                        
+                                                    <!-- Dropdown Match Type && Interchange Match Type && Pool of Answer Match Type -->
+                                                    <div *ngIf="element.match_type == 1 || element.match_type == 2 || element.match_type == 3"
+                                                        style="margin-top:20px;">
+                                                        <p style="color: #0f81d3;margin: 0px 0px 15px 0px;">Correct Answer</p>
+                                                        <div class="headDropdownMatch">
+                                                            <div *ngFor="let match of element.data_format_value;let z=index;">
+                                                                <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header ==1">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-sm-6 col-xs-6"
+                                                                            *ngFor='let data of match.match_data;let in=index'>
+                                                                            <b>
+                                                                                <p>{{data.match_value}}</p>
+                                                                            </b>
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                </div>
+                                        
+                                                                <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header !=1">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-sm-6 col-xs-6"
+                                                                            *ngFor='let data of match.match_data;let in=index'>
+                                                                            <p>{{data.match_value}}</p>
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                </div>
+                                        
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Matrix Match Type & Exact Match Type -->
+                                                    <div *ngIf="element.match_type == 4 || element.match_type == 5">                                                        
+                                                        
+                                                        <div class="headDropdownMatch">
+                                                            <div *ngFor="let match of element.data_format_value;let z=index;">
+                                                                <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header ==1">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-sm-6 col-xs-6"
+                                                                            *ngFor='let data of match.match_data;let in=index'>
+                                                                            <b>
+                                                                                <p>{{data.match_value}}</p>
+                                                                            </b>
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                </div>
+                                        
+                                                                <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header !=1">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-6 col-sm-6 col-xs-6"
+                                                                            *ngFor='let data of match.match_data;let in=index'>
+                                                                            <p>{{data.match_value}}</p>
+                                                                        </div>
+                                                                    </div>
+                                        
+                                                                </div>
+                                        
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </div>
+                                        
+                                            </div>
+                                            
+                                            <!-- Answer Choice Binding For MCQ & True or False -->
+                                            <div *ngIf="items.answer_choices.length != 0">
+                                                <div *ngIf="items.match_type == 4 && items.item_type == 3 || items.match_type == 5 && items.item_type == 3">
+                                                    <div *ngFor="let choice of items.answer_choices" style="display: flex;">
+                                                        <label class=""
+                                                            [ngClass]="{'containCheck': choice.correct_answer == false && choice.choosed_answer == false, 'containCheckR': choice.correct_answer == false && choice.choosed_answer == true, 'containCheckG': choice.correct_answer == true }">
+                                                          
+                                                                <span *ngIf="choice.data_format_id == 1"
+                                                                    [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(choice.data_format_value)">{{choice.data_format_value}}</span>
+                                                          
+                                                            <input *ngIf="choice.choosed_answer == true" type="checkbox" checked="checked">
+                                                            <input *ngIf="choice.choosed_answer == false" type="checkbox">
+                                                            <span class=""
+                                                                [ngClass]="{'checkmark': choice.correct_answer == false && choice.choosed_answer == false, 'checkmarkR': choice.correct_answer == false && choice.choosed_answer == true, 'checkmarkG': choice.correct_answer == true }"></span>
+                                                        </label>
+                                                        <span *ngIf="choice.correct_answer == true"><i class="fa fa-check correctHelp" aria-hidden="true"
+                                                                tooltip="This is the correct answer"></i></span>
+                                                        <span *ngIf="choice.choosed_answer == true && choice.correct_answer == false"><i
+                                                                class="fa fa-times wrongHelp" aria-hidden="true" tooltip="This is the incorrect answer"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                            <div *ngIf="items.match_type == 1 || items.match_type == 2 || items.match_type == 3">
+                                                <p style="color: #0f81d3;margin: 18px 0px 0px 0px;">Your Answer</p>
+                                        
+                                                <div *ngFor="let userAns of items.user_answers">
+                                                    <div *ngIf="userAns.data_format_id == 9">
+                                                        <div *ngIf="userAns.match_type == 1 || userAns.match_type == 2 || userAns.match_type == 3"
+                                                            style="margin-top:20px;">
+                                                
+                                                            <div class="headDropdownMatch">
+                                                                <div *ngFor="let match of userAns.data_format_value;let z=index;">
+                                                                    <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header ==1">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6 col-sm-6 col-xs-6" *ngFor='let data of match.match_data;let in=index'>
+                                                                                <b>
+                                                                                    <p>{{data.match_value}}</p>
+                                                                                </b>
+                                                                            </div>
+                                                                        </div>
+                                                
+                                                                    </div>
+                                                
+                                                                    <div class="col-lg-12 col-sm-12 col-xs-12" *ngIf="match.match_data[0].header !=1">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-6 col-sm-6 col-xs-6" *ngFor='let data of match.match_data;let in=index' [ngClass]="{'colorGreen': match.match_data[1].correct_answer == true }">
+                                                                                <p>{{data.match_value}}</p>
+                                                                            </div>
+                                                                        </div>
+                                                
+                                                                    </div>
+                                                
+                                                                </div>
+                                                            </div>
+                                                
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                            <!-- Explanation For The Item -->
+                                            <!-- <div style="margin-top: 10px;" *ngIf="items.explanation != ''">
+                                                <p class="explainClass" (click)="openExplanation(seq,displaySolution.section_id)">Explanation &nbsp;<span
+                                                        class="ExplainIconClass"><i class="fa fa-sort-desc" aria-hidden="true"></i></span></p>
+                                                <div *ngIf="curItemIndex == seq && curSecId == displaySolution.section_id">
+                                                    <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(items.explanation)"> {{items.explanation}} </p>
+                                                 
+                                                </div>
+                                            </div> -->
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-md-1" style="text-align: center;width: 10%;max-width: 10%;">
+                                        <span style="display: none;" class="DirectiveView" tooltip="View Directive" (click)="viewDirCont(items.directive_content.content)"><i class="fa fa-sitemap" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- Explanation For The Item -->
+                            <div style="background: #e8eff785;padding: 5px 25px;border-radius: 5px;margin: 10px 20px;" *ngIf="items.answer_choices != ''">
+                                <p class="explainClass" (click)="openExplanation(seq,displaySolution.section_id)" >Explanation &nbsp;<span class="ExplainIconClass"><i class="fa fa-sort-desc" aria-hidden="true"></i></span></p>                                            
+                                <div *ngIf="curItemIndex == seq && curSecId == displaySolution.section_id">
+                                    <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(items.explanation)"> {{items.explanation}} </p>
+                                    <!-- <p style="text-align:center;"> <button class="v_m_btn">View More</button> </p> -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </tab>
+
+        </tabset>
+      </div>
+</div>
+
+</div>
+
+
+    <!-- view test popup -->
+    <ng-template #ViewTest>
+      <div class="modal-headers">
+          <p class="modalHeads">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="viewTestPopupClose()">
+              <span aria-hidden="true" style="color: white;margin-right: 7px;">&times;</span>
+          </button>
+          </p>
+
+      </div>
+      <div class="modal-bodys">
+
+
+
+          <div class="tab-contents" id="myTabContent" style="overflow:auto;height: 100%;">
+
+                <table align="center" class="table" style="width: 110%;overflow-x: auto;max-width: unset;">
+
+                  <thead class="_eTmTabHead">
+                    <tr style="background: #9ac9fb;">
+                      <th class="tableAlign">S.No</th>
+                      <th class="tableAlign">Date</th>
+                      <th class="tableAlign">Time</th>
+                      <th class="tableAlign">IP</th>
+                      <th class="tableAlign">Browser</th>
+                      <th class="tableAlign">Device</th>
+                      <th class="tableAlign">OS</th>
+                      <th class="tableAlign">Section ID</th>
+                      <th class="tableAlign">Event Type</th>
+                      <th class="tableAlign">Content Section</th>
+                    </tr>
+                  </thead>
+
+                    <tbody class="viewTestBgs">
+                    <tr *ngFor="let data of etm_Data.events;let ind=index">
+                      <td>{{ind+1}}</td>
+                      <td>{{data.date}}</td>
+                      <td>{{data.time}}</td>
+                      <td>{{data.ip}}</td>
+                      <td>{{data.browser}}</td>
+                      <td>{{data.device}}</td>
+                      <td>{{data.os}}</td>
+                      <td>{{data.section_id}}</td>
+                      <td>{{data.event_type}}</td>
+                      <td>{{data.content_section}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+
+          </div>
+      </div>
+  </ng-template>
+
+<ng-template #alertPopup>
+  <div class="modal-header">
+      <p class="modalHead">Alert!</p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="this.modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <p class="" style="text-align:center">Are you sure you want to {{alertType}}?</p>
+      <div class="saveBtn">
+          <button class="btn btn-primary btnCss creategrpBtn" (click)="changeUserStatus()">Ok</button>
+          <button class="btn btn-primary btnCss creategrpBtn" (click)="this.modalRef.hide()">Cancel</button>
+      </div>
+  </div>
+</ng-template>

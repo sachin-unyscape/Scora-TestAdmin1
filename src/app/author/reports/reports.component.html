@@ -1,0 +1,229 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+
+    <p class="header">Reports</p>
+    <hr class="headerLine">
+</div>
+
+<!-- user response 5 menus to uncomment - not in use-->
+<!-- Keerthana Code Start -->
+<!-- <div style="margin-top:6%;">
+<p class="txtCenter">
+  <i class="fa fa-envelope iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" disabled>Email User Response</button>
+
+  <i class="fa fa-sort-numeric-asc iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="emailRanking()">Email Rank List</button>
+</p>
+
+<p class="txtCenter">
+  <i class="fa fa-circle-thin iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="ProcessUserData()" disabled>Process Data</button>
+  <i class="fa fa-line-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="emailThemeReport()">Email Theme Reports</button>
+</p>
+
+<p class="txtCenter">
+  <i class="fa fa-bar-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="EmailReport()">Email Report</button>
+</p>
+</div> -->
+<!-- Keerthana Code End -->
+
+<!-- Sakkeer Code Start -->
+<div style="margin-top:6%;">
+  <p class="txtCenter">
+    <!-- <i class="fa fa-envelope iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" disabled>Email
+      User Response</button> -->
+
+      <button class="btn btn-3 btn-3d pro-icon1"
+      (click)="openbatchModel(1, showBatchListPopList)"><i class="fa fa-bar-chart iconstag" aria-hidden="true"></i> Email Score Report</button>
+      <!-- (click)="EmailReport()"  -->
+    <button class="btn btn-3 btn-3d pro-icon1"
+    (click)="openbatchModel(2, showBatchListPopList)"><i class="fa fa-sort-numeric-asc iconstag" aria-hidden="true"></i>&nbsp; Email Rank List</button>
+
+  </p>
+
+  <!-- <p class="txtCenter"> -->
+    <!-- <i class="fa fa-circle-thin iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1"
+      (click)="ProcessUserData()" disabled>Process Data</button> -->
+
+  <!-- </p> -->
+
+  <p class="txtCenter">
+    <button class="btn btn-3 btn-3d pro-icon1" (click)="openbatchModel(3, showBatchListPopList)" ><i class="fa fa-line-chart iconstag" aria-hidden="true"></i>&nbsp; Email Theme Report</button>
+  </p>
+</div>
+<!-- Sakkeer Code End -->
+
+<!-- user response 5 menus to uncomment - not in use-->
+
+
+
+<!-- jobs file upload list screen -->
+<!-- <div class="col-md-12" class="text-right">
+  <button class="btn btn-primary uploadbtn cursor" [routerLink]="['/Upload/FileUpload']">Upload</button>
+</div>
+<div class="col-md-12" >
+  <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>File Name</th>
+        <th>File Data Type</th>
+        <th>Created By</th>
+        <th>Created At</th>
+        <th>Updated By</th>
+        <th>Updated At</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf=" uplodedFileDetails == undefined || uplodedFileDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="3" style="padding:4px 10px">No data found</td></tr>
+      <tr *ngFor="let data of uplodedFileDetails;let i= index;">
+        <td>{{data.file_name}}</td>
+        <td >{{data.file_type}}</td>
+        <td>{{data.created_by}}</td>
+        <td>{{data.created_at}}</td>
+        <td>{{data.updated_by}}</td>
+        <td>{{data.updated_at}}</td>
+        <td *ngIf="data.status != null">{{data.status}}</td>
+        <td *ngIf="data.status == null">--</td>
+        <td class="cursor" (click)="ViewFileDetails(data.file_id,data.file_type)" ><span style="font-size: 13px;"><fa [name]="'eye'" [size]=1 tooltip="View File Details" placement="top"></fa></span></td>
+      </tr>
+
+    </tbody>
+  </table>
+</div> -->
+
+<!-- match item instruction popup start -->
+
+<div *ngIf="showMatchDescription === true" class="bg-modal">
+  <div class="modal-content">
+    <div (click)="cancelSendAndDonwload()" class="close">+</div>
+    <div class="headerofpopup">
+      Batch List
+    </div>
+    <div class="content">
+      <div class="formAlign" *ngIf="batchListData.batch_numbers.length != 0">
+        <p><b>User Profile</b><span style="color: red;">*</span></p>
+        <ul class="_batchListUL" *ngIf="batchListData != undefined">
+          <!-- (change)="userProfileValue = data" -->
+          <li *ngFor="let data of batchListData.batch_numbers.profile"> <input type="radio" name="Profile" (change) = "selectBatchValue(data)" >&nbsp;&nbsp;&nbsp;<span>{{data.profile_id}}</span></li>
+        </ul>
+      </div>
+
+      <div class="formAlign" *ngIf="batchValue !== undefined">
+        <p ><b>User Response</b><span style="color: red;">*</span></p>
+        <ul class="_batchListUL">
+          <!-- (change)="userResponseValue = data" -->
+          <li *ngFor="let data of batchValue"> <input type="radio"  (change)="userResponseValue = data" name="Response">&nbsp;&nbsp;&nbsp;<span>{{data}}</span></li>
+        </ul>
+      </div>
+
+      <div class="formAlign" *ngIf="batchListData.batch_numbers.length != 0 && currentModel == 2">
+        <p><b>QP Ranking And Section Preference</b><span style="color: red;">*</span></p>
+        <ul class="_batchListUL" *ngIf="batchListData != undefined">
+          <!-- (change)="QP_rankValue = data" -->
+          <li *ngFor="let data of batchListData.batch_numbers.question_papper"> <input type="radio" name="Section" (change)="QP_rankValue = data" >&nbsp;&nbsp;&nbsp;<span>{{data}}</span></li>
+        </ul>
+      </div>
+      <div class="formAlign" *ngIf="batchListData == undefined || batchListData.batch_numbers.length == 0">
+        <p style="text-align: center;margin: 0;"><b>No Batches Found</b></p>
+      </div>
+      <div *ngIf="showNegativeScenario === true">
+        <span class="validationAlert">
+          <p class="negativeContent"><b>Please select the required fields</b></p>
+        </span>
+      </div>
+    </div>
+    <div *ngIf="popupNumber !== 2">      
+      <input class="excludeItem" type="checkbox" (change)="enableExclude(enableExcludeItem)" [checked] = "enableExcludeItem"> <b>   Exclude Items</b>
+    </div>
+    <br *ngIf="popupNumber !== 2"><br *ngIf="popupNumber !== 2">
+    <div *ngIf="showManualScoraId === true && popupNumber !== 2">
+    <div>
+      <span class="intimateContent">
+        Please enter the scora item id to be excluded:
+      </span>
+    </div>
+      <div class="scoraManualIdTextBox">
+        <!-- <input type="text" [(ngModel)]="scoraItem_id"> -->
+        <textarea name="" [(ngModel)]="scoraItem_id" id="" rows="2"></textarea>
+      </div>
+    </div>
+
+    <div class="saveBtn" *ngIf="batchListData.batch_numbers.length != 0">
+      <button class="_downLoad" (click)="sendAndDownload(scoraItem_id)">Download</button>
+      <button class="_canCel" (click)="cancelSendAndDonwload()">Cancel</button>
+  </div>
+  </div>
+</div>
+
+<!-- match item instruction popup start -->
+
+<div *ngIf="openRedownloadPopup === true" class="bg-modal">
+  <div class="modal-content">
+    <div (click)="openRedownloadPopup = false" class="close">+</div>
+    <div class="headerofpopup">
+      Alert!
+    </div>
+    <div class="content">
+      <p class="content-text">
+     Do you want to redownload the report again?
+      </p>
+    </div>
+    <div class="row">
+      <button class="okbtn" id="okbutton" (click)="reDownloadReports()" >Yes</button>
+      <button class="cancelbtn" id="okbutton" (click)="openRedownloadPopup = false" >No</button>   
+    </div>
+    </div>
+</div>
+
+<!-- match item instruction popup end -->
+
+<!-- match item instruction popup end -->
+
+<!-- <ng-template #showBatchListPopList id="batch_modal">
+  <div class="modal-header">
+    <p _ngcontent-c3="" class="modalHead" style="margin: 0;text-align: center;width: 100%;color: #f3f3f3;"><b>Batch List</b></p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="cancelSendAndDonwload()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body _overFlow">
+      <div class="formAlign" *ngIf="batchListData.batch_numbers.length != 0">
+        <p><b>User Profile</b></p>
+        <ul class="_batchListUL" *ngIf="batchListData != undefined">
+          <li *ngFor="let data of batchListData.batch_numbers.profile"> <input type="radio" name="Profile" (change)="userProfileValue = data">&nbsp;&nbsp;&nbsp;<span>{{data}}</span></li>
+        </ul>
+      </div>
+
+      <div class="formAlign" *ngIf="batchListData.batch_numbers.length != 0">
+        <p><b>User Response</b></p>
+        <ul class="_batchListUL" *ngIf="batchListData != undefined">
+          <li *ngFor="let data of batchListData.batch_numbers.response"> <input type="radio" (change)="userResponseValue = data" name="Response">&nbsp;&nbsp;&nbsp;<span>{{data}}</span></li>
+        </ul>
+      </div>
+
+      <div class="formAlign" *ngIf="batchListData.batch_numbers.length != 0">
+        <p><b>QP Ranking And Section Preference</b></p>
+        <ul class="_batchListUL" *ngIf="batchListData != undefined">
+          <li *ngFor="let data of batchListData.batch_numbers.question_papper"> <input type="radio" name="Section" (change)="QP_rankValue = data">&nbsp;&nbsp;&nbsp;<span>{{data}}</span></li>
+        </ul>
+      </div>
+      <div class="formAlign" *ngIf="batchListData == undefined || batchListData.batch_numbers.length == 0">
+        <p style="text-align: center;margin: 0;"><b>No Batches Found</b></p>
+      </div>
+      <div *ngIf="showNegativeScenario === true">
+      <span class="validationAlert">
+        <p class="negativeContent"><b>Please select the required fields</b></p>
+      </span>
+      </div>
+      <div class="saveBtn" *ngIf="batchListData.batch_numbers.length != 0">
+          <button class="_downLoad" (click)="sendAndDownload()">Download</button>
+          <button class="_canCel" (click)="cancelSendAndDonwload()">Cancel</button>
+      </div>
+
+  </div>
+
+</ng-template> -->

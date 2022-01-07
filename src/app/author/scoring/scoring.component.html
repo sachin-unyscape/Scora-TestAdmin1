@@ -1,0 +1,388 @@
+<app-loader *ngIf="showLoad"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="evaluationScreenFlag">
+  <div class="row">
+  <div >
+    <header>
+      <p class="head">Evaluation Screen</p>
+    </header>
+
+    <!--test  list Table -->
+    <div style="padding: 10px;">
+        <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                <th>Test Name</th>
+                <th>No of Items</th>
+                <th>Participants</th>
+                <th>Review Status</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+
+                <!-- <tr style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found</td></tr> -->
+
+                <tr *ngFor="let test of testDetails;let ind = index">
+                  <td>{{test.test_name}}</td>
+                  <td>{{test.no_of_items}}</td>
+                  <td>{{test.participants}}</td>
+                  <td>{{test.review_Status}}</td>
+                  <td class="cursor" style="font-size: 12px;">
+                    <fa [name]="'eye'" class="faIcons" [size]=1 (click)="viewItemSetDetails(ind, test.test_id)" tooltip="View Item Set Details " placement="top"></fa>
+                 </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+  </div>
+  </div>
+</div>
+
+  <div class="col-lg-12 col-md-12 col-sm-6" *ngIf="viewItemSetDetailsFlag" >
+    <div class="row">
+    <div >
+      <header>
+        <p class="head"><span>Evaluation Screen</span> - <span>Item Set Details</span>
+        <a style="float: right;margin: 0px 10px;cursor: pointer;" (click)="backToEvaluation()"> < Back</a></p>
+      </header>
+
+      <!--Item Set Details Table -->
+      <div style="padding: 10px;">
+          <table class="table table-hover viewTable fold-table" id="myTable" >
+              <thead>
+                  <tr>
+                  <th>Item Set Name</th>
+                  <th>Participants</th>
+                  <th>Review Status</th>
+                  <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody class="testdata">
+                  <div  *ngFor="let itemset of itemSetDetailsItems;let i = index;">
+                  <tr  class="cursor" (click)="openItemInstance(itemset.itemset_id,i)">
+
+                  <td>{{itemset.itemset_name}}</td>
+                  <td>{{itemset.participants}}</td>
+                  <td>{{itemset.review_status}}</td>
+                  <td>
+                      <fa [name]="'sort-numeric-asc'" class="faIcons" [size]=1 (click)="startScoring()" tooltip="Start Scoring" placement="top"></fa>
+                  </td>
+                  </tr>
+                  <tr *ngIf="ItemInstance == itemset.itemset_id" style="background: rgb(225, 235, 243);margin:0;box-shadow: 0px 0px 10px rgba(128, 128, 128, 0.31) inset;">
+                  <div>
+                        <ul class="ulDesign">
+                              <li *ngFor="let items of itemsDetails;let index = index;" style="color: #4141ea;"><span class="cursor" style="text-decoration: underline;" (click)="ItemDetailsPopUP(index,ItemDetails)">item {{index+1}}</span> <span style="color: #424242;margin: 0 0 0 10px;font-weight: 600;cursor: default;" *ngIf="items.item_type == 5">(Free Text)</span><span style="color: #424242;margin: 0 0 0 10px;font-weight: 600;cursor: default;" *ngIf="items.item_type == 7">(File Upload)</span></li>
+                        </ul>
+
+                    </div>
+                  </tr>
+                  </div>
+              </tbody>
+          </table>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="StartFlag" >
+  <div class="row">
+  <div >
+    <header>
+      <p class="head"><span>Evaluation Screen</span> - <span>Test Name</span>-<span>Item Set Name</span>
+      <a class="floatCss" (click)="backToItemSetDetails()"> < Back</a></p>
+    </header>
+
+    <!--Item Set Details Table -->
+    <div style="padding: 10px;">
+        <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                <th>Participant Name</th>
+                <th>Items Allocated</th>
+                <th>Status</th>
+                <th>Max Score</th>
+                <th>Score Awarded</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+                <div>
+                  <tr>
+                    <td>User9190</td>
+                    <td>2/3</td>
+                    <td>Pending</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>
+                      <fa [name]="'check-circle-o'" class="faIcons cursor" [size]=1 (click)="startEvaluation()" tooltip="Start Evaluation"
+                        placement="top"></fa>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>User9191</td>
+                    <td>3/3</td>
+                    <td>Reviewed</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>
+                      <fa [name]="'check-circle-o'" class="faIcons cursor" [size]=1 (click)="startEvaluation()" tooltip="Start Evaluation"
+                        placement="top"></fa>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>User9192</td>
+                    <td>0/3</td>
+                    <td>Yet to start</td>
+                    <td>3</td>
+                    <td>NA</td>
+                    <td>
+                      <fa [name]="'check-circle-o'" class="faIcons cursor" [size]=1 (click)="startEvaluation()" tooltip="Start Evaluation"
+                        placement="top"></fa>
+                    </td>
+                  </tr>
+                </div>
+            </tbody>
+        </table>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="startEvaluationFlag" >
+    <div class="row">
+    <div >
+      <header>
+        <p class="head"><span>Evaluation Screen</span> - <span>Test Name</span> - <span>Item Set Name</span> - <span>User 91905</span> <a class="floatCss" (click)="backToStartEvaluation()"> < Back</a></p>
+      </header>
+      <div class="overAllBorder1" >
+       <div class="overAllBorder2">
+          <div class="modal-header" style="display: flex;padding: 10px 0 !important;">
+              <p class="modalHead" style="flex:1;">Items 1 (Free Text)</p>
+              <p class="modalHead1">Score: 1</p>
+              <p class="modalHead1">Score Type: Item Level Score</p>
+              <p class="cursor viewAttr modalHead1" (click)="ItemDetailsPopUP(ItemDetails)">View Attributes</p>
+          </div>
+            <div class="modal-body">
+                <div>
+                    <p class="_disStar">
+                      <!-- <span class="_unMark"><i class="fa fa-star-o" aria-hidden="true"></i></span>
+                      <span class="_mark"><i class="fa fa-star" aria-hidden="true"></i></span> -->
+                    </p>
+                    <div class="col-lg-12 col-md-12 col-sm-6 divCss">
+                      <div class="row">
+
+                        <div class ="col-lg-6 col-md-6 col-sm-3">
+                          <div>
+                              <p style="margin-top: 15px">Which type of examination do you think is more reliable? Oral or Written. why?</p>
+                          </div>
+                          <div class="paddingTop">
+                              <p>Keyword 1: Online Assessment</p>
+                              <p>Keyword 2: Communication</p>
+                              <p>Keyword 3: Presentation</p>
+                          </div>
+                            <div class="paddingTop">
+                              <p>Participant Response </p>
+                              <textarea class="textArea" rows="10" cols="50" placeholder="User response display here.."></textarea>
+                            </div>
+                        </div>
+                        <div class ="col-lg-5 col-md-6 col-sm-3">
+                          <table >
+                            <tr class="A_1">
+                              <td class="A_2">Score Awarded<sup>*</sup></td>
+                              <td style="text-align: left"><input class="_sAwr_Inp" maxlength="4" type="text" (keypress)="onlyNumberKey($event)"></td>
+                            </tr>
+                            <tr class="A_1">
+                                <td class="A_2">Remarks</td>
+                                <td><textarea class="textArea" rows="6" placeholder="Optional maximum 500 characters" cols="35"></textarea></td>
+                              </tr>
+                          </table>
+                        <div style="text-align: right;padding-top: 20px;">
+                          <button type="button" class="btn btn-primary cursor saveCancelbtn" >Review later</button>
+                          <button type="button" class="btn btn-primary cursor saveCancelbtn" (click)="updateEvaluationScores()">Reviewed Move to Next</button>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+
+                </div>
+            </div>
+       </div>
+      </div>
+
+
+    </div>
+    </div>
+  </div>
+
+<ng-template #ItemDetails>
+    <div class="modal-header">
+      <p class="modalHead">Items {{curItemNumber}} <span *ngIf="itempPopup.item_type == 5">(Free Text)</span> <span *ngIf="itempPopup.item_type == 7">(File Upload)</span></p>
+      <button type="button" class="close pull-right" style="background: black;" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body popUpCss">
+        <div>
+            <div class="col-md-12" style="padding: 0;max-width: 100%;">
+              <div class="row" style="max-width: 100%;margin: 0;">
+                <div style="padding: 10px 0px 0px 0px;" class ="col-md-7">
+
+                  <div *ngIf="itempPopup.item_type == 5">
+                    <div *ngFor="let eachElements of itempPopup.item">
+                      <p *ngIf="eachElements.item_df_id == 1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachElements.data_format_value)"> {{eachElements.data_format_value}} </p>
+                    </div>
+
+                      <hr>
+                      <p> <span style="padding-right: 70px;">Score: {{itempPopup.score}}</span> <span>Score Type: {{itempPopup.score_type}}</span> </p>
+                      <p *ngFor="let keys of itempPopup.answer_choices; let i=index"> <span style="font-weight: 600;">Keyword {{i+1}} : </span>  {{keys.answer_data}}</p>
+
+                  </div>
+
+                  <div *ngIf="itempPopup.item_type == 7">
+                    <div *ngFor="let eachElements of itempPopup.item">
+                      <p *ngIf="eachElements.item_df_id == 1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachElements.data_format_value)"> {{eachElements.data_format_value}} </p>
+                    </div>
+                    <hr>
+                    <p> <span style="padding-right: 70px;">Score: {{itempPopup.score}}</span> <span>Score Type: {{itempPopup.score_type}}</span> </p>
+                    <p>Keyword 1: Online Assessment</p>
+                    <p>Keyword 2: Communication</p>
+                    <p>Keyword 3: Presentation</p>
+                  </div>
+
+                </div>
+                <div class="col-md-5" style="padding: 0 0 0 15px;">
+                        <div class="attrAccordion">
+                                <div  class="attrHead">
+                                  <p class="">Attributes</p>
+                                </div>
+                                <div class="attrContent">
+                                  <!-- <div>
+                                    <form class="form-horizontal">
+                                      <div class="form-group displayMargin">
+                                        <label for="email" class="labelWidth">Subject</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.itemset_name)">{{getOneItem.itemset_name}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="pwd" class="labelWidth">Topic</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.description)">{{getOneItem.description}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="email" class="labelWidth">Subtopic</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.subjects)">{{getOneItem.subjects}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="email" class="labelWidth">Difficulty Level </label>&nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.topics)">{{getOneItem.topics}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="email" class="labelWidth">Taxonomy</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.no_of_sections)">{{getOneItem.no_of_sections}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="email" class="labelWidth">User Defined Taxonomy</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.author)">{{getOneItem.author}}</label>
+                                      </div>
+                                      <div class="form-group displayMargin ">
+                                        <label for="email" class="labelWidth">Language</label> &nbsp;:&nbsp;
+                                        <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(getOneItem.reviewer)">{{getOneItem.reviewer}}</label>
+                                      </div>
+
+                                        <div class="form-group displayMargin">
+                                            <label for="pwd" class="labelWidth">Item Valid Till</label> &nbsp;:&nbsp;
+                                            <label for="email" class="labelWidth1"  [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachSectionItems.section_name)">{{eachSectionItems.section_name}}</label>
+                                        </div>
+                                        <div class="form-group displayMargin">
+                                          <label for="email" class="labelWidth">Reference Links</label> &nbsp;:&nbsp;
+                                          <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachSectionItems.subjects)">{{eachSectionItems.subjects}}</label>
+                                        </div>
+                                        <div class="form-group displayMargin">
+                                          <label for="pwd" class="labelWidth">Keywords </label>&nbsp;:&nbsp;
+                                          <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachSectionItems.topics)">{{eachSectionItems.topics}}</label>
+                                        </div>
+                                        <div class="form-group displayMargin">
+                                          <label for="email" class="labelWidth">Hints</label> &nbsp;:&nbsp;
+                                          <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachSectionItems.no_of_items)">{{eachSectionItems.no_of_items}}</label>
+                                        </div>
+                                        <div class="form-group displayMargin">
+                                          <label for="email" class="labelWidth">Explanation</label> &nbsp;:&nbsp;
+                                          <label for="email" class="labelWidth1" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(eachSectionItems.no_of_items_in_pool)">{{eachSectionItems.no_of_items_in_pool}}</label>
+                                        </div>
+                                        </form>
+                                  </div> -->
+
+                                  <table class="_AtrTab">
+                                    <tr>
+                                      <td class="_l_Atr">Subject</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.subjects)">{{itempPopup.attributes.subjects}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Topic</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.topics)">{{itempPopup.attributes.topics}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Subtopic</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.subtopics)">{{itempPopup.attributes.subtopics}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Difficulty Level</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.difficulty_level)">{{itempPopup.attributes.difficulty_level}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Taxonomy</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.taxonomy)">{{itempPopup.attributes.taxonomy}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">User Defined Taxonomy</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.content_types)">{{itempPopup.attributes.content_types}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Language</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.language)">{{itempPopup.attributes.language}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Item Valid Till</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.item_valid_till)">{{itempPopup.attributes.item_valid_till}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Reference Links</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.ref_link)">{{itempPopup.attributes.ref_link}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Keywords</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.search_keywords)">{{itempPopup.attributes.search_keywords}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Hints</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.hint)">{{itempPopup.attributes.hint}}</td>
+                                    </tr>
+                                    <tr>
+                                      <td class="_l_Atr">Explanation</td>
+                                      <td class="middleColon">:</td>
+                                      <td class="_r_Atr" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(itempPopup.attributes.explanation)">{{itempPopup.attributes.explanation}}</td>
+                                    </tr>
+                                  </table>
+
+                                </div>
+                              </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+    </div>
+  </ng-template>

@@ -1,0 +1,343 @@
+<app-loader *ngIf="showload"></app-loader>
+
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+<div *ngFor="let alert of alerts" class="alertPOPup">
+  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+</div>
+<div class="content-wrapper">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header p-4" *ngIf="!edit">
+                          <h3 class="card-title">Profile </h3>
+                          <a  class="take-test float-right" (click)="edit=true; patchForm()" >Edit</a>
+                      </div>                     
+                      <div class="card-body p-0" *ngIf="!edit && universityall">
+                          <div class="profile-wrap">
+                              <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group float-left">
+                                        <figure class="pro-pic">
+                                            <img [src]="tenantDetails.tenant_logo" onError="this.onerror=null;this.src='../../../assets/img/admin-img/d-profile.png';"  alt="" class="img-fluid float-right">
+                                        </figure>
+                                    </div>
+                                    <div class="form-group float-right">
+                                        <figure class="pro-pic">
+                                            <img [src]="universityall.profile_picture" onError="this.onerror=null;this.src='../../assets/img/userProfile.png';" alt="" class="img-fluid float-right">
+                                        </figure>
+                                    </div>
+                                </div>
+                                  <div class="col-md-6" >
+                                      <div class="form-group">
+                                          <label>Name</label>
+                                          <input [(ngModel)]="universityall.profile_name" type="text" class="form-control name-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Time Zone</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_timezone" type="text" class="form-control time-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Email ID</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_email" type="text" class="form-control email-icon"  [ngClass]="{'alertBorder' : emailErr == true}" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Country</label>
+                                          <input [(ngModel)]="tenantDetails.tenant_country" type="text" class="form-control country-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Phone</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_phone" type="text" class="form-control phone-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>State</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_state" type="text" class="form-control state-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Organisation Name</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_name" type="text" class="form-control organisation-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>City</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_city" type="text" class="form-control address-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Designation</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_designation"  type="text" class="form-control designation-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Address</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_address" type="text" class="form-control city-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Password</label>
+                                          <input  type="password" class="form-control password-icon" value="">
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <label>Postal Code</label>
+                                          <input  [(ngModel)]="tenantDetails.tenant_zip_code" type="text" class="form-control postalcode-icon" value="">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="theme">Theme</div>
+                                  </div>
+                                  <div class="col-md-3">
+                                      <div class="theme-choose">
+                                          <div class="name-wrap">
+                                              <div class="name">{{org_themes.display_theme_name}}
+                                                  <div class="selected float-right mt-2">
+                                                      <span></span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <figure class="color-pallet">
+                                              <div [ngStyle]="{'background':org_themes.default_brand_color,'border-color':org_themes.default_brand_color}" 
+                                                class="theme-clr"></div>
+                                          </figure>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6"></div>
+                              </div>
+                          </div>
+                      </div>
+                      <form [formGroup]="myForm" (ngSubmit)="saveProfile()">
+                        <div class="card-header p-4" *ngIf="edit">
+                          <h3 class="card-title">Profile </h3>
+                          <button type="submit"  class="default-btn float-right w190">Save</button>
+                          <a (click)="cancelProfile()" class="skip-btn float-right mr-3 w190">Cancel</a>
+                      </div> 
+                      <div class="card-body p-0" *ngIf="edit && universityall">
+                        <div class="profile-wrap-edit">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group float-left">
+                                        <figure class="pro-pic">
+                                            <img  src={{tenantDetails.tenant_logo}}  onError="this.onerror=null;this.src='../../../assets/img/admin-img/d-profile.png';" alt="" class="img-fluid float-right">
+                                            <div class="file-select">
+                                                <input type="file" (change)="onImageUpload($event)" name="" id="">
+                                                <span>
+                                                    <img src="src/assets/img/admin-img/profile-choose.png" alt="">
+                                                </span>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                    <div class="form-group float-right">
+                                        <figure class="pro-pic">
+                                            <img [src]="universityall.profile_picture" 
+                                            onError="this.onerror=null;this.src='../../assets/img/userProfile.png';" alt="" class="img-fluid float-right">
+                                            <div class="file-select">
+                                                <input type="file" (change)="onImageUpload1($event)"  name="" id="">
+                                                <span>
+                                                    <img src="src/assets/img/admin-img/profile-choose.png" alt="">
+                                                </span>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input   formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"  type="text" class="form-control"  >
+                                        <div *ngIf="myForm.get('name').errors  && submitted">
+                                          <div *ngIf="myForm.get('name').hasError('required')">
+                                            <span style="color: red;">Name is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <select  (change)="populateState($event.target.value)"  formControlName="country" [ngClass]="{ 'is-invalid': submitted && f.country.errors }" class="form-control" name="tenant_country" class="select h52 w-100">
+                                            <option *ngFor="let country of getAllCountries;let i = index" [value]="country.name">{{country.name}}</option>
+                                        </select>
+                                        <div *ngIf="myForm.get('country').errors  && submitted">
+                                          <div *ngIf="myForm.get('country').hasError('required')">
+                                            <span style="color: red;">Country name is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Organisation Name</label>
+                                        <input  formControlName="org_name" [ngClass]="{ 'is-invalid': submitted && f.org_name.errors }"  type="text" class="form-control" >
+                                    </div>
+                                    <div *ngIf="myForm.get('org_name').errors  && submitted">
+                                      <div *ngIf="myForm.get('org_name').hasError('required')">
+                                        <span style="color: red;">Organisation name is required.</span>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>State</label>
+                                        <select (change)="populateCity($event.target.value)"    formControlName="state" [ngClass]="{ 'is-invalid': submitted && f.state.errors }"  name="tenant_state"  class="select h52 w-100">
+                                            <option  *ngFor="let state of statesList;let i = index"  [value]="state.name">{{state.name}}</option>
+                                        </select>
+                                        <div *ngIf="myForm.get('state').errors  && submitted">
+                                          <div *ngIf="myForm.get('state').hasError('required')">
+                                            <span style="color: red;">State name is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Designation</label>
+                                        <input   formControlName="designation" [ngClass]="{ 'is-invalid': submitted && f.designation.errors }" type="text" class="form-control" >
+                                        <div *ngIf="myForm.get('designation').errors  && submitted">
+                                          <div *ngIf="myForm.get('designation').hasError('required')">
+                                            <span style="color: red;">Designation is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                  
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <select   formControlName="city" [ngClass]="{ 'is-invalid': submitted && f.city.errors }"  name="tenant_city"  class="select h52 w-100">
+                                            <option *ngFor="let city of cityList;let i = index"   [value]="city.name">{{city.name}}</option>
+                                        </select>
+                                        <div *ngIf="myForm.get('city').errors  && submitted">
+                                          <div *ngIf="myForm.get('city').hasError('required')">
+                                            <span style="color: red;">City name is required.</span>
+                                          </div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Email ID</label>
+                                        <input  formControlName="emailId" [ngClass]="{ 'is-invalid': submitted && f.emailId.errors }" type="text" class="form-control" >
+                                        <div *ngIf="myForm.get('emailId').errors  && submitted">
+                                          <div *ngIf="myForm.get('emailId').hasError('required')">
+                                            <span style="color: red;">EmailId is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        <input  formControlName="mobNo" [ngClass]="{ 'is-invalid': submitted && f.mobNo.errors }" type="text" class="form-control" >
+                                        <div *ngIf="myForm.get('mobNo').errors  && submitted">
+                                          <div *ngIf="myForm.get('mobNo').hasError('required')">
+                                            <span style="color: red;">Phone number is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input  formControlName="address" [ngClass]="{ 'is-invalid': submitted && f.address.errors }"  type="text" class="form-control" >
+                                        <div *ngIf="myForm.get('address').errors  && submitted">
+                                          <div *ngIf="myForm.get('address').hasError('required')">
+                                            <span style="color: red;">Address is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input  type="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"  class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Time Zone</label>
+                                        <select name="timezone" id="timezone"   formControlName="timezone" [ngClass]="{ 'is-invalid': submitted && f.timezone.errors }" class="select h52 w-100" >
+                                          <option *ngFor="let data of timeZoneMetaData"  [value]="data.timezone_name"> {{data.timezone_name}}</option>
+                                        </select>
+                                        <div *ngIf="myForm.get('timezone').errors  && submitted">
+                                          <div *ngIf="myForm.get('timezone').hasError('required')">
+                                            <span style="color: red;">Timezone is required.</span>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Postal Code</label>
+                                        <input  formControlName="postalcode" [ngClass]="{ 'is-invalid': submitted && f.postalcode.errors }" type="text" class="form-control" >
+                                    </div>
+                                    <div *ngIf="myForm.get('postalcode').errors  && submitted">
+                                      <div *ngIf="myForm.get('postalcode').hasError('required')">
+                                        <span style="color: red;">Postal code is required.</span>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="theme">Theme</div>
+                                </div>
+                                <div class="col-md-4"  *ngFor="let color of tenantDetails?.tenant_themes" >
+                                    <div class="theme-choose">
+                                        <div class="name-wrap">
+                                            <div class="name">{{color.display_theme_name}}
+                                                <!-- <div class="selected float-right mt-2">
+                                                    <span></span>
+                                                </div> -->
+                                                <div class="float-right">
+                                                    <div class="custom-radio">
+                                                        <input type="radio" (click)="changeTheme(color)" [checked]="color.current_active == true" name="color-pallet" id="">
+                                                        <div class="radio mr-0">
+                                                            <div class="check"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <figure class="color-pallet">
+                                            <div [ngStyle]="{'background':color.default_brand_color,'border-color':color.default_brand_color}" 
+                                             class="theme-clr"></div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+          <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>

@@ -1,0 +1,1710 @@
+<app-loader *ngIf="showLoad"></app-loader>
+
+
+
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="!showScheduleTest && !showReportTest">
+  <div class="row">
+  <div >
+    <div class="">
+      <header>
+        <p style="display: flex; justify-content: space-between;align-items: center;" class="head">
+          <span>Tests Available</span>
+          <span style="color: red;background-color: #ededed; font-size: 11px;padding-left: 15px;padding: 0;margin-right: 4px;">Date & Time are in {{timeZoneName}}</span>
+        </p>
+      </header>
+    </div>
+    <!-- <a class="downloadSummary" href="{{currentDownloadURl}}" *ngIf="currentDownloadURl !== ''">Download Summary</a> -->
+
+    <button *ngIf="checkOrgToDisable === true" class="downloadSummary" [ngClass]="{'downloadSchedule1' : checkOrgToShowReport === true}" (click)="downloadMyFile()">Download Schedule &nbsp;<i class="fa fa-list-alt downloadIcon"></i></button>
+    <button *ngIf="checkOrgToShowReport === true" class="downloadReport"  (click)="downloadTestFile()">LPU Report &nbsp;<i class="fa fa-download downloadIcon"></i></button>
+    <!--test  list Table -->
+    <div style="padding: 10px;">
+        <table class="table table-hover viewTable fold-table" id="myTable" >
+            <thead>
+                <tr>
+                <th>Test Name</th>
+                <th>Test Type</th>
+                <th>No of Attempts</th>
+                <th>Duration</th>
+                <th>No of Items</th>
+                <th>Max Score</th>
+                <th>Test Status</th>
+                <th>Item Set</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="testdata">
+
+                <tr *ngIf=" testDetails == undefined || testDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="9" style="padding:4px 10px;">No data found.</td></tr>
+                <div *ngFor = "let data of testDetails;let i=index" class="instance">
+                <tr  class="cursor" (click)="openScheduleInstance(data.test_id)">
+
+                <td>{{data.test_name}}</td>
+                <td>{{data.test_type}}</td>
+                <td>{{data.no_of_attempts}}</td>
+                <td>{{data.duration}}</td>
+                <td>{{data.no_of_items}}</td>
+                <td>{{data.maximum_score}}</td>
+                <td>{{data.test_status}}</td>
+                <td>{{data.itemsets}}</td>
+                <td class="cursor" style="font-size: 12px;">
+                    <!-- <i class="fa fa-expand faIcons" aria-hidden="true" tooltip="Schedule Instance" placement="top" (click)="testInstance = i" *ngIf="testInstance !=i"></i> -->
+                    <!-- <i class="fa fa-compress" aria-hidden="true" *ngIf="testInstance == i" (click)="testInstance = -1"></i> -->
+                    <button [disabled]="disableReporBtn" style="background-color: transparent; border: none;outline: none;color:black;cursor: pointer;" [ngClass]="{'disableDelete' : data.schedule_instances.length == 0}"><fa [name]="'file-text-o'" (click)="ShowReportsFun(data.test_id, data.schedule_instances.length)" class="faIcons" [size]=1 tooltip="Reports" placement="top" ></fa></button>
+                    <fa [name]="'calendar'" class="faIcons" [size]=1 (click)="scheduleTestMetaData(data)" tooltip="Schedule Test" placement="top" [ngClass]="{'disableDelete' : planExpires == true}"></fa>
+                    <fa [name]="'eye'" class="faIcons" [size]=1 (click)="viewTest(data.test_id,ViewTest,data.delete_test)" tooltip="View Test" placement="top"></fa>
+                    <fa [name]="'trash'" class="faIcons" [size]=1 (click)="deleteTest(data.test_id,data.delete_test,deleteTestPopup)" tooltip="Delete Test" placement="top" [ngClass]="{'disableDelete' : data.delete_test == false}"></fa>
+                </td>
+                </tr>
+                <tr class="fold" *ngIf="testInstance == data.test_id">
+                        <div *ngIf="testIns == true">
+                                <table class="testInstancecss">
+                                    <thead>
+                                        <tr style="background: rgba(235, 244, 245, 0.99);font-weight:bold !important;">
+                                            <th>Schedule For</th>
+                                            <th>Group / User</th>
+                                            <th>Time Zone</th>
+                                            <th>Start Date & time</th>
+                                            <th>End Date & time</th>
+                                            <th>Instance</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr *ngIf=" testDetails[i].schedule_instances == undefined || testDetails[i].schedule_instances.length ==0" style="text-align: center;opacity: 0.7;background: rgb(250, 255, 250);">No Schedule to View</tr>
+                                            <tr *ngFor = "let instance of testDetails[i].schedule_instances;let a=index" class="cursor" style="background: rgb(250, 255, 250);">
+
+                                            <td class="instTblPAdd">{{instance.schedule_for}}</td>
+                                            <td class="instTblPAdd">{{instance.schedule_datas}}</td>
+                                            <td class="instTblPAdd">{{instance.timezone}}</td>
+                                            <td class="instTblPAdd">{{instance.schedule_start_date}}</td>
+                                            <td class="instTblPAdd">{{instance.schedule_end_date}}</td>
+                                            <td class="instTblPAdd">{{instance.schedule_instance_id}}</td>
+                                            <td class="instTblPAdd"> <fa [name]="'calendar'" class="faIcons" [size]=1 (click)="editScheduleInstance(instance,data)" tooltip="Edit" placement="top" [ngClass]="{'disableDelete' : instance.schedule_instance_active == false}"></fa>&nbsp;
+                                                <fa [name]="'desktop'" class="faIcons" [size]=1  tooltip="View real time status" placement="top" (click)="getInstanceId(instance.instance_unique_id,instance.test_id)" ></fa>&nbsp;
+                                              </td>
+
+
+                                            </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                </tr>
+                </div>
+            </tbody>
+        </table>
+    </div>
+  </div>
+  </div>
+</div>
+<!-- success message popup -->
+<!-- <p class="successMsg" [@dialog1] *ngIf="saveMsg">{{showMsg}}</p> -->
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="showScheduleTest && !showReportTest">
+  <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-6 header">
+        <div class="row">
+          <p class="head1"><span> Test</span> - <span style="color:#00aed9;">{{testName}}</span></p>
+        </div>
+      </div>
+         <div class="col-lg-12 col-md-12 col-sm-6 col-md-offset-4" style="height: 500px;">
+            <div class="row">
+                <form class="form-horizontal scheduleForm">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-6 formMArgin">
+                        <div class="row">
+                            <label class="control-label col-lg-2 col-md-2 col-sm-2 scheduleLAbel" for="subtop">Schedule For</label>
+                            <div class="col-md-6">
+                                <label class="radio-inline col-lg-4 col-md-4 col-sm-2" style="float: left;padding: 0px;">
+                                    <input type="radio" name="optradio1"   (click)="selectscheduleType(1,alertPopup)" [checked]="defaultSelectType == true && test_Schedule.schedule_for==1">Test Group
+                                </label>
+                                <label class="radio-inline col-lg-6 col-md-6 col-sm-3" style="padding: 0px;">
+                                <input type="radio" name="optradio1"  (click)="selectscheduleType(2,alertPopup)"  [checked]="defaultSelectType == true && test_Schedule.schedule_for==2">Individual User
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row rowWidth">
+                        <label class="control-label col-lg-2 col-md-2 col-sm-2 test_Lable" for="name" *ngIf="test_Schedule.schedule_for == 1">Test Group</label>
+                        <label class="control-label col-lg-2 col-md-2 col-sm-2 test_Lable" for="name" *ngIf="test_Schedule.schedule_for == 2">Users</label>
+                        <div class="col-lg-4 col-md-4 col-sm-2" style="padding: 0px;">
+                            <div *ngFor="let item of test_Schedule.schedule_datas" class="selectedLists">
+                                <div class="selected" >
+                                    <span>{{item}}</span>
+                                    <a (click)="remove(item)" >x</a>
+                                </div>
+                            </div>
+                            <input type="text" autocomplete="off" class="form-control" id="uname" name="uname" maxlength="60" [(ngModel)]="searchUsers" #uname="ngModel" placeholder="Type Test Group Name" (ngModelChange)="userNameSuggesstion(searchUsers)" style="height: 30px;" *ngIf="test_Schedule.schedule_for == 1">
+                            <input type="text" autocomplete="off" class="form-control" id="uname" name="uname" maxlength="60" [(ngModel)]="searchUsers" #uname="ngModel" placeholder="Type User Name" (ngModelChange)="userNameSuggesstion(searchUsers)" style="height: 30px;" *ngIf="test_Schedule.schedule_for == 2">
+                        <div>
+                                <div class="alertdanger"  *ngIf="groupErr && test_Schedule.schedule_datas.length == 0">Select Users/User Groups before scheduling a test.</div>
+                        </div>
+                            <div *ngIf="userNameLists != undefined" [ngClass]="{'hideSuggesstion':userNameLists.length == 0 || userNameLists == undefined}">
+                                <div class="suggestions" >
+                                    <ul *ngFor="let item of userNameLists" >
+                                        <li >
+                                            <a (click)="select(item)" style="padding: 4px 6px !important;display: block;">{{item}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row rowWidth">
+                            <label class="control-label col-lg-2 col-md-2 col-sm-2 test_Lable" for="Testattmpt"></label>
+                            <div class="col-lg-5 col-md-5 col-sm-5" style="padding: 0px;">
+                                <input type="checkbox" [checked]="test_Schedule.skip_error_user" (change)="SkipErrUser(test_Schedule.skip_error_user)">&nbsp;Remove debarred users from this schedule instance
+                            </div> &nbsp;&nbsp;<br>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row rowWidth">
+                        <label class="control-label col-lg-2 col-md-2 col-sm-2 test_Lable" for="Testattmpt" style="margin-top: 30px;">Start Date & Time</label>
+                        <div class="col-lg-2 col-md-2 col-sm-2" style="padding: 0px; margin-top: 30px;">
+                            <my-date-picker name="mydateStart" id="mydateStart" [options]="myDatePickerOptions" [(ngModel)]="scheduledStartDate" (dateChanged)="startDateChanged($event)" ></my-date-picker> &nbsp;&nbsp;
+                        </div> &nbsp;&nbsp;<br>
+
+                        <!-- <input type="time"  class="form-control" placeholder="HH:MM:SS"  name="duration" [(ngModel)]="start_time" min="20:00" max="12:00">&nbsp; -->
+                        <!-- <input type="time" class="form-control" #myTime min="00:00" max="12:00" [(ngModel)]="start_time" value="start_time" style="height: 30px !important;width: 93px;" (blur)="getstartTime(myTime.value)" name="start_time">&nbsp; -->
+                        <timepicker [(ngModel)]="start_time" id="start_time" name="strttime" (isValid)="isValid($event)" (ngModelChange)="StartTimechanged(start_time)" class="col-md-2 timerPadding"></timepicker>
+                        <p class="hint" style="margin-top: 30px;">(24 Hrs) Format</p>
+                        <!-- <select class="form-control col-sm-1 timedrop" name="date" (change)="getMeridian1(starttime.value)" #starttime>
+                            <option value="AM" [selected]="starttimeMeridian == 'AM'">AM</option>
+                            <option value="PM" [selected]="starttimeMeridian == 'PM'">PM</option>
+                        </select> -->
+                        </div>
+						<div class="row rowWidth" style="margin-top:15px;">
+							<div class="errMsg1">
+								<div class="alertdanger"  *ngIf="startDateErr && (scheduledStartDate == undefined || scheduledStartDate == '')">This field is required</div>
+							</div>
+							<div class="errMsgTime">
+								<!-- <div class="alertdanger"  *ngIf="startTimeErr ">This field is required</div> -->
+								<div class="alertdanger"  *ngIf="startTimeErr || startTimeErrShow === true ">Invalid Time</div>
+							</div>
+						</div>
+                    </div>
+                    <div class="form-group" style="margin-top: 13px;">
+                        <div class="row rowWidth">
+                            <label class="control-label col-lg-2 col-md-2 col-sm-2 test_Lable" for="Testattmpt" style="margin-top: 30px;">End Date & Time</label>
+                            <div class="col-lg-2 col-md-2 col-sm-2" style="padding: 0px; margin-top: 30px;">
+                            <my-date-picker name="mydateEnd" id="mydateEnd" [options]="myDatePickerOptionsEnd" [(ngModel)]="scheduledEndDate" (dateChanged)="endDateChanged($event)"></my-date-picker> &nbsp;&nbsp;
+                            </div> &nbsp;&nbsp;
+
+                            <!-- <input id="settime" type="time"  class="form-control" placeholder="HH:MM:SS" style="height: 30px !important;width: 93px;" name="duration" [(ngModel)]="end_time">&nbsp; -->
+                            <!-- <input type="time" class="form-control" #myEndTime min="00:00" max="12:00" [(ngModel)]="end_time" style="height: 30px !important;width: 93px;" (blur)="getEndTime(myEndTime.value)" name="end_time">&nbsp; -->
+                            <timepicker [(ngModel)]="end_time" id="end_time" name="endtime" (isValid)="isValid($event)" (ngModelChange)="EndTimechanged(end_time)" class="col-md-2 timerPadding"></timepicker>
+                            <p class="hint" style="margin-top: 30px;">(24 Hrs) Format</p>
+                            <!-- <select class="form-control col-sm-1 timedrop" name="date"  (change)="getMeridian2(endtime.value)" #endtime>
+                            <option value="AM" [selected]="endtimeMeridian == 'AM'">AM</option>
+                            <option value="PM" [selected]="endtimeMeridian == 'PM'">PM</option>
+                            </select> -->
+                        </div>
+						<div class="row rowWidth" style="margin-top:15px;">
+							<div class="errMsg1">
+								<div class="alertdanger"  *ngIf="endDateErr && (scheduledEndDate == undefined || scheduledEndDate == '')">This field is required</div>
+							</div>
+							<div class="errMsgTime">
+								<div class="alertdanger"  *ngIf="endTimeErr || endTimeErrShow === true">Invalid Time</div>
+							</div>
+						</div>
+                    </div>
+                    <!-- <div class="form-group">
+                        <div class="row rowWidth">
+                        <label class="control-label col-sm-2 test_Lable" for="Testtype">Start Time</label>
+
+                        </div>
+                    </div> -->
+                    <!-- <div class="form-group">
+                        <div class="row rowWidth">
+                        <label class="control-label col-sm-2 test_Lable" for="Testtype">End Time</label>
+                        <input id="settime" type="time" step="1" class="form-control col-sm-4" placeholder="HH:MM:SS" style="height: 33px !important;"  name="duration" [(ngModel)]="test_Schedule.end_time">
+                        </div>
+                    </div> -->
+
+                </form>
+                <span style="margin-left: 278px;color: red;background-color: #ededed;">Date & Time are in {{timeZoneName}}</span>
+                <div class="btnDiv col-md-12 col-lg-12 col-sm-6">
+                    <button type="button" class="btn btn-primary btnCss" (click)="scheduleTest()">Schedule</button>
+                    <a class="btnCss" style="color: #00aed9;" (click)="CancelScheduleTest()">Cancel</a>
+                    <!-- <button type="button" class="btn btn-default btnCss" (cancel)="CancelScheduleTest()">Cancel</button> -->
+                </div>
+            </div>
+        </div>
+
+  </div>
+
+</div>
+
+
+<div class="col-lg-12 col-md-12 col-sm-6" *ngIf="showReportTest">
+  <div class="row">
+    <div style="width:100%;">
+      <header>
+        <p class="head">Configure & Generate Report <span *ngIf="CurrentTestName != undefined"> - </span><span class="_TNAME" *ngIf="CurrentTestName != undefined">{{CurrentTestName}}</span> <span style="float: right;clear: both;color: #0681d3;    cursor: pointer;padding: 2px 10px;" (click)="showReportTest = false"> <i class="fa fa-angle-left" aria-hidden="true"></i> Back</span> </p>
+      </header>
+
+      <!--test  list Table -->
+      <div style="padding: 10px;" *ngIf="getMetaForProfileSummary !== undefined">
+        <!-- Stepper -->
+        <div class="row" style="width: 100%;margin: 0;">
+          <div class="col-xs-12 col-md-8 offset-md-2 block border">
+            <div class="wrapper-progressBar">
+              <ul class="progressBar">
+                <li class="" [ngClass]="{'active': activeTabDet == 1 || activeTabDet == 2 || activeTabDet == 3 }">Define Users</li>
+                <li class="" [ngClass]="{'active': activeTabDet == 2 || activeTabDet == 3 }">Scoring Criteria</li>
+                <li class="" [ngClass]="{'active': activeTabDet == 3 }">Report</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- ********* TAB 1 ********* -->
+        <div *ngIf="activeTabDet == 1">
+          <!-- Select Test Instance -->
+          <div class="_filterRepOA" *ngIf="getMetaForProfileSummary.test[0].schedules.length != 0">
+            <div class="col-md-12">
+              <h5>Select Test Instance(s)</h5>
+              <div>
+                <label class="customBtn" (change)="allTestInstacnce(selectAllInstance)">
+                  <p class="select_all_check"></p>
+                  <input type="checkbox" name="" [(ngModel)]="selectAllInstance">
+                  <span class="checkmark"></span>
+                </label>
+                <span class="_listVals">Select All</span>
+                <ul class="_TestUL">
+                  <li *ngFor="let inst of getMetaForProfileSummary.test[0].schedules">
+                    <label class="customBtn" (change)="changeTestinstance(inst)">
+                      <p class="select_all_check"></p>
+                      <input type="checkbox" name="" [checked]="inst.is_selected">
+                      <span class="checkmark"></span>
+                    </label>
+                    <span class="_listVals">{{inst.Scheduled_Start_DT}} - {{inst.Scheduled_End_DT}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select User Groups -->
+          <div class="_filterRepOA" *ngIf="getMetaForProfileSummary.test[0].groups.length != 0">
+            <div class="col-md-12">
+              <h5>Select User Groups</h5>
+              <div>
+                <label class="customBtn" (change)="allTestGroup(selectAllGroup)">
+                  <p class="select_all_check"></p>
+                  <input type="checkbox" name="" [(ngModel)]="selectAllGroup">
+                  <span class="checkmark"></span>
+                </label>
+                <span class="_listVals">Select All</span>
+                <ul class="_TestUL">
+                  <li *ngFor="let grps of getMetaForProfileSummary.test[0].groups" >
+                    <div>
+                      <label class="customBtn" (change)="changeUserGroups(grps)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="" [checked]="grps.is_selected">
+                        <span class="checkmark"></span>
+                      </label>
+                      <span class="_listVals" style="cursor: pointer;" (click)="showCurrentGroups(showGroups, grps)">{{grps.Grp_Name}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Users -->
+          <div class="_filterRepOA" *ngIf="getMetaForProfileSummary.test[0].users.length != 0">
+            <div class="col-md-12">
+              <h5>Select Users</h5>
+              <div>
+                <label class="customBtn" (change)="allTestUsers(selectAllUsers)">
+                  <p class="select_all_check"></p>
+                  <input type="checkbox" name="" [(ngModel)]="selectAllUsers">
+                  <span class="checkmark"></span>
+                </label>
+                <span class="_listVals">Select All</span>
+                <ul class="_TestUL">
+                  <li *ngFor="let usrs of getMetaForProfileSummary.test[0].users">
+                    <div>
+                      <label class="customBtn" (change)="changeUsers(usrs)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="" [checked]="usrs.is_selected">
+                        <span class="checkmark"></span>
+                      </label>
+                      <span class="_listVals" style="cursor: pointer;" (click)="showCurrentUser(showUsers, usrs)">{{usrs.Tenant_user_nm}} - {{usrs.email}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Attempts -->
+          <div class="_filterRepOA" *ngIf="attemptListArr.length != 0">
+            <div class="col-md-12">
+              <h5>Attempts</h5>
+              <div>
+                <ul class="_TestUL">
+                  <li *ngFor="let attm of attemptListArr;let i=index">
+                    <div>
+                      <label class="customBtnR" (change)="changeAttempts(i)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="attempt" [checked]="selectedAttemptInd == i">
+                        <span class="checkmarkR"></span>
+                      </label>
+                      <!-- <input type="radio" name="attempt"> -->
+                      <span class="_listVals" style="cursor: pointer;">{{attm}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Custom Fields -->
+          <div class="_filterRepOA" *ngIf="getMetaForProfileSummary.test[0].custom_fields.length != 0">
+            <div class="col-md-12">
+              <h5>Custom Fields</h5>
+              <div>
+                <ul class="_TestUL">
+                  <li *ngFor="let cusFil of getMetaForProfileSummary.test[0].custom_fields" [ngClass]="{'disableCF' : cusFil.custom_field_values.length === 0}">
+                    <div>
+                      <label class="customBtn" (change)="changeCF(cusFil)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="" [checked]="cusFil.is_selected" [disabled]="cusFil.custom_field_values.length === 0">
+                        <span class="checkmark"></span>
+                      </label>
+                      <span class="_listVals" style="cursor: pointer;" (click)="showCurrentCFValues(showCustomFields, cusFil)">{{cusFil.label}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ********* TAB 2 ********* -->
+        <div *ngIf="activeTabDet == 2">
+
+          <!-- Select Sections -->
+          <div class="_filterRepOA">
+            <div class="col-md-12">
+              <h5>Select Score To Be Consider:</h5>
+              <div>
+                <ul class="_TestUL">
+                  <li *ngFor="let score of sectionSelectListArr;let i=index">
+                    <div [ngClass]="{ 'fadeIt': i == 1 }">
+                      <label class="customBtnR" (change)="changeScoringType(i)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="section" [checked]="selectScoreTypeInd == i" [disabled]="i == 1">
+                        <span class="checkmarkR" [ngClass]="{ 'notAllowed': i == 1 }"></span>
+                      </label>
+                      <!-- <input type="radio" name="attempt"> -->
+                      <span class="_listVals" style="cursor: pointer;">{{score}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Itemset List -->
+          <div class="_filterRepOA" style="display: none;">
+            <div class="col-md-12">
+              <h5>Select Itemset(s) and Section(s)</h5>
+              <div>
+                <ul class="_TestUL1">
+                  <li *ngFor="let itmSet of getMetaForProfileSummary.test[0].itemset;">
+                    <div>
+                      <label class="customBtn" (change)="changeItemsets(itmSet)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="" [checked]="itmSet.is_selected">
+                        <span class="checkmark"></span>
+                      </label>
+                      <!-- <input type="radio" name="attempt"> -->
+                      <span class="_listVals" style="cursor: pointer;">{{itmSet.ItemSet_Name}}</span>
+                    </div>
+                    <ul class="_TestUL">
+                      <li *ngFor="let sec of itmSet.sections">
+                        <div>
+                          <label class="customBtn" (change)="changeItemsetSection(sec)">
+                            <p class="select_all_check"></p>
+                            <input type="checkbox" name="" [checked]="sec.is_selected">
+                            <span class="checkmark"></span>
+                          </label>
+                          <!-- <input type="radio" name="attempt"> -->
+                          <span class="_listVals" style="cursor: pointer;">{{sec.Section_Nm}}</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Scoring Criteria -->
+          <div class="_filterRepOA">
+            <div class="col-md-12">
+              <h5>Scoring Criteria</h5>
+              <div>
+                <ul class="_TestUL">
+                  <li *ngFor="let scC of scoringCriteriaArr;let i=index">
+                    <div>
+                      <label class="customBtnR" (change)="changeScoringCriteria(i)">
+                        <p class="select_all_check"></p>
+                        <input type="checkbox" name="attempt" [checked]="selectScoringCriteriaInd == i">
+                        <span class="checkmarkR"></span>
+                      </label>
+                      <!-- <input type="radio" name="attempt"> -->
+                      <span class="_listVals" style="cursor: pointer;">{{scC}}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        <!-- Scoring type based on mark and percentage -->
+        <div class="_filterRepOA">
+          <div class="col-md-12">
+            <h5>Test Result Type</h5>
+            <div>
+              <ul class="TestULs">
+                <li>
+                  <div class="row result_type_content">
+                    <input type="radio" name="Result_Type" value="1" [checked] ="miniMumScore_Value === 1"  (change)="selectTestResultType(1)" style="margin-top: 4px;height: 15px;width: 15px;">&nbsp;&nbsp;Result Based On {{resul_type_label_1}}
+                  </div>
+                  <div class="row result_type_content">
+                    <input type="radio" name="Result_Type" value="2" [checked] ="miniMumScore_Value === 2"  (change)="selectTestResultType(2)" style="margin-top: 4px;height: 15px;width: 15px;">&nbsp;&nbsp;Result Based On {{resul_type_label_2}} (or) {{resul_type_label_3}}
+                  </div>
+                  
+                  <div *ngIf="miniMumScore_Value === 2">
+                    <div class="row result_type_content">
+                      <label>
+                       Please enter the value:
+                       </label>
+                    </div>
+                    <div class="row result_main_contents">
+                      <input type="text" placeholder="Enter The Value"[(ngModel)]="scoreOrPercValue" [ngClass]="{ 'validateField': showError === true && scoreOrPercValue === null}" class="result_main_contents_input">
+                      &nbsp;&nbsp;&nbsp;
+                      <select name="" [ngClass]="{ 'validateField': showError === true && selectValue === null }" [(ngModel)]="selectValue" (change)="getScorePercentage(selectValue)"  id="selectPerc_mark" class="basedOn_Mark_Perc">
+                        <option [selected]="selectValue === null" disabled>Select Type</option>
+                        <option  value="1">Raw Score</option>                      
+                        <option  value="2">Percentage</option>
+                      </select>
+                    </div>
+                    <!-- <div *ngIf="showError === true">
+                      <span>This field is required</span>
+                    </div> -->
+                  </div>  
+
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        </div>
+
+ 
+
+
+        <!-- ********* TAB 3 ********* -->
+        <div *ngIf="activeTabDet == 3">
+
+          <p style="text-align:right;margin: 10px 0 0 0;">
+            <button *ngIf="finalResultData != undefined" class="btn btn-primary creategrpBtnR" (click)="showReportDetails(showReports)">Report Details</button>
+            <button class="btn btn-primary creategrpBtnR" (click)="showColumnSelect(showColumnFilter)"><span><i class="fa fa-filter" aria-hidden="true"></i></span> Filter by column</button>
+          </p>
+
+          <!-- Selcted Lists -->
+          <div class="_filterRepOA" *ngIf="finalStructureForReport != undefined && showSelectedData == true && !showReports">
+              <div class="col-md-12">
+                <table align="center" class="_finalStrTable table">
+                  <tr *ngIf="finalStructureForReport.schedules.length != 0">
+                    <td>Test Instance(s)</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span *ngFor="let itm of finalStructureForReport.schedules;let i=index">{{itm.Scheduled_Start_DT}} - {{itm.Scheduled_End_DT}}<span *ngIf="i != finalStructureForReport.schedules.length-1">, </span></span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="finalStructureForReport.groups.length != 0">
+                    <td>Group(s)</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span *ngFor="let itm of finalStructureForReport.groups;let j=index">{{itm.Grp_Name}}<span *ngIf="j != finalStructureForReport.groups.length-1">,</span> </span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="finalStructureForReport.users.length != 0">
+                    <td>User(s)</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span *ngFor="let itm of finalStructureForReport.users;let k=index">{{itm.email}}<span *ngIf="k != finalStructureForReport.users.length-1">, </span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Attempt(s)</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>{{attemptListArr[selectedAttemptInd]}}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="finalStructureForReport.custom_fields.length != 0">
+                    <td colspan="3"><b>Custom Field(s)</b></td>
+                  </tr>
+                  <tr *ngFor="let itm of finalStructureForReport.custom_fields">
+                    <td>{{itm.label}}</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span *ngFor="let itms of itm.custom_field_values;let l=index">{{itms.value}}<span *ngIf="l != itm.custom_field_values.length-1">, </span></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Scoring Type</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>{{sectionSelectListArr[selectScoreTypeInd]}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Scoring Criteria</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>{{scoringCriteriaArr[selectScoringCriteriaInd]}}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="minimum_Score_label === true">
+                    <td>Result Type</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>Based On {{resul_type_label_1}}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="showTest_Info_1 === true">
+                    <td>Result Type</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>Based On {{show_label}} - {{scoreOrPercValue}}</span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="showTest_Info_2 === true">
+                    <td>Result Type</td>
+                    <td style="text-align: center;width: 5%;">:</td>
+                    <td>
+                      <span>Based On {{show_labels}} - {{scoreOrPercValue}} %</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+          </div>
+
+          <div class="_filterRepOA" *ngIf="finalResultData != undefined && showSelectedData == true">
+            <div class="col-md-12">
+              <ng-container>
+                <ag-grid-angular
+
+                    class="ag-theme-balham"
+                    [rowData]="rowData"
+                    [columnDefs]="columnDefs"
+                    [modules]="modules"
+                    [sideBar]="true"
+                    domLayout='autoHeight'
+                    [suppressDragLeaveHidesColumns]="true"
+                    (firstDataRendered)="onFirstDataRendered($event)"
+                    >
+                </ag-grid-angular>
+              </ng-container>
+
+              <!-- <table align="center" class="_urRepTable" #myTableElementId>
+                <tr> <ng-container *ngFor="let itm of getMetaForProfileSummary.test[0].column_names">
+                    <th *ngIf="itm.is_selected == true">{{itm.col_name}}</th>
+                  </ng-container>
+                  <th>Score</th>
+                  <th>Rank</th>
+                </tr>
+                <tr *ngFor="let usrRep of finalResultData">
+                  <td>{{usrRep.Tenant_user_nm}}</td>
+                  <td>{{usrRep.Phone}}</td>
+                  <td>{{usrRep.email}}</td>
+                  <ng-container *ngFor="let itms of usrRep.custom_fields">
+                    <td *ngIf="itms.is_selected == true">{{itms.value}}</td>
+                  </ng-container>
+                  <td>{{usrRep.score}}</td>
+                  <td>{{usrRep.rank}}</td>
+                </tr>
+              </table> -->
+                    </div>
+          </div>
+
+          <!-- Select Filter -->
+          <!-- <div class="_filterRepOA">
+            <div class="col-md-12">
+              <h5>Select the columns to be displayed in the report:</h5>
+              <div>
+                <ul class="_TestUL">
+                  <li *ngFor="let cols of getMetaForProfileSummary.test[0].column_names">
+                    <label class="customBtn">
+                      <p class="select_all_check"></p>
+                      <input type="checkbox" name="" [checked]="false">
+                      <span class="checkmark"></span>
+                    </label>
+                    <span class="_listVals">{{cols}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <div class="col-lg-12 col-md-12" style="margin-top: 25px;">
+          <p style="text-align: center;">
+            <button *ngIf="activeTabDet == 1" class="btn btn-primary creategrpBtnR" (click)="activeTabDet = 2">Next</button>
+
+            <button *ngIf="activeTabDet == 2" class="btn btn-primary creategrpBtnR" (click)="activeTabDet = 1">Previous</button>
+            <button *ngIf="activeTabDet == 2" class="btn btn-primary creategrpBtnR" (click)="goToThree()">Next</button>
+
+            <button *ngIf="activeTabDet == 3" class="btn btn-primary creategrpBtnR" (click)="activeTabDet = 2">Previous</button>
+            <button *ngIf="activeTabDet == 3" class="btn btn-primary creategrpBtnR" (click)="generateReport()">Generate Report</button>
+            <button *ngIf="activeTabDet == 3 && finalResultData != undefined" class="btn btn-primary creategrpBtnR"
+            (click)="exportAsXLSX()">Download as Excel</button>
+
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- view test popup -->
+
+<!-- <div class="testView" *ngIf="ViewTest">
+    <button  aria-label="Close" class="dialog__close-btn" (click)="closeViewTest()">X</button>
+    <p class="modalHead">View Test</p>
+    <ul class="nav nav-tabs col-md-12" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link " id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" (click)="activeTab =1" [ngClass]="{'active' : activeTab ==1}">Test Info</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" (click)="activeTab =2" [ngClass]="{'active' : activeTab ==2}">Test Engine Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="Customisation-tab" data-toggle="tab" role="tab" aria-controls="Customisation" aria-selected="false" (click)="activeTab =3" [ngClass]="{'active' : activeTab ==3}">Test Engine Customisation</a>
+          </li>
+        <div class="addSubBtn" style="margin-left: 22%;">
+          <button class="btn btn-primary btnCss" (click)="editTest()">Edit</button>
+        </div>
+    </ul>
+
+
+
+      <div class="tab-content" id="myTabContent" style="overflow:auto;height:85%;">
+          <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab"  [ngClass]="{'active' : activeTab ==1}">
+
+              <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                <tbody class="viewTestBg">
+                  <tr>
+                    <td class="tableAlign"><b>Test Name</b></td>
+                    <td class="tableAlign">{{viewTestDetails.test_name}}</td>
+                  </tr>
+                  <tr>
+                      <td class="tableAlign"><b>Test Type</b></td>
+                      <td class="tableAlign">{{viewTestDetails.test_type}}</td>
+                    </tr>
+                    <tr>
+                        <td class="tableAlign"><b>Test Attempts</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_attempts}}</td>
+                      </tr>
+                      <tr>
+                          <td class="tableAlign"><b>Result Type</b></td>
+                          <td class="tableAlign">{{viewTestDetails.test_result_type}}</td>
+                        </tr>
+                        <tr>
+                            <td class="tableAlign"><b>Evaluation Type</b></td>
+                            <td class="tableAlign">{{viewTestDetails.test_evaluation}}</td>
+                          </tr>
+                          <tr>
+                              <td class="tableAlign"><b>Item Sets(s) Mapped</b></td>
+                              <td class="tableAlign">{{viewTestDetails.mappedItemSets}}</td>
+                            </tr>
+                            <tr>
+                                <td class="tableAlign"><b>Subject</b></td>
+                                <td class="tableAlign">{{viewTestDetails.subject_name}}</td>
+                              </tr>
+                              <tr>
+                                  <td class="tableAlign"><b>No of Items</b></td>
+                                  <td class="tableAlign">{{viewTestDetails.no_of_items}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign"><b>Duration</b></td>
+                                    <td class="tableAlign">{{viewTestDetails.test_duration}}</td>
+                                  </tr>
+                                  <tr>
+                                      <td class="tableAlign"><b>Maximum Score</b></td>
+                                      <td class="tableAlign">{{viewTestDetails.maximum_score}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableAlign"><b>Minimum Score</b></td>
+                                        <td class="tableAlign">{{viewTestDetails.passing_score}}</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAlign"><b>Display Alert in Test Engine</b></td>
+                                          <td class="tableAlign">{{viewTestDetails.Alert_Timer}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableAlign" style="vertical-align:text-bottom !important;"><b>Rules</b></td>
+                                            <td class="tableAlign">{{viewTestDetails.test_rule}}</td>
+                                          </tr>
+                </tbody>
+              </table>
+          </div>
+          <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" [ngClass]="{'active' : activeTab ==2,'show':activeTab ==2}">
+
+
+              <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                  <tbody class="viewTestBg">
+                    <tr>
+                      <td class="tableAlign"><b>Can User Choose Section Order ?</b></td>
+                      <td class="tableAlign"><label class="switch">
+                          <input type="checkbox" [checked]="viewTestDetails.dynamic_section_order_choose =='y'" (change)="sectionOrder(sectionOrderToggle)" [disabled]="true">
+                          <span class="slider"></span>
+                      </label></td>
+                    </tr>
+                    <tr>
+                        <td class="tableAlign"><b>Sectionwise Timer</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" (change)="timer(timerToggle)" [checked]="viewTestDetails.sectionwise_timer == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                        </label></td>
+                      </tr>
+                      <tr>
+                          <td class="tableAlign"><b>Cross Section Navigation</b></td>
+                          <td class="tableAlign"> <label class="switch">
+                              <input type="checkbox" (change)="navigation(navigationToggle)" [checked]="viewTestDetails.cross_section_navication == 'y'" [disabled]="true">
+                              <span class="slider"></span>
+                          </label></td>
+                        </tr>
+                        <tr>
+                            <td class="tableAlign"><b>Submit Before Time Ends</b></td>
+                            <td class="tableAlign"><label class="switch">
+                                <input type="checkbox" (change)="timeEnds(timeEndsToggle)" [checked]="viewTestDetails.submit_before_timer_ends == 'y'" [disabled]="true">
+                                <span class="slider"></span>
+                            </label></td>
+                          </tr>
+                          <tr>
+                              <td class="tableAlign"><b>Randomize Questions</b></td>
+                              <td class="tableAlign"><label class="switch">
+                                  <input type="checkbox" (change)="randomQues(randomQuesToggle)" [checked]="viewTestDetails.randomise_items == 'y'" [disabled]="true">
+                                  <span class="slider"></span>
+                              </label></td>
+                            </tr>
+                            <tr>
+                                <td class="tableAlign"><b>Answer Option Shuffling</b></td>
+                                <td class="tableAlign"><label class="switch">
+                                    <input type="checkbox" (change)="answerShuffling(answerShufflingToggle)" [checked]="viewTestDetails.randomise_answers == 'y'" [disabled]="true">
+                                    <span class="slider"></span>
+                                </label></td>
+                              </tr>
+                              <tr>
+                                  <td class="tableAlign"><b>Can User Pause the Exam ?</b></td>
+                                  <td class="tableAlign"><label class="switch">
+                                      <input type="checkbox" (change)="pauseExam(pauseExamToggle)" [checked]="viewTestDetails.test_pause_option == 'y'" [disabled]="true">
+                                      <span class="slider"></span>
+                                  </label></td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign"><b>Should Hint be Displayed ?</b></td>
+                                    <td class="tableAlign"><label class="switch">
+                                        <input type="checkbox" (change)="displayHint(displayHintToggle)" [checked]="viewTestDetails.hints =='y'" [disabled]="true">
+                                        <span class="slider"></span>
+                                    </label></td>
+                                  </tr>
+                                  <tr>
+                                      <td class="tableAlign"><b>Display Correct Answers in Dashboard</b></td>
+                                      <td class="tableAlign"><label class="switch">
+                                          <input type="checkbox" (change)="displayCorrtAns(displayCorrtAnsToggle)" [checked]="viewTestDetails.correct_answer_display == 'y'" [disabled]="true">
+                                          <span class="slider"></span>
+                                      </label></td>
+                                    </tr>
+
+                  </tbody>
+              </table>
+          </div>
+
+          <div class="tab-pane fade" id="Customisation" role="tabpanel" aria-labelledby="Customisation-tab" [ngClass]="{'active' : activeTab ==3,'show':activeTab ==3}">
+
+              <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                  <tbody class="viewTestBg">
+                    <tr>
+                      <td class="tableAlign"><b>Is Question Palette Required ?</b></td>
+                      <td class="tableAlign"> <label class="switch">
+                          <input type="checkbox" [disabled]="true" (change)="QuestPalette(QuestPaletteToggle)" [checked]="viewTestDetails.item_palette =='y'">
+                          <span class="slider"></span>
+                        </label></td>
+                    </tr>
+                    <tr>
+                        <td class="tableAlign"><b>Are Filters Required ?</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [disabled]="true" (change)="filters(filtersToggle)" [checked]="viewTestDetails.filter =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                          <td class="tableAlign"><b>Is Question Paper View Required ?</b></td>
+                          <td class="tableAlign"> <label class="switch">
+                              <input type="checkbox" [disabled]="true" (change)="quePaper(quePaperToggle)" [checked]="viewTestDetails.item_paper_view =='y'">
+                              <span class="slider"></span>
+                            </label></td>
+                      </tr>
+                  </tbody>
+              </table>
+              <div class="col-md-12" style="text-align:center;">
+                  <p style="font-weight: bold;">Buttons Selected</p>
+                  <div class="form-group" *ngIf="this.viewTestDetails.previous_button == 'y'">
+                      <div class=" rowWidth">
+                      <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.previous_button_value}}</button>
+                      </div>
+                  </div>
+                  <div class="form-group" *ngIf="this.viewTestDetails.mark_for_review_button == 'y'">
+                      <div class=" rowWidth">
+                          <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.mark_for_review_button_value}}</button>
+                      </div>
+                  </div>
+                  <div class="form-group" *ngIf="this.viewTestDetails.clear_response_button == 'y'">
+                      <div class=" rowWidth">
+                          <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.clear_response_button_value}}</button>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class=" rowWidth">
+                          <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.save_next_buton_value}}</button>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class=" rowWidth">
+                          <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.submit_button_value}}</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</div>
+<div *ngIf="ViewTest" class="viewTest-overlay" (click)="close()"></div> -->
+
+    <!-- view test popup -->
+    <ng-template #ViewTest>
+        <div class="modal-header">
+            <p class="modalHead">View Test</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="viewTestPopupClose()">
+            <span aria-hidden="true">&times;</span>
+        </button> 
+        </div>
+        <div class="modal-body">
+            <ul class="nav nav-tabs col-md-12" id="myTab" role="tablist">
+                <li class="nav-item">
+                <a class="nav-link " id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" (click)="activeTab =1" [ngClass]="{'active' : activeTab ==1}">Test Info</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" (click)="activeTab =2" [ngClass]="{'active' : activeTab ==2}">Test Engine Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Customisation-tab" data-toggle="tab" role="tab" aria-controls="Customisation" aria-selected="false" (click)="activeTab =3" [ngClass]="{'active' : activeTab ==3}">Test Engine Customisation</a>
+                </li>
+                <li class="nav-item" *ngIf="viewTestDetails.Scorer_Details.length != 0">
+                  <a class="nav-link" id="ScorersLvl-tab" data-toggle="tab" role="tab" aria-controls="ScorersLvl" aria-selected="false" (click)="activeTab =4" [ngClass]="{'active' : activeTab ==4}">Evaluation Settings</a>
+                </li>
+                <div class="addSubBtn" style="width: 25%;text-align: right;">
+                <button class="btn btn-primary btnCss" (click)="editTest()" [disabled]="testEditButton == false" [ngClass]="{'cursor-disabled':testEditButton == false}">Edit</button>
+                </div>
+            </ul>
+
+
+
+            <div class="tab-content" id="myTabContent" style="overflow:auto;height:85%;">
+
+                <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab"
+                  [ngClass]="{'active' : activeTab ==1}">
+                  <!-- <form class="form-horizontal col-md-12" style="padding-left:22%;height: 500px;overflow-y: scroll;margin-top: 14px;">
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="name">Test Name</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="name">{{viewTestDetails.test_name}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Test Type</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.test_type}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testattmpt">Test Attempts</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testattmpt">{{viewTestDetails.test_attempts}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Result Type</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.test_result_type}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Evaluation Type</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.test_evaluation}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype"> Item Sets(s) Mapped</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.mappedItemSets}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Subject</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.subject_name}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">No of Items</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.no_of_items}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Duration</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.test_duration}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Maximum Score</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.maximum_score}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Minimum Score</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.passing_score}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Display Alert in Test Engine</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.Alert_Timer}}</label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Rules</label>
+                                            <label class="control-label col-sm-7 test_Lable" for="Testtype">{{viewTestDetails.test_rule}}</label>
+
+                                            </div>
+                                        </div>
+                                    </form> -->
+
+                  <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                    <tbody class="viewTestBg">
+                      <tr>
+                        <td class="tableAlign"><b>Test Name</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_name}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Test Type</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_type}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Test Attempts</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_attempts}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Result Type</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_result_type}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Evaluation Type</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_evaluation}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Item Sets(s) Mapped</b></td>
+                        <td class="tableAlign">{{viewTestDetails.mappedItemSets}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Subject</b></td>
+                        <td class="tableAlign">{{viewTestDetails.subject_name}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>No of Items</b></td>
+                        <td class="tableAlign">{{viewTestDetails.no_of_items}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Duration</b></td>
+                        <td class="tableAlign">{{viewTestDetails.test_duration}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Maximum Score</b></td>
+                        <td class="tableAlign">{{viewTestDetails.maximum_score}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Minimum Score</b></td>
+                        <td class="tableAlign">{{viewTestDetails.passing_score}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Display Alert in Test Engine</b></td>
+                        <td class="tableAlign">{{viewTestDetails.Alert_Timer}}</td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign" style="vertical-align:text-bottom !important;"><b>Rules</b></td>
+                        <td class="tableAlign" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(viewTestDetails.test_rule)">
+                          {{viewTestDetails.test_rule}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"
+                  [ngClass]="{'active' : activeTab ==2,'show':activeTab ==2}">
+                  <!-- <form class="form-horizontal col-md-12" style="padding-left:22%;height: 500px;overflow-y: scroll;margin-top: 14px;">
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="name">Can User Choose Section Order </label>
+                                            <label class="switch">
+                                                <input type="checkbox" [checked]="viewTestDetails.dynamic_section_order_choose =='y'" (change)="sectionOrder(sectionOrderToggle)" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Sectionwise Timer</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="timer(timerToggle)" [checked]="viewTestDetails.sectionwise_timer == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testattmpt">Cross Section Navigation</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="navigation(navigationToggle)" [checked]="viewTestDetails.cross_section_navication == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Submit Before Time Ends</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="timeEnds(timeEndsToggle)" [checked]="viewTestDetails.submit_before_timer_ends == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Randomize Questions</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="randomQues(randomQuesToggle)" [checked]="viewTestDetails.randomise_items == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype"> Answer Option Shuffling</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="answerShuffling(answerShufflingToggle)" [checked]="viewTestDetails.randomise_answers == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Can User Pause the Exam ?</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="pauseExam(pauseExamToggle)" [checked]="viewTestDetails.test_pause_option == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Should Hint be Displayed ?</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="displayHint(displayHintToggle)" [checked]="viewTestDetails.hints =='y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Display Correct Answers in Dashboard</label>
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="displayCorrtAns(displayCorrtAnsToggle)" [checked]="viewTestDetails.correct_answer_display == 'y'" [disabled]="true">
+                                                <span class="slider"></span>
+                                            </label>
+                                            </div>
+                                        </div>
+
+                                    </form> -->
+
+                  <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                    <tbody class="viewTestBg">
+                      <tr>
+                        <td class="tableAlign"><b>Can User Choose Section Order ?</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.dynamic_section_order_choose =='y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Sectionwise Timer</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.sectionwise_timer == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Cross Section Navigation</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.cross_section_navication == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Submit Before Time Ends</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.submit_before_timer_ends == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Can Participant Print Certificate</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.can_participant_print_certificate == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Randomize Questions</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.randomise_items == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Answer Option Shuffling</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.randomise_answers == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Can User Pause the Exam ?</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.test_pause_option == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Should Hint be Displayed ?</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.hints =='y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <!-- <tr>
+                        <td class="tableAlign"><b>Display Correct Answers in Dashboard</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [checked]="viewTestDetails.correct_answer_display == 'y'" [disabled]="true">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr> -->
+
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="tab-pane fade" id="Customisation" role="tabpanel" aria-labelledby="Customisation-tab"
+                  [ngClass]="{'active' : activeTab ==3,'show':activeTab ==3}">
+                  <!-- <form class="form-horizontal col-md-12" style="padding-left:22%;height: 500px;overflow-y: scroll;margin-top: 14px;">
+                                        <div class="form-group">
+                                            <div class="row rowWidth">
+                                            <label class="control-label col-sm-4 test_Lable" for="name">Is Question Palette Required ?</label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="QuestPalette(QuestPaletteToggle)" [checked]="viewTestDetails.item_palette =='y'">
+                                                <span class="slider"></span>
+                                                </label>
+                                            </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                            <label class="control-label col-sm-4 test_Lable" for="Testtype">Are Filters Required ? </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" (change)="filters(filtersToggle)" [checked]="viewTestDetails.filter =='y'">
+                                                <span class="slider"></span>
+                                                </label>
+                                            </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                <label class="control-label col-sm-4 test_Lable" for="Testattmpt">Is Question Paper View Required ?</label>
+
+                                                <label class="switch">
+                                                    <input type="checkbox" (change)="quePaper(quePaperToggle)" [checked]="viewTestDetails.item_paper_view =='y'">
+                                                    <span class="slider"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <p>Buttons Seleted</p>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.previous_button_value}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                    <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.mark_for_review_button_value}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                    <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.clear_response_button_value}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                    <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.save_next_buton_value}}</button>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row rowWidth">
+                                                    <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.submit_button_value}}</button>
+                                                </div>
+                                            </div>
+                                    </form> -->
+                  <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                    <tbody class="viewTestBg">
+                      <tr>
+                        <td class="tableAlign"><b>Is Question Palette Required ?</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.item_palette =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Are Filters Required ?</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.filter =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Is Question Paper View Required ?</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.item_paper_view =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="col-md-12" style="text-align:center;">
+                    <p style="font-weight: bold;">Buttons Selected</p>
+                    <div class="form-group" *ngIf="this.viewTestDetails.previous_button == 'y'">
+                      <div class=" rowWidth">
+                        <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.previous_button_value}}</button>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="this.viewTestDetails.mark_for_review_button == 'y'">
+                      <div class=" rowWidth">
+                        <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.mark_for_review_button_value}}</button>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="this.viewTestDetails.clear_response_button == 'y'">
+                      <div class=" rowWidth">
+                        <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.clear_response_button_value}}</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class=" rowWidth">
+                        <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.save_next_buton_value}}</button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class=" rowWidth">
+                        <button type="button" class="btn btn-primary btnCss">{{viewTestDetails.submit_button_value}}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="viewTestDetails.Scorer_Details.length != 0" class="tab-pane fade" id="ScorersLvl" role="tabpanel" aria-labelledby="ScorersLvl-tab"
+                  [ngClass]="{'active' : activeTab ==4,'show':activeTab ==4}">
+                  <table align="center" style="width: 73%;margin-top: 16px;margin-bottom: 16px;">
+                    <tbody class="viewTestBg">
+                      <tr>
+                        <td class="tableAlign"><b>Section Level Scorers</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.Allocated_Sections_Scorers =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <!-- If Allocated_Sections_Scorers == 'n' -->
+                      <tr *ngIf="viewTestDetails.Allocated_Sections_Scorers =='n'">
+                        <td class="tableAlign"><b>Scoring Type</b></td>
+                        <td class="tableAlign">
+                          <p style="margin: 0 0 3 0;">{{viewTestDetails.Scorer_Details[0].Scoring_Type}}</p>
+                        </td>
+                      </tr>
+                      <tr *ngIf="viewTestDetails.Allocated_Sections_Scorers =='n'">
+                        <td class="tableAlign"><b>Number of Scorers</b></td>
+                        <td class="tableAlign">
+                          <p style="margin: 0 0 3 0;">{{viewTestDetails.Scorer_Details[0].No_of_Scorers}}</p>
+                        </td>
+                      </tr>
+                      <tr *ngIf="viewTestDetails.Allocated_Sections_Scorers =='n'">
+                        <td class="tableAlign"><b>Scorers</b></td>
+                        <td class="tableAlign"><span style="margin: 0 0 3 0;">
+                            <span *ngFor="let scorers of viewTestDetails.Scorer_Details[0].Scorers;let i=index">{{scorers.itemName}}<span *ngIf="viewTestDetails.Scorer_Details[0].Scorers.length-1 != i">,</span></span></span></td>
+                      </tr>
+
+
+                      <!-- If Allocated_Sections_Scorers == 'y' -->
+
+                      <tr *ngIf="viewTestDetails.Allocated_Sections_Scorers =='y'">
+                        <table class="table table-hover viewTable table-bordered" style="margin: 10px 0;">
+                          <thead class="theadData">
+                              <tr class="trData">
+                                  <th class="thData">Item Set</th>
+                                  <th class="thData">Section</th>
+                                  <th class="thData">Scoring Type</th>
+                                  <th class="thData">No of Scorers</th>
+                                  <th class="thData">Scorers</th>
+                              </tr>
+                          </thead>
+
+                          <tbody class="tbodyData" style="display: inherit !important;">
+                               <tr class="trData" *ngFor="let itemSet of viewTestDetails.Scorer_Details;let itemsetInd = index">
+                                  <td style="width: 20%;border-right: 1px solid white;vertical-align: middle;" class="tdData">{{itemSet.ItemSet_Name}}</td>
+                                  <table style="border:none;">
+                                      <tbody>
+                                          <tr class="trData" *ngFor="let section of itemSet?.Section;let ind = index">
+                                              <td class="tdData">{{section.Section_Name}}</td>
+                                              <td class="tdData">{{section.Scoring_Type}}</td>
+                                               <td class="tdData">{{section.No_of_Scorers}}</td>
+                                               <td>
+
+                                                  <span *ngFor="let scorers of section.Scorers;let i=index">{{scorers}} <span *ngIf="section.Scorers.length-1 != i">,</span> </span>
+                                               </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                               </tr>
+                          </tbody>
+                      </table>
+                      </tr>
+
+
+                      <tr>
+                        <td class="tableAlign"><b>Anonymity</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.Anonymity =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Show Keywords</b></td>
+                        <td class="tableAlign"> <label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.Keywords_Show =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                      <tr>
+                        <td class="tableAlign"><b>Start Scoring once test is completed</b></td>
+                        <td class="tableAlign"><label class="switch">
+                            <input type="checkbox" [disabled]="true" [checked]="viewTestDetails.Score_After_Test_Completed =='y'">
+                            <span class="slider"></span>
+                          </label></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+            </div>
+        </div>
+    </ng-template>
+
+
+<!-- delete test popup -->
+
+<!-- <div *ngIf="deleteTestPopup" class="deleteTestPopupCss">
+    <button  aria-label="Close" class="dialog__close-btn" (click)="deleteTestPopup = false">X</button>
+    <p class="modalHead">Alert!</p>
+      <div class="formAlign">
+          <p class="" style="text-align:center">Are You Sure Want To Delete ?</p>
+
+      </div>
+    <div class="saveBtn">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteTestConfirm()">Ok</button>
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteTestPopup = false">Cancel</button>
+    </div>
+</div>
+<div *ngIf="deleteTestPopup" class="overlay_edit"></div> -->
+
+<!-- delete test popup -->
+<ng-template #deleteTestPopup>
+    <div class="modal-header">
+        <p class="modalHead">Alert!</p>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="viewTestPopupClose()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p class="" style="text-align:center">Are you sure you want to delete this test?</p>
+        <div class="saveBtn">
+            <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteTestConfirm()">Ok</button>
+            <button class="btn btn-primary btnCss creategrpBtn" (click)="viewTestPopupClose()">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<!-- edit schedule alert -->
+<!-- <div *ngIf="alertPopup" class="deleteTestPopupCss">
+        <button  aria-label="Close" class="dialog__close-btn" (click)="cancelChangeScheduleType()">X</button>
+        <p class="modalHead">Alert!</p>
+          <div class="formAlign">
+              <p class="" style="text-align:center">The groups already mapped will be removed.<br> Are you sure you want to proceed?</p>
+
+          </div>
+        <div class="saveBtn">
+          <button class="btn btn-primary btnCss creategrpBtn" (click)="changeScheduleType()">Ok</button>
+          <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelChangeScheduleType()">Cancel</button>
+        </div>
+</div>
+<div *ngIf="alertPopup" class="overlay_edit"></div> -->
+
+
+
+
+<!-- alert to show after seleted group name to schedule test and change individual user -->
+<ng-template #alertPopup>
+        <div class="modal-header">
+                <p class="modalHead">Alert!</p>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="formAlign">
+                <p class="" style="text-align:center">The groups already mapped will be removed.<br> Are you sure you want to proceed?</p>
+            </div>
+            <div class="saveBtn">
+                <button class="btn btn-primary btnCss creategrpBtn" (click)="changeScheduleType()">Ok</button>
+                <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelChangeScheduleType()">Cancel</button>
+            </div>
+        </div>
+</ng-template>
+
+
+<ng-template #showGroups>
+  <div class="modal-header">
+    <p class="modalHead">{{getCurrentGrpDet.Grp_Name}}</p>
+    <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="hideGroupModel()">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body" style="height: auto;max-height: 450px;overflow: auto;">
+    <table align="center" class="_grpUsrab" *ngIf="getCurrentGrpDet.users_in_group.length !== 0">
+      <tr>
+        <th style="width: 13%;">
+          <!-- <label class="customBtnGrp" (change)="selectAllUsersInGroup(getCurrentGrpDet)">
+            <p class="select_all_check"></p>
+            <input type="checkbox" name="" [checked]=false>
+            <span class="checkmark"></span>
+          </label> -->
+        </th>
+        <th>Name</th>
+        <th>Email</th>
+        <!-- <th>Phone</th> -->
+      </tr>
+      <tr *ngFor="let grpUsr of getCurrentGrpDet.users_in_group">
+        <td style="width: 13%;">
+          <label class="customBtnGrp" (change)="changeUsersInGroup(grpUsr)">
+            <p class="select_all_check"></p>
+            <input type="checkbox" name="" [checked]="grpUsr.is_selected">
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>{{grpUsr.Tenant_user_nm}}</td>
+        <td>{{grpUsr.email}}</td>
+        <!-- <td>{{grpUsr.Tenant_user_nm}}</td> -->
+      </tr>
+    </table>
+    <table *ngIf="getCurrentGrpDet.users_in_group.length === 0">
+      <tr style="text-align: center;">
+        <td colspan="3">No Values Found</td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer _modFoot">
+    <div class="saveBtnFoot">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="hideGroupModel()">Ok</button>
+      <!-- <button class="btn btn-primary btnCss creategrpBtn" (click)="hideGroupModel()">Cancel</button> -->
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #showUsers>
+  <div class="modal-header">
+    <p class="modalHead">User Details</p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hideUserModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" style="height: auto;max-height: 450px;overflow: auto;">
+    <table align="center" class="_Usrtab">
+      <tr>
+        <th>Name</th>
+        <td>{{getCurrentUserDet.Tenant_user_nm}}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{getCurrentUserDet.email}}</td>
+      </tr>
+      <tr>
+        <th>Pre Approved</th>
+        <td> <span *ngIf="getCurrentUserDet.Pre_Approved == 'y'">Yes</span> <span
+            *ngIf="getCurrentUserDet.Pre_Approved == 'n'">No</span> </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer _modFoot">
+    <div class="saveBtnFoot">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="hideUserModel()">Ok</button>
+      <!-- <button class="btn btn-primary btnCss creategrpBtn" (click)="hideUserModel()">Cancel</button> -->
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #showCustomFields>
+  <div class="modal-header">
+    <p class="modalHead">Custom Field : <b>{{getCurrentCFDet.label}}</b></p>
+    <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="hideCFModel()">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body" style="height: auto;max-height: 450px;overflow: auto;">
+    <table align="center" class="_grpUsrab" *ngIf="getCurrentCFDet.custom_field_values.length !== 0">
+      <tr>
+        <th style="width: 13%;">
+          <!-- <label class="customBtnGrp">
+            <p class="select_all_check"></p>
+            <input type="checkbox" name="" [checked]=false>
+            <span class="checkmark"></span>
+          </label> -->
+        </th>
+        <th>Values</th>
+        <!-- <th>Phone</th> -->
+      </tr>
+      <tr>
+      <td style="width: 20%;">
+        <label class="customBtnGrp" (change)="selecAllCustomFieldValues(selectAllCustomFields)">
+          <p class="select_all_check"></p>
+          <input type="checkbox" name="" [(ngModel)]="selectAllCustomFields" [checked]="selectAllCustomFields">
+          <span class="checkmark"></span>
+        </label>
+      </td>
+      <td>Select All</td>
+      </tr>
+      <tr *ngFor="let cfField of getCurrentCFDet.custom_field_values">
+        <td style="width: 20%;">
+          <label class="customBtnGrp" (change)="changeCFValues(cfField)">
+            <p class="select_all_check"></p>
+            <input type="checkbox" name="" [checked]="cfField.is_selected">
+            <span class="checkmark"></span>
+          </label>
+        </td>
+        <td>{{cfField.value}}</td>
+        <!-- <td>{{grpUsr.Tenant_user_nm}}</td> -->
+      </tr>
+      </table>
+      <table *ngIf="getCurrentCFDet.custom_field_values.length === 0">
+        <tr style="text-align: center;">
+          <td colspan="2">No Values Found</td>
+        </tr>
+      </table>
+  </div>
+  <div class="modal-footer _modFoot">
+    <div class="saveBtnFoot">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="hideCFModel()">Ok</button>
+      <!-- <button class="btn btn-primary btnCss creategrpBtn" (click)="hideCFModel()">Cancel</button> -->
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #showColumnFilter>
+  <div class="modal-header">
+    <p class="modalHead">Filter by column name</p>
+    <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="hideCFModel()">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+  <div class="modal-body" style="height: auto;max-height: 450px;overflow: auto;">
+    <!-- Select Filter -->
+    <div class="_filterRepOA">
+      <div class="col-md-12">
+        <h5>Select the columns to be displayed in the report:</h5>
+        <div>
+          <ul class="_TestUL">
+            <li *ngFor="let data of columnNames">
+              <label class="customBtn" (change)="chooseColumns(data)">
+                <p class="select_all_check"></p>
+                <input type="checkbox" name="" [checked]="data.is_selected">
+                <span class="checkmark"></span>
+              </label>
+              <span class="_listVals">{{data.field}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer _modFoot">
+    <div class="saveBtnFoot">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="hideCFModel()">Ok</button>
+      <!-- <button class="btn btn-primary btnCss creategrpBtn" (click)="hideCFModel()">Cancel</button> -->
+    </div>
+  </div>
+</ng-template>

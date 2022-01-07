@@ -1,0 +1,97 @@
+<app-loader *ngIf="showload"></app-loader>
+<div class="content-wrapper" *ngIf = "APPNAME == 'Admin/Author'">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header p-4">
+                          <h3 class="card-title">Welcome to Scora!</h3>
+                      </div>
+                      <div class="card-body p-0">
+                          <div class="pl-3 pr-3 mt-4 ">
+                              <p class="mb-4">Wow! Welcome onboard!</p>
+
+                                <p class="mb-4">You are all set to use SCORA for your assessment needs!</p>
+                    
+                                <p class="mb-4">As a first step, you can start adding Users for Roles such as Author, Test Administrator, Examiner and Participant. Each Role comes with a set of privileges and permissions which can be specifically assigned based on the task a User is expected to perform. While creating a User, in addition to the generic Fields, you can also create custom Fields. These SIX custom Fields can only be created or edited by you. Once Users are added, you can start inviting them to SCORA. Users can also be bulk imported into the system using the Excel template provided under the Data Templates Menu.</p>
+                                
+                                <p class="mb-4">Once you have added Users, you can also Create and Manage User Groups as per your needs.</p>
+                                
+                               <p>We would love to assist you with this process. Email us at <a href="" class="take-test">cx@scora.io</a> and let us help you to make the most of SCORA.
+                              </p>
+                              <div class="row text-center">
+                                  <div class="col-md-6 form-group">
+                                      <figure>
+                                        <img src="src/assets/img/admin-img/manage-group.png" alt="" srcset="">
+                                      </figure>
+                                      <a [routerLink]="['/author/ManageUsers']" class="default-btn">Manage Users</a>
+                                  </div>
+                                  <div class="col-md-6 form-group">
+                                      <figure>
+                                        <img src="src/assets/img/admin-img/manage-user.png" alt="" srcset="">
+                                      </figure>
+                                      <a [routerLink]="['/author/userGroups']" class="default-btn">Manage Groups</a>
+                                  </div>
+
+                              </div>
+                          </div>
+
+                      </div>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+          <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" *ngIf = "APPNAME == 'Test Admin'">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <h3 class="card-title">Welcome to Scora!</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="p-5">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.</p>
+                                <div class="row text-center">
+                                    <div class="col-md-6">
+                                        <figure>
+                                            <img src="src/test-admin1-assets/img/exadmin-img/blue-print.svg" alt="" srcset="" class="img-fluid">
+                                        </figure>
+                                        <a href="" class="default-btn">Create Blueprint</a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <figure>
+                                            <img src="src/test-admin1-assets/img/exadmin-img/rubric.svg" alt="" srcset="" class="img-fluid">
+                                        </figure>
+                                        <a href="" class="default-btn">Create Rubric</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col-md-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

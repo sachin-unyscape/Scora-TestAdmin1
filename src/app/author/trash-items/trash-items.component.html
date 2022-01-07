@@ -1,0 +1,924 @@
+<!-- <view Trash Items> -->
+  <app-loader *ngIf="showLoad"></app-loader>
+  <simple-notifications [options]="Notificationoptions"></simple-notifications>
+  <div class="col-lg-12 col-md-12 col-sm-6">
+    <div class="row">
+      <div class="col-lg-8 col-md-8 col-sm-4 viewAll">
+        <div class="rightcolumn">
+          <p class="itemSetHead12" *ngIf="!uploadBack">Deleted Items<span *ngIf="deletedItemIdList.length != 0" style="padding: 0 0 0 15px;font-size: 12px;color: #0681d3;cursor: default;">{{deletedItemIdList.length}} item(s) selected</span> </p>
+          <p class="itemSetHead12" *ngIf="uploadBack">Uploaded Items</p>
+          <label style="visibility: hidden;" class="control-label col-lg-1 col-md-1 col-sm-1 searchLabel" for="pwd">Search</label>
+          <input list="browsers" class="form-control col-lg-3 col-md-3 col-sm-2"  [(ngModel)]="searchItems" (ngModelChange)="SearchKeywords(searchItems)" (keydown)="searchByFilter($event)" placeholder="Enter Search Keywords" [ngClass]="{'alertSearch': searchError== true && (searchItems == undefined || searchItems == '')}" style="border-radius: 5px !important;height: 28px;margin: 7px 0px;visibility: hidden;">
+            <datalist id="browsers" style="visibility: hidden;">
+              <option [value]="data" *ngFor="let data of searchedData">
+            </datalist>
+
+            <div style="visibility: hidden;" *ngIf="showAttributeFilter" class="attributeList">
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 attrLabel" for="email">Subject</label>
+                      <div class="col-lg-8">
+                              <p class="form-control-static" >
+                                  <angular2-multiselect style="font-size:12px" [data]="subjectList"  (ngModelChange)="getTopic($event)"
+                                  [(ngModel)]="selectedSub" [ngModelOptions]="{standalone: true}" [disable]="disableAttributes"
+                                      [settings]="settings1" id="Subjects" #Subjects="ngModel" required [selected]="selectedSub == subjectList" [ngClass]= "{'disableToggle':disableAttributes == true}">
+
+                                  </angular2-multiselect>
+
+                              </p>
+
+                      </div>
+                  </div>
+
+                </div>
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 attrLabel" for="pwd">Topic</label>
+                      <div class="col-lg-8">
+                              <p class="form-control-static">
+                                <angular2-multiselect  [data]="topicsList"  (ngModelChange)="getSubtopic($event)"  [disable]="disableAttributes"
+                                [(ngModel)]="selectedTopic" [ngModelOptions]="{standalone: true}"
+                                      [settings]="settings2" id="topics" #topics="ngModel" required [selected]="selectedTopic == topicsList" [ngClass]= "{'disableToggle':disableAttributes == true}">
+                                      </angular2-multiselect>
+                              </p>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 attrLabel" for="pwd">Sub Topic</label>
+                      <div class="col-lg-8">
+                      <p class="form-control-static">
+                            <angular2-multiselect [data]="subtopicList"  class="custom-class-example"
+                            [(ngModel)]="selectedSubtopic" [ngModelOptions]="{standalone: true}"
+                                      [settings]="settings3" [selected]="selectedSubtopic == subtopicList" [disable]="disableAttributes" [ngClass]= "{'disableToggle':disableAttributes == true}">
+                            </angular2-multiselect>
+                        </p>
+                      </div>
+                  </div>
+
+                </div>
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 diffiLevel attrLabel" for="pwd">Difficulty Level</label>
+                      <div class="col-lg-8">
+                      <p class="form-control-static">
+                        <select  class="form-control dropdownSize"  [(ngModel)]="difficulty_level" name="difflevel" id="difflevel" #difflevel="ngModel"  [ngClass]= "{'disableToggle':disableAttributes == true}">
+                            <option disabled="true" [selected]="difficulty_level == '' && diffLevel_boolean == true " [value]="undefined" class="dropdownPlaceholder">Select {{diffLevelLabelName}}</option>
+                            <option *ngFor="let data of difficultyLevel" [value]="data" >{{data}}</option>
+                        </select>
+                      </p>
+                      </div>
+                  </div>
+
+                </div>
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 attrLabel" for="pwd">Taxonomy</label>
+                      <div class="col-lg-8">
+                        <p class="form-control-static">
+                          <select  class="form-control dropdownSize" [(ngModel)]="taxonomy" id="tax" #tax="ngModel" name="tax"  [ngClass]= "{'disableToggle':disableAttributes == true}">
+                              <option disabled="true" [selected]="taxonomy == ''" [value]="undefined" class="dropdownPlaceholder">Select {{TaxonomyLabelName}}</option>
+                              <option *ngFor="let data1 of taxonomyList" [value]="data1" >{{data1}}</option>
+                          </select>
+                        </p>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group formMargin">
+                  <div class="row">
+                      <label class="control-label col-lg-4 attrLabel" for="pwd"></label>
+                      <div class="col-lg-8">
+                        <p class="form-control-static">
+                          <button class = "btn btn-primary addnewItemBtn" (click)="ApplyFilter()">Apply Filter</button> &nbsp;
+                          <a class="resetFilter" (click)="resetAttribute()">Reset</a>
+                        </p>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+            <span style="visibility: hidden;" class="filterIconSearch" (click)="searchByFilter($event.keyCode =13)"><fa [name]="'search'" [size]=1 tooltip="Search" placement="bottom"></fa></span>
+            <label style="visibility: hidden;" class="control-label ClearLabel" for="pwd" (click)="clearData()" *ngIf="showClearBtn"><fa [name]="'eraser'" [size]=1 tooltip="Clear Search Result" placement="bottom"></fa></label>
+            <span class="filterIconSearch" style="margin-right: 15px;visibility: hidden;" (click)="filterWithAttributes()" [ngClass]="{'filterApplied':isFilterApplied == true}"><fa [name]="'filter'" tooltip="Filter" placement="bottom" [size]=1></fa></span>
+            <span class="deleteAllIcon"><fa  *ngIf="allItemsList" [name]="'trash'"  (click)="bulkItemDelete(bulkDeletePopup)" [size]=1 class="" [tooltip]="deleteItemsTooltip" (mouseover)="getToolTipValue()" placement="bottom"></fa></span>
+            <span class="filterIconSearch"><fa  *ngIf="allItemsList" [name]="'suitcase'"  (click)="bulkRestore(bulkRestorePopup)" [size]=1 class="" [tooltip]="restoreItemsTooltip" (mouseover)="getToolTipValue()" placement="bottom"></fa></span>
+            <span style="text-align: right;line-height: 3;cursor:pointer" class="col-md-2"  *ngIf="uploadBack" [routerLink]="['/Upload/UploadedFiles']">< Back</span>
+        </div>
+        <hr>
+        <p *ngIf="allItemsList == undefined || allItemsList.length == 0" class="noItemcss">No Items to display</p>
+        <div class="setion_wise_Item" *ngIf="allItemsList" infiniteScroll [infiniteScrollDistance]="1" [infiniteScrollThrottle]="50" (scrolled)="onScroll()" [scrollWindow]="false">
+          <div *ngFor="let data of allItemsList; let seq = index" [ngClass]="{'shadow':showItem == seq,'pendingItem':data.element_pending == true}" class="eachQuesBorder">
+
+            <label class="customBtn" *ngIf="data.item_delete == true"><p class="select_all_check"></p>
+              <input type="checkbox" (click)="selctedItemsToDelete(data.item_id)" name="data.UDF_Tag_ID" [checked]=false>
+              <span class="checkmark"></span>
+            </label>
+
+            <label class="customBtn" *ngIf="data.item_delete == false" style="cursor: not-allowed;"><p class="select_all_check"></p>
+              <input type="checkbox" *ngIf="data.item_delete == true" name="data.UDF_Tag_ID" [checked]=false>
+              <span class="checkmark"></span>
+            </label>
+
+            <div *ngIf="data.item_type==1" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.item[0].item_df_id ==6,'showAudioHeight':data?.item[0].item_df_id ==10,'showVideoHeight':data?.item[0].item_df_id ==11}" >
+
+              <div  class=""  *ngFor="let value of data?.item; let i=index" >
+
+                <span *ngIf="i==0 && value.item_df_id == 1" class="quesAlignment">{{data.index}}.&nbsp;</span><p class="paraAlign" *ngIf="value.item_df_id == 1" [innerHTML]="value.data_format_value">{{value.data_format_value}}</p>
+                <p *ngIf="i==0 && value.item_df_id == 6" class="questionNumberAlign">{{data.index}}.&nbsp;</p><img [src]="value.data_format_value" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                <p *ngIf="i==0 && value.item_df_id == 10" class="questionNumberAlign">{{data.index}}.&nbsp;</p><audio [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+                <p *ngIf="i==0 && value.item_df_id == 11" class="questionNumberAlign">{{data.index}}.&nbsp;</p><video [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+                <!-- list -->
+                <p *ngIf="i==0 && value.item_df_id == 8" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                <div *ngIf="value.item_df_id == 8">
+                  <div *ngFor="let listArray of value.data_format_value">
+                    <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                      <div class="row">
+                        <div class="col-md-1 listLablePreview1">
+                          <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                        </div>
+                        <div class="col-md-7">
+                          <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                          <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                          <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                          <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="i==0 && value.item_df_id == 7" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                <!-- Table -->
+                <div *ngIf="value.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                  <div class="row">
+                    <div  style="width:98%;">
+                      <table class="table"  [style.width.%]="value.table_format == 5 ? '50':100"   [ngClass]="{'table-striped' :value.table_format == 3,'table-bordered' : (value.table_format == 2 || value.table_format == 4 || value.table_format == 5)}" >
+
+                        <tbody>
+
+                          <tr *ngFor="let row of value.data_format_value;let rowindex =index">
+
+                            <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':value.table_color}"  [ngClass]="{'tableHeadType':(value.available_headers =='column' || value.available_headers =='all') && col.header == 1 && (value.table_format == 2  || value.table_format == 5)}">{{col.table_value}}</td>
+                          </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <!-- answer block -->
+              <div class='hideAnswer' [ngClass]="{'class4':showItem == seq}">
+                  <div *ngFor='let input of data?.answer_choices; let i = index;'>
+                    <div class="">
+                      <div *ngFor="let data of input?.choice_elements; let id=index;">
+                        <div *ngIf="data.answer_df_id== 1" style="margin-left: 3px;margin-bottom: 4px;display: inline-flex;" [ngClass]="{'textClr':input.correct_answer == true}"><span *ngIf="id==0">{{input.label}}.&nbsp;</span><span [innerHTML]="data.data_format_value">{{data.data_format_value}}</span></div>
+                        <div *ngIf="data.answer_df_id== 6" style="margin-top: 9px;margin-bottom: 10px;margin-left: 2px;" [ngClass]="{'textClr':input.correct_answer == true}"><span *ngIf="id==0">{{input.label}}.&nbsp;</span>&nbsp;<img [src]="data.data_format_value" style="width: 84px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';"></div>
+                        <!-- audio -->
+                        <div *ngIf="data.answer_df_id == 10" style="margin-top: 34px;margin-left: 35px;margin-bottom: 8px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                          <span *ngIf="id==0" class="quesNumAlignAnsBlk">{{input.label}}.&nbsp;</span><audio [src]="data.data_format_value" type="audio/mp3"  controls  controlsList="nodownload"  style="width: 200px;margin-left: -18px; margin-top: -23px;" class="audiotag">
+                            <!-- <source src="{{data.data_format_value}}" type="audio/mp3"> -->
+                          </audio>
+                        </div>
+                        <!-- video -->
+                        <div *ngIf="data.answer_df_id == 11" style="margin-top: 34px;margin-left: 34px;margin-bottom: 8px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                          <span *ngIf="id==0" class="quesNumAlignAnsBlk">{{input.label}}.&nbsp;</span><video [src]="data.data_format_value" type="video/mp4" controls controlsList="nodownload"  style="width: 173px;margin-top: -23px;" class="audiotag1">
+                            <!-- <source src="{{data.data_format_value}}" type="video/mp4"> -->
+                            </video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <p class="">
+                  <span class="viewIcons">Score : {{data.score}}</span>
+                <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,data.item_delete,deleteitemPopup)" [tooltip]= "data.item_delete == false?'This item cannot be deleted since it may be mapped to an Item set':'Delete permanently'" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+              </p>
+            </div>
+
+            <!-- Tf -->
+            <div *ngIf="data.item_type==2" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.item[0].item_df_id ==6,'showAudioHeight':data?.item[0].item_df_id ==10,'showVideoHeight':data?.item[0].item_df_id ==11}">
+              <div  class="" *ngFor="let value of data?.item; let i=index" >
+                  <span *ngIf="i==0 && value.item_df_id == 1" class="quesAlignment">{{data.index}}.&nbsp;</span><p class="paraAlign" *ngIf="value.item_df_id == 1" [innerHTML]="value.data_format_value">{{value.data_format_value}}</p>
+                <p *ngIf="i==0 && value.item_df_id == 6" class="questionNumberAlign">{{data.index}}.&nbsp;</p><img [src]="value.data_format_value" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                <p *ngIf="i==0 && value.item_df_id == 10" class="questionNumberAlign">{{data.index}}.&nbsp;</p><audio [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+                <p *ngIf="i==0 && value.item_df_id == 11" class="questionNumberAlign">{{data.index}}.&nbsp;</p><video [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+                <!-- list -->
+                <p *ngIf="i==0 && value.item_df_id == 8" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                <div *ngIf="value.item_df_id == 8">
+                  <div *ngFor="let listArray of value.data_format_value">
+                    <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                      <div class="row">
+                        <div class="col-md-1 listLablePreview1">
+                          <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                        </div>
+                        <div class="col-md-7">
+                          <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                          <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                          <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                          <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="i==0 && value.item_df_id == 7" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                  <!-- Table -->
+                  <div *ngIf="value.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                    <div class="row">
+                      <div  style="width:98%;">
+                        <table class="table"  [style.width.%]="value.table_format == 5 ? '50':100"   [ngClass]="{'table-striped' :value.table_format == 3,'table-bordered' : (value.table_format == 2 || value.table_format == 4 || value.table_format == 5)}" >
+
+                          <tbody>
+
+                            <tr *ngFor="let row of value.data_format_value;let rowindex =index">
+
+                              <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':value.table_color}"  [ngClass]="{'tableHeadType':(value.available_headers =='column' || value.available_headers =='all') && col.header == 1 && (value.table_format == 2  || value.table_format == 5)}">{{col.table_value}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <!-- answer block -->
+              <div class='hideAnswer' [ngClass]="{'class4':showItem == seq}">
+                  <div *ngFor='let input of data?.answer_choices; let i = index;'>
+                      <div class="correct_options_block_TF_viewItem">
+                          <div class="correct_radio_button_TF">
+                              <p *ngIf="input.answer_df_id == 1" [ngClass]="{'textClr':input.correct_answer == true}">{{input.label}}.&nbsp;{{input.data_format_value}}</p>
+                          </div>
+                      </div>
+
+                  </div>
+              </div>
+              <p class="">
+                  <span class="viewIcons">Score : {{data.score}}</span>
+                  <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                  <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,data.item_delete,deleteitemPopup)" [tooltip]= "data.item_delete == false?'This item cannot be deleted since it may be mapped to an Item set':'Delete permanently'" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+                </p>
+            </div>
+
+            <!-- match -->
+            <div  *ngIf="data.item_type == 3" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.item[0].item_df_id ==6,'showAudioHeight':data?.item[0].item_df_id ==10,'showVideoHeight':data?.item[0].item_df_id ==11}">
+                <div *ngFor="let data1 of data?.item; let i = index;" class="display_margin1 ">
+                    <span *ngIf="i==0 && data1.item_df_id == 1" class="quesAlignment">{{data.index}}.&nbsp;</span><p class="paraAlign" *ngIf="data1.item_df_id == 1" [innerHTML]="data1.data_format_value">{{data1.data_format_value}}</p>
+                  <p *ngIf="i==0 && data1.item_df_id == 6" class="questionNumberAlign">{{data.index}}.&nbsp;</p><img [src]="data1.data_format_value" *ngIf="data1.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                  <p *ngIf="i==0 && data1.item_df_id == 10" class="questionNumberAlign">{{data.index}}.&nbsp;</p><audio [src]="data1.data_format_value" *ngIf="data1.item_df_id == 10" width="400" height = "200" controls></audio>
+                  <p *ngIf="i==0 && data1.item_df_id == 11" class="questionNumberAlign">{{data.index}}.&nbsp;</p><video [src]="data1.data_format_value" *ngIf="data1.item_df_id == 11" width="400" height = "200" controls></video>
+                  <!-- list -->
+                  <p *ngIf="i==0 && data1.item_df_id == 8" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                  <div *ngIf="data1.item_df_id == 8">
+                    <div *ngFor="let listArray of data1.data_format_value">
+                      <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                        <div class="row">
+                          <div class="col-md-1 listLablePreview1">
+                            <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                          </div>
+                          <div class="col-md-7">
+                            <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                            <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                            <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                            <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p *ngIf="i==0 && data1.item_df_id == 7" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                  <!-- Table -->
+                  <div *ngIf="data1.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                    <div class="row">
+                      <div  style="width:98%;">
+                        <table class="table"  [style.width.%]="data1.table_format == 5 ? '50':100"   [ngClass]="{'table-striped' :data1.table_format == 3,'table-bordered' : (data1.table_format == 2 || data1.table_format == 4 || data1.table_format == 5)}" >
+
+                          <tbody>
+
+                            <tr *ngFor="let row of data1.data_format_value;let rowindex =index">
+
+                              <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':data1.table_color}"  [ngClass]="{'tableHeadType':(data1.available_headers =='column' || data1.available_headers =='all') && col.header == 1 && (data1.table_format == 2  || data1.table_format == 5)}">{{col.table_value}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="data1.item_df_id == 9">
+                        <div *ngFor='let input1 of data1?.data_format_value;let idn = index;'>
+                          <div class="col-md-12" *ngIf="input1.match_data[0].header == 1">
+                            <div class="row">
+                              <div class="headMargin_left" *ngFor='let data of input1?.match_data;let in=index'  [ngClass]="{'header-margin': in==1}">
+                                  <div style="margin-top:5px;" class="input-group" >
+                                    <b><p *ngIf="data.match_data_format_id == 1" class="previewMatchStmt">{{data.match_value}}</p></b>
+                                    <img [src]="data.match_value" *ngIf="data.match_data_format_id == 6 " style="width: 197px;height: 135px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                                    <audio width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 10 " style="width: 202px;">
+                                      <source [src]="data.match_value" type="audio/mp3">
+                                    </audio>
+                                    <video width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 11 " style="width: 196px;height: 100px;">
+                                      <source [src]="data.match_value" type="video/mp4">
+                                    </video>
+                                  </div>
+                              </div>
+
+                            </div>
+                          </div>
+                          <div class="col-md-12" *ngIf="input1.match_data[0].header != 1">
+                              <div class="row">
+
+                                <div class="matchLeft" *ngFor='let data of input1?.match_data;let in=index' [ngClass]="{'matchRight': in==1}" >
+                                    <div class="input-group match_margin previewMatchStmt" [ngClass]="{'extraOption' : input1?.match_data[0].match_value == 'abc'}">
+                                        <p *ngIf="data.match_data_format_id == 1 && data.match_value != 'abc'" class=""><span *ngIf="data.match_data_format_id == 1 && (data1.matchlist_type == 4 || data1.matchlist_type == 5)">{{data.label}}.</span>&nbsp;{{data.match_value}}</p>
+                                        <span *ngIf="data.match_data_format_id == 6 && (data1.matchlist_type == 4 || data1.matchlist_type == 5)">{{data.label}}.&nbsp;</span><img [src]="data.match_value" *ngIf="data.match_data_format_id == 6 && data.match_value != 'abc'" style="width: 178px;height: 121px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                                        <span *ngIf="data.match_data_format_id == 10 && (data1.matchlist_type == 4 || data1.matchlist_type == 5)">{{data.label}}.&nbsp;</span><audio width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 10 && data.match_value != 'abc'" style="width: 202px;">
+                                          <source [src]="data.match_value" type="audio/mp3">
+                                        </audio>
+                                        <span *ngIf="data.match_data_format_id == 11 && (data1.matchlist_type == 4 || data1.matchlist_type == 5)">{{data.label}}.&nbsp;</span><video width="400" height = "200" controls controlsList="nodownload" *ngIf="data.match_data_format_id == 11 && data.match_value != 'abc'" style="width: 196px;height: 100px;">
+                                          <source [src]="data.match_value" type="video/mp4">
+                                        </video>
+                                    </div>
+                                </div>
+
+                              </div>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                <!-- answer block -->
+                  <div class='' *ngIf="data.matchlist_type == 5" style="margin-left: -50px;margin-top: 34px;">
+                    <div *ngFor='let input of data?.answer_choices; let i = index;' >
+                      <div class="" style="margin-bottom: 13px;">
+                        <div *ngIf="input.answer_df_id== 1" style="margin-top: 4px;margin-left: 93px;display: inline-flex;" [ngClass]="{'textClr':input.correct_answer == true}"><span>{{input.label}}.</span>&nbsp;<span [innerHTML]="input.data_format_value">{{input.data_format_value}}</span></div>
+                        <div *ngIf="input.answer_df_id== 6" style="margin-top: 9px;margin-bottom: 10px;margin-left: 2px;" [ngClass]="{'textClr':input.correct_answer == true}"><span >{{input.label}}.</span>&nbsp;<img [src]="input.data_format_value" style="width: 84px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';"></div>
+                        <!-- audio -->
+                        <div *ngIf="input.answer_df_id == 10" style="margin-top: 34px;margin-left: 102px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                          <span class="quesNumAlignAnsBlk">{{input.label}}.</span>&nbsp;<audio [src]="input.data_format_value" type="audio/mp3" controls  controlsList="nodownload"  style="width: 200px;margin-left: -18px; margin-top: -23px;" class="audiotag">
+                            <!-- <source src="{{input.data_format_value}}" type="audio/mp3"> -->
+                          </audio>
+                        </div>
+                        <!-- video -->
+                        <div *ngIf="input.answer_df_id == 11" style="margin-top: 34px;margin-left: 93px;" [ngClass]="{'textClr':input.correct_answer == true}">
+                          <span class="quesNumAlignAnsBlk">{{input.label}}.</span>&nbsp;<video [src]="input.data_format_value" type="video/mp4" controls controlsList="nodownload"  style="width: 173px;margin-top: -23px;" class="audiotag1">
+                            <!-- <source src="{{input.data_format_value}}" type="video/mp4"> -->
+                            </video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class='' *ngIf = "data.matchlist_type == 4" style="margin-left: 22px;margin-bottom: 2px;">
+                      <div *ngFor='let input of data?.answer_choices; let idn = index;' style="margin-bottom: 6px;">
+                          <div *ngIf="input.answer_df_id== 1" [ngClass]="{'textClr':input.correct_answer == true}"><span>{{input.label}}.</span>&nbsp;{{input.data_format_value}}</div>
+                      </div>
+                  </div>
+                  <p class="">
+                      <span class="viewIcons">Score : {{data.score}}</span>
+                      <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                      <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,data.item_delete,deleteitemPopup)" [tooltip]= "data.item_delete == false?'This item cannot be deleted since it may be mapped to an Item set':'Delete permanently'" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+                    </p>
+            </div>
+
+            <!-- free text -->
+            <div *ngIf="data.item_type==5" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.item[0].item_df_id ==6,'showAudioHeight':data?.item[0].item_df_id ==10,'showVideoHeight':data?.item[0].item_df_id ==11}" >
+
+              <div  class=""  *ngFor="let value of data?.item; let i=index" >
+
+                <span *ngIf="i==0 && value.item_df_id == 1" class="quesAlignment">{{data.index}}.&nbsp;</span><p class="paraAlign" *ngIf="value.item_df_id == 1" [innerHTML]="value.data_format_value">{{value.data_format_value}}</p>
+                <p *ngIf="i==0 && value.item_df_id == 6" class="questionNumberAlign">{{data.index}}.&nbsp;</p><img [src]="value.data_format_value" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                <p *ngIf="i==0 && value.item_df_id == 10" class="questionNumberAlign">{{data.index}}.&nbsp;</p><audio [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+                <p *ngIf="i==0 && value.item_df_id == 11" class="questionNumberAlign">{{data.index}}.&nbsp;</p><video [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+                <!-- list -->
+                <p *ngIf="i==0 && value.item_df_id == 8" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                <div *ngIf="value.item_df_id == 8">
+                  <div *ngFor="let listArray of value.data_format_value">
+                    <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                      <div class="row">
+                        <div class="col-md-1 listLablePreview1">
+                          <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                        </div>
+                        <div class="col-md-7">
+                          <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                          <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                          <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                          <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="i==0 && value.item_df_id == 7" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                  <!-- Table -->
+                  <div *ngIf="value.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                    <div class="row">
+                      <div  style="width:98%;">
+                        <table class="table"  [style.width.%]="value.table_format == 5 ? '50':100"   [ngClass]="{'table-striped' :value.table_format == 3,'table-bordered' : (value.table_format == 2 || value.table_format == 4 || value.table_format == 5)}" >
+
+                          <tbody>
+
+                            <tr *ngFor="let row of value.data_format_value;let rowindex =index">
+
+                              <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':value.table_color}"  [ngClass]="{'tableHeadType':(value.available_headers =='column' || value.available_headers =='all') && col.header == 1 && (value.table_format == 2  || value.table_format == 5)}">{{col.table_value}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <p class="freetextKey"><b>Keywords:</b></p>
+              <div *ngFor="let value of data?.answer_choices; let i=index">
+                <p class="freetextKey">{{i+1}}.&nbsp;{{value.answer_data}}</p>
+              </div>
+                <p class="">
+                  <span class="viewIcons">Score : {{data.score}}</span>
+                  <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                  <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,data.item_delete,deleteitemPopup)" [tooltip]= "data.item_delete == false?'This item cannot be deleted since it may be mapped to an Item set':'Delete permanently'" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+                </p>
+            </div>
+
+            <!-- file upload -->
+            <div *ngIf="data.item_type==7" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.item[0].item_df_id ==6,'showAudioHeight':data?.item[0].item_df_id ==10,'showVideoHeight':data?.item[0].item_df_id ==11}" >
+
+              <div  class=""  *ngFor="let value of data?.item; let i=index" >
+
+                <span *ngIf="i==0 && value.item_df_id == 1" class="quesAlignment">{{data.index}}.&nbsp;</span><p class="paraAlign" *ngIf="value.item_df_id == 1" [innerHTML]="value.data_format_value">{{value.data_format_value}}</p>
+                <p *ngIf="i==0 && value.item_df_id == 6" class="questionNumberAlign">{{data.index}}.&nbsp;</p><img [src]="value.data_format_value" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                <p *ngIf="i==0 && value.item_df_id == 10" class="questionNumberAlign">{{data.index}}.&nbsp;</p><audio [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+                <p *ngIf="i==0 && value.item_df_id == 11" class="questionNumberAlign">{{data.index}}.&nbsp;</p><video [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+                <!-- list -->
+                <p *ngIf="i==0 && value.item_df_id == 8" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                <div *ngIf="value.item_df_id == 8">
+                  <div *ngFor="let listArray of value.data_format_value">
+                    <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                      <div class="row">
+                        <div class="col-md-1 listLablePreview1">
+                          <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                        </div>
+                        <div class="col-md-7">
+                          <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                          <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                          <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                          <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="i==0 && value.item_df_id == 7" class="questionNumberAlign">{{data.index}}.&nbsp;</p>
+                  <!-- Table -->
+                  <div *ngIf="value.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                    <div class="row">
+                      <div  style="width:98%;">
+                        <table class="table"  [style.width.%]="value.table_format == 5 ? '50':100"   [ngClass]="{'table-striped' :value.table_format == 3,'table-bordered' : (value.table_format == 2 || value.table_format == 4 || value.table_format == 5)}" >
+
+                          <tbody>
+
+                            <tr *ngFor="let row of value.data_format_value;let rowindex =index">
+
+                              <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':value.table_color}"  [ngClass]="{'tableHeadType':(value.available_headers =='column' || value.available_headers =='all') && col.header == 1 && (value.table_format == 2  || value.table_format == 5)}">{{col.table_value}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+                <!-- file upload ans blk -->
+                <div class="col-md-12">
+                  <div class="row fileuploadPrevRow" *ngFor="let file of data?.answer_choices;let a= index">
+                    <div class="col-md-1" style="padding: 0px;">
+                      <p class="DescseqMArgin textClr">{{a+1}}.</p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="DescMArgin"> {{file.description}}</p>
+                    </div>
+                    <div class="col-md-6" style="display:inline-flex;">
+                        (<p style="margin:0px;color:red;" *ngFor="let type of file.data_format_type;let f= index">{{type.itemName}}<span *ngIf= "file.data_format_type.length > f+1">/</span>&nbsp;</p>)
+                    </div>
+                  </div>
+
+                </div>
+
+                <p class="">
+                  <span class="viewIcons">Score : {{data.score}}</span>
+                  <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                  <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,data.item_delete,deleteitemPopup)" [tooltip]= "data.item_delete == false?'This item cannot be deleted since it may be mapped to an Item set':'Delete permanently'" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+                </p>
+            </div>
+
+            <!-- directives -->
+            <div *ngIf="data.item_type == 6" class="eachSection" (click)="showQues(seq)" [ngClass]="{'class4':showItem == seq,'imageShowHeight':data?.directive_content[0].item_df_id ==6,'showAudioHeight':data?.directive_content[0].item_df_id ==10,'showVideoHeight':data?.directive_content[0].item_df_id ==11}">
+              <div *ngIf="data?.directive_content != []">
+                <!-- directive -->
+                <div    *ngFor="let value of data?.directive_content; let i=index" >
+                    <span *ngIf="i==0" class="quesAlignment">Directions - (Q. {{data.index}}).&nbsp;</span><p class="paraAlign" *ngIf="value.item_df_id == 1" [innerHTML]="value.data_format_value">{{value.data_format_value}}</p>
+                  <p *ngIf="i==0 && value.item_df_id == 6" class="questionNumberAlign">Directions - (Q. {{data.index}}).&nbsp;</p><img [src]="value.data_format_value" *ngIf="value.item_df_id == 6" style="width: 200px;height: 123px;margin-left: 16px;margin-bottom: 6px;"  onError="this.onerror=null;this.src='../../../assets/img/no_image_available.jpeg';">
+                  <p *ngIf="i==0 && value.item_df_id == 10" class="questionNumberAlign">Directions - (Q. {{data.index}}).&nbsp;</p><audio [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 10" width="400" height = "200" controls></audio>
+                  <p *ngIf="i==0 && value.item_df_id == 11" class="questionNumberAlign">Directions - (Q. {{data.index}}).&nbsp;</p><video [src]="value.data_format_value" controlsList="nodownload"  *ngIf="value.item_df_id == 11" width="400" height = "200" controls style="height: 128px;width: 256px;"></video>
+                  <!-- list -->
+                  <p *ngIf="i==0 && value.item_df_id == 8" class="questionNumberAlign">Directions - (Q. {{data.index}}).&nbsp;</p>
+                  <div *ngIf="value.item_df_id == 8">
+                    <div *ngFor="let listArray of value.data_format_value">
+                      <div class="col-md-12" *ngFor="let listElements of listArray?.list_elements;let eltIndex = index">
+                        <div class="row">
+                          <div class="col-md-1 listLablePreview1">
+                            <p class="listEltTxt" [ngClass]="{'listLabelDotPrev':listElements.list_label =='.'}" *ngIf="eltIndex == 0">{{listElements.list_label}}</p>
+                          </div>
+                          <div class="col-md-7">
+                            <p class="listEltTxt" *ngIf="listElements.list_data_format_id == 1">{{listElements.list_value}}</p>
+                            <img src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 6" class="ListImageSizePrev">
+                            <audio src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 10"  controlsList="nodownload" controls width="400" height = "200" controls class="ListAudioSizePrev"></audio>
+                            <video src="{{listElements.list_value}}" *ngIf="listElements.list_data_format_id == 11"  controlsList="nodownload" controls width="400" height = "200" controls class="ListVideoSizePrev"></video>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p *ngIf="i==0 && value.item_df_id == 7" class="questionNumberAlign">Directions - (Q. {{data.index}}).&nbsp;</p>
+                  <!-- Table -->
+                  <div *ngIf="value.item_df_id== 7" style="width: 100%;margin: 20px 10px;" class="col-md-12">
+                    <div class="row">
+                      <div  style="width:98%;">
+                        <table class="table"  [style.width.%]="value.table_format == 5 ? '50':100"  [ngClass]="{'table-striped' :value.table_format == 3,'table-bordered' : (value.table_format == 2 || value.table_format == 4 || value.table_format == 5)}" >
+
+                          <tbody>
+
+                            <tr *ngFor="let row of value.data_format_value;let rowindex =index">
+
+                              <td *ngFor="let col of row;let colIndex = index" [ngStyle]="{'border-color':value.table_color}"  [ngClass]="{'tableHeadType':(value.available_headers =='column' || value.available_headers =='all') && col.header == 1 && (value.table_format == 2  || value.table_format == 5)}">{{col.table_value}}</td>
+                            </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="">
+
+                  <fa [name]="'suitcase'" [size]=1 class="viewIcons" (click)="restoreItem(data.item_id,restoreItemPopup)" tooltip="Move to item bank" placement="top" [ngClass]="{'disableDelete' : data.item_edit == false || disableDeleteEditButtons == true}"></fa>
+                  <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id,deleteitemPopup)" tooltip= "Delete permanently" placement="top" [ngClass]="{'disableDelete' : data.item_delete == false || disableDeleteEditButtons == true}"></fa>
+                  <!-- <fa [name]="'trash'" [size]=1 class="viewIcons" (click)="deleteItem(data.item_id)" [ngClass]="{'disableDelete' : data.item_delete == false}"></fa> -->
+                </p>
+              </div>
+            </div>
+            <img src="../../../assets/img/scora-loader.gif" style="height: 40px;
+            position: relative;
+            left: 50%;" *ngIf="allItemsList.length-1 == seq && lazyLoadScroll == true">
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-2" style="padding: 0px;">
+        <div class="attrAccordion">
+          <div  class="attrHead">
+            <p class="" style="margin-bottom:0px;">Attributes</p>
+          </div>
+
+          <div>
+            <!-- <fa [name]="'tags'" class="faIcons" [size]=1  tooltip="Predefined Attributes" placement="top" (click)="openAttributesTab(1)" ></fa>&nbsp;
+            <fa [name]="'tags'" class="faIcons" [size]=1  tooltip="Custom Attributes" placement="top" (click)="openAttributesTab(2)" ></fa>&nbsp; -->
+
+            <div class="infoList">
+              <p class="infoName" (click)="activeTab = 0" [ngClass]="{'activeTabClass' : activeTab == 0}">
+                <fa [name]="'tags'" [size]=1 class="itemsetCommentIcon" tooltip="Predefined Attributes" placement="top"></fa>
+              </p>
+              <p class="infoName" (click)="activeTab = 1" [ngClass]="{'activeTabClass' : activeTab == 1}">
+                <fa [name]="'edit'" [size]=1 class="itemsetCommentIcon" tooltip="Custom Attributes" placement="top"></fa>
+              <!-- <p class="infoName" (click)="activeTab = 3" [ngClass]="{'activeTabClass' : activeTab == 3}"><fa [name]="'comments'" [size]=1 class="itemsetCommentIcon" tooltip="Comments" placement="top"></fa></p> -->
+              
+            </div>
+
+            
+          </div>
+
+          <div class="attrContent" *ngIf="activeTab == 0">
+
+            <div class="lists">
+                <p *ngIf="allItemsList == undefined || allItemsList.length == 0" class="noItemcss">No Attributes to display</p>
+              <form class="form-horizontal"  *ngFor="let data of allItemsList; let seq = index">
+                <p style="opacity:0.5;text-align:center" *ngIf="showItem == -1 && seq ==0">Select an Item</p>
+                <div class="form-group displayMargin" *ngIf="seq == showItem ">
+                    <label for="pwd" class="labelWidth">{{data.attributes.parameters.linked_attribute_1}}</label> &nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1">{{data.attributes.subjects}}</label>
+                </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">{{data.attributes.parameters.linked_attribute_2}}</label> &nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1">{{data.attributes.topics}}</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="pwd" class="labelWidth">{{data.attributes.parameters.linked_attribute_3}} </label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.subtopics !=''">{{data.attributes.subtopics}}</label>
+                  <label for="email" *ngIf="data.attributes.subtopics ==''" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth" >{{data.attributes.parameters.difficulty_level}}</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.difficulty_level !=''">{{data.attributes.difficulty_level}}</label>
+                  <label for="email" *ngIf="data.attributes.difficulty_level ==''" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">{{data.attributes.parameters.taxonomy}}</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.taxonomy !='' && data.attributes.taxonomy != undefined">{{data.attributes.taxonomy}}</label>
+                  <label for="email" *ngIf="data.attributes.taxonomy =='' || data.attributes.taxonomy == null" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">{{data.attributes.parameters.content_type}}</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.content_types !=''">{{data.attributes.content_types}}</label>
+                    <label for="email" *ngIf="data.attributes.content_types ==''" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Language</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.language != null">{{data.attributes.language}}</label>
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.language == null" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Item Valid Till</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.item_valid_till !=null">{{data.attributes.item_valid_till}}</label>
+                  <label for="email" *ngIf="data.attributes.item_valid_till ==null" style="opacity:0.5">No Data</label>
+                </div>
+
+
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Reference Links</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.ref_link !=null" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(data.attributes.ref_link)">{{data.attributes.ref_link}}</label>
+                  <label for="email" *ngIf="data.attributes.ref_link ==null" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Keywords</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.search_keywords !=null" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(data.attributes.search_keywords)">{{data.attributes.search_keywords}}</label>
+                  <label for="email" *ngIf="data.attributes.search_keywords ==null" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Hints</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1" *ngIf="data.attributes.hint != null" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(data.attributes.hint)"> {{data.attributes.hint}}</label>
+                  <label for="email" *ngIf="data.attributes.hint == null" style="opacity:0.5">No Data</label>
+                </div>
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                  <label for="email" class="labelWidth">Explanation</label>&nbsp;:&nbsp;
+                  <label for="email" class="labelWidth1 explnationMargin" *ngIf="data.attributes.explanation !=null" [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(data.attributes.explanation)">{{data.attributes.explanation}}</label>
+                  <label for="email" *ngIf="data.attributes.explanation ==null" style="opacity:0.5">No Data</label>
+                </div>
+
+
+                <!-- <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_1}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_1 !=null">{{data.attributes.sec_attribute_1}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_1 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_2}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_2 !=null">{{data.attributes.sec_attribute_2}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_2 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_3}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_3 !=null">{{data.attributes.sec_attribute_3}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_3 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_4}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_4 !=null">{{data.attributes.sec_attribute_4}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_4 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_5}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_5 != null">{{data.attributes.sec_attribute_5}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_5 == null" style="opacity:0.5">No Data</label>
+                  </div> -->
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">Scora Id</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.item_id != null">{{data.item_id}}</label>
+                    <label for="email" *ngIf="data.item_id == null" style="opacity:0.5">No Data</label>
+                  </div>
+
+                  <div *ngFor="let data of custom_Attributes.answer_choices; let i=index">
+                    <div class="form-group displayMargin" *ngIf="seq == showItem">
+                      <label for="email" class="labelWidth">Answer Insight - {{i+1}}</label>&nbsp;:&nbsp;
+                      <label for="email" class="labelWidth1" *ngIf="data.data_insight != null">{{data.data_insight}}</label>
+                      <label for="email" *ngIf="data.data_insight == null" style="opacity:0.5">No Data</label>
+                    </div>
+                  </div>
+
+              </form>
+            </div>
+          </div>
+
+          <div class="attrContent" *ngIf="activeTab == 1">
+
+            <div class="lists">
+                <p *ngIf="allItemsList == undefined || allItemsList.length == 0" class="noItemcss">No Attributes to display</p>
+              <form class="form-horizontal"  *ngFor="let data of allItemsList; let seq = index">
+                <p style="opacity:0.5;text-align:center" *ngIf="showItem == -1 && seq ==0">Select an Item</p>
+
+                <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_1}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_1 !=null">{{data.attributes.sec_attribute_1}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_1 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_2}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_2 !=null">{{data.attributes.sec_attribute_2}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_2 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_3}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_3 !=null">{{data.attributes.sec_attribute_3}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_3 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_4}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_4 !=null">{{data.attributes.sec_attribute_4}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_4 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_5}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_5 != null">{{data.attributes.sec_attribute_5}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_5 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_6}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_6 != null">{{data.attributes.sec_attribute_6}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_6 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_7}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_7 !=null">{{data.attributes.sec_attribute_7}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_7 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_8}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_8 !=null">{{data.attributes.sec_attribute_8}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_8 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_9}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_9 !=null">{{data.attributes.sec_attribute_9}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_9 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_10}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_10 != null">{{data.attributes.sec_attribute_10}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_10 == null" style="opacity:0.5">No Data</label>
+                  </div> 
+
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_11}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_11 != null">{{data.attributes.sec_attribute_11}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_11 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_12}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_12 !=null">{{data.attributes.sec_attribute_12}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_12 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_13}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_13 !=null">{{data.attributes.sec_attribute_13}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_13 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_14}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_14 !=null">{{data.attributes.sec_attribute_14}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_14 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_15}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_15 != null">{{data.attributes.sec_attribute_15}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_15 == null" style="opacity:0.5">No Data</label>
+                  </div> 
+
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_16}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_16 != null">{{data.attributes.sec_attribute_16}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_16 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_17}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_17 !=null">{{data.attributes.sec_attribute_17}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_17 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_18}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_18 !=null">{{data.attributes.sec_attribute_18}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_18 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_19}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_19 !=null">{{data.attributes.sec_attribute_19}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_19 == null" style="opacity:0.5">No Data</label>
+                  </div>
+                  <div class="form-group displayMargin" *ngIf="seq == showItem">
+                    <label for="email" class="labelWidth">{{data.attributes.parameters.sec_attribute_20}}</label>&nbsp;:&nbsp;
+                    <label for="email" class="labelWidth1" *ngIf="data.attributes.sec_attribute_20 != null">{{data.attributes.sec_attribute_20}}</label>
+                    <label for="email" *ngIf="data.attributes.sec_attribute_20 == null" style="opacity:0.5">No Data</label>
+                  </div> 
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- <view Trash Items Ends> -->
+
+    <!-- success message popup -->
+
+    <!-- <p class="successMsg" [@dialog1] *ngIf="saveMsg">{{showMsg}}</p> -->
+
+      <!-- delete item popup -->
+
+      <!-- <div *ngIf="deleteitemPopup" class="deleteItemPopupCss">
+          <button  aria-label="Close" class="dialog__close-btn" (click)="deleteitemPopup = false">X</button>
+          <p class="modalHead">Alert!</p>
+            <div class="formAlign">
+                <p class="" style="text-align:center">Are You Sure Want To Delete ?</p>
+
+            </div>
+          <div class="saveBtn">
+            <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteItemConfirm()">Ok</button>
+            <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteitemPopup = false">Cancel</button>
+          </div>
+      </div>
+      <div *ngIf="deleteitemPopup" class="overlay_edit"></div> -->
+
+<ng-template #deleteitemPopup>
+<div class="modal-header">
+  <p class="modalHead">Alert!</p>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="formAlign">
+    <p class="" style="text-align:center">Are You Sure You Want To Delete This Item Permanently?</p>
+
+  </div>
+  <div class="saveBtn">
+    <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteItemConfirm(1)">Yes</button>
+    <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+  </div>
+</div>
+</ng-template>
+
+<ng-template #restoreItemPopup>
+  <div class="modal-header">
+    <p class="modalHead">Alert!</p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="formAlign">
+      <p class="" style="text-align:center">Are You Sure You Want To Move This Item To Itembank?</p>
+
+    </div>
+    <div class="saveBtn">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="restoreItemConfirm(1)">Yes</button>
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+    </div>
+  </div>
+  </ng-template>
+
+<ng-template #bulkDeletePopup>
+  <div class="modal-header">
+    <p class="modalHead">Alert!</p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="formAlign">
+      <p class="" *ngIf="deletedItemIdList.length == 0" style="text-align:center">Are You Sure You Want To Delete All Item(s) From Itembank Permanently?</p>
+      <p class="" *ngIf="deletedItemIdList.length != 0" style="text-align:center">Are You Sure You Want To Delete Selected Item(s) From Itembank Permanently?</p>
+    </div>
+    <div class="saveBtn">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteItemConfirm(2)">Yes</button>
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #bulkRestorePopup>
+  <div class="modal-header">
+    <p class="modalHead">Alert!</p>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="formAlign">
+      <p class="" *ngIf="deletedItemIdList.length == 0" style="text-align:center">Are You Sure You Want To Move All Item(s) To Itembank?</p>
+      <p class="" *ngIf="deletedItemIdList.length != 0" style="text-align:center">Are You Sure You Want To Move Selected Item(s) To Itembank?</p>
+    </div>
+    <div class="saveBtn">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="restoreItemConfirm(2)">Yes</button>
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+    </div>
+  </div>
+</ng-template>

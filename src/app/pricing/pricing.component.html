@@ -1,0 +1,89 @@
+
+<app-loader *ngIf="fullpageload"></app-loader>
+
+
+
+
+
+<div class="navBar">
+    <img src="{{tenantLogo}}" class="TenantLogo">
+    <div class="btn-group " dropdown style="margin-right: 44px;float:right;margin-top: 15px;">
+        <a id="button-basic" dropdownToggle type="" class="dropdown-toggle USERbTN"
+                aria-controls="dropdown-basic">
+                <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </a>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" style="left: -278% !important;"
+            role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">Logout</a></li>
+         
+        </ul>
+    </div>
+      
+</div>
+
+
+<h6 class="head">Pricing</h6>
+<div style=" background: rgba(96, 165, 234, 0.05);">
+<div class="container">
+   <!-- notification -->
+   <simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+   
+  <h4 class="textCenter textColor textBottomMargin">Find a plan that right's for you</h4>
+  <p class="textCenter textBottomMargin">You can make account changes at any time – no hassle and no questions asked</p>
+
+
+
+ 
+
+
+  <!-- free plan -->
+  <div class="col-md-4 offset-md-4 freeTrialDiv" *ngIf="FreeTrialPlan != undefined">
+    <h4>{{FreeTrialPlan[0].plan_name}}</h4>
+    <h1 class="textColor textBottomMargin"><span class="numberFont">Rs</span> {{FreeTrialPlan[0].plan_price}}<sub class="numberFont">/{{FreeTrialPlan[0].plan_validity}}</sub></h1>
+   
+    <div *ngFor="let benefit of FreeTrialPlan[0].benifits">
+      <p>{{benefit}}</p>
+    </div>
+  
+    <button class="btn btn-primary buynowBtn"  (click)="choosePlan(FreeTrialPlan[0].plan_id)">Start Your Trial</button>
+  </div>
+
+
+
+  <div class="col-md-12 textMargin">
+    <h4 class="textCenter textColor textBottomMargin">Following Benefits are applicable for all the paid plans :</h4>
+    <div class="row">
+      <div class="col-md-4 " *ngFor="let data of commonBenefits;let i=index" [ngClass]="{'offset-md-2':i%2 ==0}">
+        <p class="textCenter">{{data}}</p>
+      
+      </div>
+      <!-- <div class="col-md-4">
+          <p class="textCenter">1 year Validity (365 days)</p>
+         
+      </div> -->
+    </div>
+
+  </div>
+
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-4 eachPlanMargin" *ngFor="let plan of AllPlanLists">
+        <div class="paidPlanDiv">
+          <h4>{{plan.plan_name}}</h4>
+          <h1 class="textColor textBottomMargin"><span class="numberFont">Rs</span> {{plan.plan_price}} <sub class="numberFont">/YR</sub></h1>
+        
+          <div *ngFor="let benefit of plan.benifits;let i=index">
+            <p [ngClass]="{'textWeight':i==0}">{{benefit}}</p>
+           
+          </div>
+         
+          <button class="btn btn-primary buynowBtn"  (click)="getPlanId(plan.plan_id)">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>

@@ -1,0 +1,126 @@
+<app-loader *ngIf="showload"></app-loader>
+<div  class="content-wrapper">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card dashboard-tab">
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                          <li class="nav-item" role="presentation">
+                              <a class="nav-link active" id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" [ngClass]="{'active' :activeTab==1}" (click)="tabActive(1)">Usage</a>
+                          </li>
+                          <li class="nav-item" role="presentation">
+                              <a class="nav-link" id="profile-tab" data-toggle="tab"  role="tab" aria-controls="profile" aria-selected="false" [ngClass]="{'active' :activeTab==2}" (click)="tabActive(2)">User Data</a>
+                          </li>
+                      </ul>
+                      <div class="tab-content" id="myTabContent">
+                          <div *ngIf="activeTab == 1" class="tab-pane fade show active" id="home-tab" role="tabpanel" aria-labelledby="home-tab">
+                              <div class="dashboard-graph">
+                                  <div class="row">
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank</div>
+                                              <img src="https://www.cambridgemaths.org/Images/The-trouble-with-graphs.jpg" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank</div>
+                                              <img src="https://www.cambridgemaths.org/Images/The-trouble-with-graphs.jpg" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank</div>
+                                              <img src="https://www.cambridgemaths.org/Images/The-trouble-with-graphs.jpg" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank</div>
+                                              <img src="https://www.cambridgemaths.org/Images/The-trouble-with-graphs.jpg" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="tab-pane fade show active" *ngIf="activeTab == 2" id="profile-tab" role="tabpanel" aria-labelledby="profile-tab">
+                              <div class="dashboard-graph">
+                                  <div class="row">
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank New</div>
+                                              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmqaUJah-FzjNR6NuHKFUb7iTTBhNUWRjMnVWDMZxEAmqxJRQRuXdlwra4OWdG4h4O9E&usqp=CAU" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank New</div>
+                                              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmqaUJah-FzjNR6NuHKFUb7iTTBhNUWRjMnVWDMZxEAmqxJRQRuXdlwra4OWdG4h4O9E&usqp=CAU" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank New</div>
+                                              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmqaUJah-FzjNR6NuHKFUb7iTTBhNUWRjMnVWDMZxEAmqxJRQRuXdlwra4OWdG4h4O9E&usqp=CAU" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="graph">
+                                              <div class="ttl">Item Bank New</div>
+                                              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDmqaUJah-FzjNR6NuHKFUb7iTTBhNUWRjMnVWDMZxEAmqxJRQRuXdlwra4OWdG4h4O9E&usqp=CAU" alt="" class="img-fluid">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+          <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div>
+
+
+ <!-- If No Data content -->
+<div class="content-wrapper" *ngIf = "NoData == true">
+  <!-- Main content -->
+  <div class="content p-4">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                  <div class="card">
+                      <div class="card-header p-4">
+                          <h3 class="card-title">Scora Insights</h3>
+                      </div>
+                      <div class="card-body">
+                          <div class="p-5 text-center">
+                              <p class="no-data">Yes! You can do that!</p>
+                              <p>Once you start using the system and complete a few tests, you can come back here and look here for some amazing insights!</p>
+                              <figure>
+                                  <img src="src/assets/img/admin-img/no-data-img.png" alt="" srcset="">
+                              </figure>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- /.card -->
+              </div>
+              <!-- /.col-md-12 -->
+          </div>
+          <!-- /.row -->
+      </div>
+      <!-- /.container-fluid -->
+  </div>
+  <!-- /.content -->
+</div> 
+
+
+
+

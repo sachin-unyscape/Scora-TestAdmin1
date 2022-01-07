@@ -1,0 +1,43 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+  
+    <p class="header">Job List</p>
+    <hr class="headerLine">
+</div>
+
+<!-- jobs list table -->
+
+<div class="col-md-12" style="margin-top: 2%;">
+  <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>Job ID</th>
+        <th>File Name</th>
+        <th>File Type</th>
+        <th>Job status</th>
+        <th>Created By</th>
+        <th>Created At</th>
+        <th>Updated By</th>
+        <th>Updated At</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf=" uplodedFileDetails == undefined || uplodedFileDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="3" style="padding:4px 10px">No data found</td></tr>
+      <tr *ngFor="let data of uplodedFileDetails;let i= index;">
+        <td>{{data.job_id}}</td>
+        <td>{{data.file_name}}</td>
+        <td >{{data.file_type}}</td>
+        <td>{{data.status}}</td>
+        <td>{{data.created_by}}</td>
+        <td>{{data.created_at}}</td>
+        <td>{{data.updated_by}}</td>
+        <td>{{data.updated_at}}</td>
+      </tr>
+    
+    </tbody>
+  </table>
+</div>

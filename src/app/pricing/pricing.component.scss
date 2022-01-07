@@ -1,0 +1,116 @@
+.textCenter{
+    text-align: center;
+}
+
+.textColor{
+    color: #00aed9;
+}
+
+.container{
+    padding-top: 50px;
+    margin-bottom: 20px;
+}
+
+.buynowBtn{
+    border-radius: 3px;
+    padding: 4px 15px;
+    
+    border: 1px solid #00aed9;
+    background: white;
+    color: #00aed9;
+    transition: all 0.25s ease-in-out;
+    font-family: Roboto,sans-serif;
+}
+
+.buynowBtn:hover{
+    border: 1px solid #00aed9;
+    background: #00aed9;
+    color: white;
+    transition: all 0.25s ease-in-out;
+    font-family: Roboto,sans-serif;
+    cursor: pointer;
+}
+
+
+.buynowBtn:focus{
+    background: #00aed9;
+    color: white;
+    font-family: Roboto,sans-serif;
+    border: 1px solid #00aed9;
+}
+
+.freeTrialDiv{
+    text-align: center;
+    border: 1px solid #c0c0c04a;
+    padding: 20px 0px;
+}
+
+.numberFont{
+    font-size: 24px !important;
+}
+
+.textBottomMargin{
+    margin-bottom: 20px;
+}
+
+.textMargin{
+    margin: 20px 20px;
+}
+
+.paidPlanDiv{
+    text-align: center;
+    border: 1px solid #c0c0c04a;
+    padding: 20px 0px;
+}
+
+.head{
+    padding: 10px;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #ededed;
+    margin-top: 4.5%;
+    margin-bottom: 0px;
+}
+
+
+
+.TenantLogo{
+    width: auto;
+    height: 46px;margin-top: 8px;margin-left: 25px;
+    float: left;
+}
+
+
+.USERbTN{
+    background: #ffffff;
+    float: right;
+    border: hidden;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.dropdown-item{
+    padding: 5px 15px !important;
+    text-align: center;
+}
+
+.navBar{
+    height: 60px;
+    box-shadow: 1px 1px 1px #e4e4e4;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background: white;
+}
+
+.open > .dropdown-menu{
+    left: -278% !important;
+}
+
+
+.eachPlanMargin{
+    margin: 0px 0px 30px 0px;
+}
+
+.textWeight{
+    font-weight: bold;
+}

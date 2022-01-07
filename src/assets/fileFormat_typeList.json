@@ -1,0 +1,33 @@
+{
+    "FileFormatList" :[
+            {"id":1,"itemName" :"Document"},
+            {"id" :2,"itemName" :"Image"},
+            {"id" :3,"itemName" :"Audio"},
+            {"id" :4,"itemName" :"Video"}
+    ],
+
+    "FileTypeList" : {
+        "Docs" :[
+            {"id":5,"itemName" :"pdf","fileFormat" : "Docs"},
+            {"id":6,"itemName" :"doc","fileFormat" : "Docs"},
+            {"id":7,"itemName" :"docx","fileFormat" : "Docs"},
+            {"id":8,"itemName" :"xls","fileFormat" : "Docs"},
+            {"id":9,"itemName" :"xlsx","fileFormat" : "Docs"},
+            {"id":10,"itemName" :"ppt","fileFormat" : "Docs"},
+            {"id":11,"itemName" :"pptx","fileFormat" : "Docs"}
+        ],
+        "Image" :[
+            {"id":12,"itemName" :"jpeg","fileFormat" : "Image"},
+            {"id":13,"itemName" :"jpg","fileFormat" : "Image"},
+            {"id":14,"itemName" :"png","fileFormat" : "Image"},
+            {"id":15,"itemName" :"gif","fileFormat" : "Image"}
+        ], 
+        "Audio" :[
+            {"id":16,"itemName" :"mp3","fileFormat" : "Audio"}
+        ],
+        "Video" :[
+            {"id":17,"itemName" :"mp4","fileFormat" : "Video"},
+            {"id":18,"itemName" :"avi","fileFormat" : "Video"}
+        ]
+    }
+}

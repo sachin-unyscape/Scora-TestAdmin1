@@ -1,0 +1,23 @@
+.sidebar nav>ul {
+    margin: 0;
+    width: 100% !important;
+}
+.sidebar nav>ul li.nav-item a:hover{
+	background: transparent !important;
+	font-weight: 600;
+}
+.sidebar .nav-link:hover:before {
+    content: '';
+    width: 5px;
+    height: 50px;
+    background: var(--primary);
+    font-weight: 600;
+    display: block;
+    position: absolute;
+    left: -4px;
+    top: 0;
+    border-radius: 0 5px 5px 0;
+}
+nav {
+    flex-direction: initial !important;
+}

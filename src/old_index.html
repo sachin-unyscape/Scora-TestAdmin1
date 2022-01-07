@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="google-site-verification" content="sCTGOoE-JdmyTVgodFsICnNIPOCjAgvlI-OKSNHWz84" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+	<meta name="author" content="Łukasz Holeczek">
+	<meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,jQuery,CSS,HTML,RWD,Dashboard">
+  <link rel="icon"type="image/x-icon" href="assets/img/favicon-scora.png">
+  <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.css" integrity="sha384-8QOKbPtTFvh/lMY0qPVbXj9hDh+v8US0pD//FcoYFst2lCIf0BmT58+Heqj0IGyx" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha1/katex.min.js" integrity="sha384-GR8SEkOO1rBN/jnOcQDFcFmwXAevSLx7/Io9Ps1rkxWp983ZIuUGfxivlF/5f5eJ" crossorigin="anonymous"></script> -->
+  <!-- <link href="node_modules/@angular/material/prebuilt-themes/indigo-pink.css" rel="stylesheet"> -->
+
+	<title>Scora-Assessments on demand</title>
+     <!-- Google Font: IBM Plex Sans -->
+     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/simple-line-icons.css" rel="stylesheet">
+      <!-- Theme style -->
+    <link href="assets/css/adminlte.min.css" rel="stylesheet">
+       <!-- Custom Theme Style -->
+    <link href="assets/css/skora-theme.css" rel="stylesheet">
+      <!-- Admin Dashboard Style -->
+    <link href="assets/css/admin-dashboard.css" rel="stylesheet">
+    <link href="assets/css/simple-line-icons.css" rel="stylesheet">
+    <link href="assets/css/skora-live.css" rel="stylesheet">
+      <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome-free/css/all.min.css">
+      <!-- IonIcons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
+
+    <!-- drag and drop -->
+    <link href="../node_modules/dragula/dist/dragula.css" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-123156497-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-123156497-1');
+    </script>
+    <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
+
+</head>
+
+<!-- BODY options, add following classes to body to change options
+
+// Header options
+1. '.header-fixed'					- Fixed Header
+
+// Sidebar options
+1. '.sidebar-fixed'					- Fixed Sidebar
+2. '.sidebar-hidden'				- Hidden Sidebar
+3. '.sidebar-off-canvas'		- Off Canvas Sidebar
+4. '.sidebar-compact'				- Compact Sidebar Navigation (Only icons)
+
+// Aside options
+1. '.aside-menu-fixed'			- Fixed Aside Menu
+2. '.aside-menu-hidden'			- Hidden Aside Menu
+3. '.aside-menu-off-canvas'	- Off Canvas Aside Menu
+
+// Footer options
+1. 'footer-fixed'						- Fixed footer
+
+-->
+
+<!-- <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden "> -->
+  <body class="hold-transition sidebar-mini">
+  <!-- Enable bootstrap 4 theme -->
+  <!-- <script>window.__theme = 'bs4';</script> -->
+  <!-- App Loading... -->
+  <!-- <script src="assets/flat/ckeditor/ckeditor.js"></script>
+  <script src="https://cdn.ckeditor.com/4.9.2/full-all/ckeditor.js"></script> -->
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script> -->
+ <!-- <script src="node_modules/chart.js/src/chart.js"></script> -->
+  <script src="../node_modules/dragula/dist/dragula.min.js" rel="stylesheet"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.js" integrity="sha512-lUsN5TEogpe12qeV8NF4cxlJJatTZ12jnx9WXkFXOy7yFbuHwYRTjmctvwbRIuZPhv+lpvy7Cm9o8T9e+9pTrg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <!-- REQUIRED SCRIPTS -->
+
+  
+  
+    <!-- jQuery -->
+    <script src="assets/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE -->
+    <script src="assets/js/adminlte.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<div class="navBar">
+    <img src="{{tenantLogo}}" class="TenantLogo">
+    <div class="btn-group " dropdown style="margin-right: 44px;float:right;margin-top: 15px;">
+        <a id="button-basic" dropdownToggle type="" class="dropdown-toggle USERbTN"
+                aria-controls="dropdown-basic">
+                <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </a>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" style="left: -278% !important;"
+            role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">Logout</a></li>
+         
+        </ul>
+    </div>
+      
+</div>
+<div class="Bg">
+<div class="container">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 checkoutDivMargin" >
+    <h3 class="checkouthead">Checkout</h3>
+  <div class="row">
+   
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 billPadd">
+        <h5 class="formHead">BILLING ADDRESS</h5>
+        <form  id="ccSelectForm" [formGroup] ="paymentForm" (ngSubmit)="onSubmit(paymentForm)">
+            <div class="form-group">
+                <label for="name">Name <sup>*</sup></label>
+                <input type="text" class="form-control" id="name" placeholder="Enter Your Name or Company Name" required formControlName="username">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['username'].valid && paymentForm.controls['username'].touched">This Field is Required</div>
+            </div>
+            <div class="form-group">
+                <label for="add1">Address <sup>*</sup></label>
+                <input type="text" class="form-control" id="add1" placeholder="Enter Address" required formControlName="address">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['address'].valid && paymentForm.controls['address'].touched">This Field is Required</div>
+            </div>
+          
+            <div class="form-group">
+                <label for="pincode">Pincode <sup>*</sup> </label>
+                <input type="text" class="form-control" id="pincode" placeholder="Enter Pincode"  maxlength="6" required (keypress)="onlyNumberKey($event)" formControlName="pincode">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['pincode'].valid && paymentForm.controls['pincode'].touched">This Field is Required</div>
+            </div>
+            <div class="form-group">
+                <label for="city">City<sup>*</sup></label>
+                <input type="text" class="form-control " id="city" placeholder="Enter City" formControlName="city" (keypress)="omit_special_char($event)">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['city'].valid && paymentForm.controls['city'].touched">Enter valid City</div>
+               
+            </div>
+            <div class="form-group">
+                <label for="state">State <sup>*</sup></label>
+                <input type="text" class="form-control" id="state" placeholder="Enter State" formControlName="state" (keypress)="omit_special_char($event)">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['state'].valid &&  paymentForm.controls['state'].touched">Enter valid State</div>
+              
+            </div>
+            <div class="form-group">
+                <label for="country">Country <sup>*</sup></label>
+                <input type="text" class="form-control" id="country" placeholder="Enter Country" formControlName="country" (keypress)="omit_special_char($event)">
+                <div class="alertMsg" *ngIf="!paymentForm.controls['country'].valid && paymentForm.controls['country'].touched">Enter valid Country</div>
+              
+            </div>
+           
+        </form>
+        <div class="col-lg-offset-2 col-lg-12" style="text-align: center;margin-bottom: 15px;margin-top: 28px;">
+            <button type="button" class="btn  signupBtn "   id="rzp-button1" (click)="initPay()">PROCEED TO PAY</button>
+        </div>
+       
+    </div>
+  
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 billPadd">
+        <h5 class="formHead">ORDER SUMMARY</h5>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="name" class="col-lg-4 control-label">Plan Name :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.plan_name}}</label>
+            </div>
+           
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Plan Validity :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.plan_validity}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Authors :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_authors}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Tenant Admin :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_tenant_admins}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Test Admin :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_test_admins}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Items :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_items}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Itemsets :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_itemsets}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Tests :</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_tests}}</label>
+            </div>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Tests Instances:</label>
+                <label for="name" class="col-lg-5 control-label lableFont">{{planDetails.maximum_test_instances}}</label>
+            </div>
+           
+            <div class="col-lg-offset-2 col-lg-6" style="text-align: center;">
+                <a href="#" class="textClrLink" [routerLink]="['/pricing']">Change Plan</a>
+            </div>
+            <hr>
+            <div class="form-group">
+                <label for="add2" class="col-lg-4 control-label">Amount Due :</label>
+                <label for="name" class="col-lg-5 control-label">{{planDetails.plan_picre}}</label>
+            </div>
+            <div class="paypalDiv">
+               
+                <span class="textClr col-lg-4">Pay Securely With <img src="../../../assets/img/paypal.png" class="paypalImg"></span><br>
+                
+            </div>
+        </form>
+       
+    </div>
+  
+  </div>
+</div>
+</div>
+</div>

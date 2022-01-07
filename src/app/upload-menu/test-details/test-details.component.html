@@ -1,0 +1,134 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<p class="_uploadMsg" *ngIf="showLoadMessage == true">Please wait. Uploading data.</p>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+
+    <p class="header">File Upload</p>
+    <hr class="headerLine">
+</div>
+
+
+<p *ngIf="showError != ''" class="alertMSg col-md-12">{{showError}}</p>
+<!-- <div class="uploadPos">
+  <div class="fileUploadExcel btn" >
+      <span>Click here to upload files</span>
+    <input type="file" onclick="this.value = null" (change)="uploadExcel($event,i)" placeholder="Upload file" accept=".xlsx" name="file" class="upload">
+  </div>
+  <p class="noteMsg"><span>Note:</span> Upload the User profile sheet here</p>
+</div> -->
+
+
+
+
+
+
+
+<div class="btnp">
+      <!-- <li class="nav-item dropdown admin"  dropdown (onToggle)="toggled($event)" style="list-style-type: none;">
+
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" dropdownToggle aria-controls="dropdown-autoclose1">
+          <span>Select files to download</span>
+
+        </a>
+
+          <div class="dropdown-menu dropClass" dropdownMenu aria-labelledby="simple-dropdown"   id="dropdown-autoclose1" aria-labelledby="button-autoclose1">
+            <a  href="../../../../assets/file/Scora Bulk Items Import Using MS Excel Sheet - V1.xlsx">Items and ItemSet </a>
+            <a  href="../../../../assets/file/Bulk Users Import (3).xlsx">Users</a>
+            <a  href="../../../../assets/file/Bulk Attributes Import.xlsx">Attributes</a>
+            <a  href="../../../../assets/file/User Response Data Template.xlsx">User Response</a>
+            <a  href="../../../../assets/file/User Profile Data Template.xlsx">User Profile</a>
+            <a  href="../../../../assets/file/match-items-mapping-template.xlsx">Match Items</a>
+          </div>
+      </li> -->
+
+
+        <!-- <div class="nav-item" dropdown>
+            <div  id="button-disabled-item" dropdownToggle  class="iconcolor dropdown-toggle nav-link" (click)="showDropdown = true"
+            aria-controls="dropdown-disabled-item" aria-hidden="true"  tooltip="Applications" placement="left"><span>Select files to download</span></div>
+
+            <ul id="dropdown-disabled-item" *dropdownMenu class="dropdown-menu dropdown-menu-right"
+                role="menu" aria-labelledby="button-disabled-item" style="right: -9px;top: 50% !important;display: grid;text-align: center;">
+                <a  href="../../../../assets/file/Scora Bulk Items Import Using MS Excel Sheet - V1.xlsx">Items and ItemSet </a>
+                <a  href="../../../../assets/file/Bulk Users Import (3).xlsx">Users</a>
+                <a  href="../../../../assets/file/Bulk Attributes Import.xlsx">Attributes</a>
+                <a  href="../../../../assets/file/User Response Data Template.xlsx">User Response</a>
+                <a  href="../../../../assets/file/User Profile Data Template.xlsx">User Profile</a>
+                <a  href="../../../../assets/file/match-items-mapping-template.xlsx">Match Items</a>
+            </ul>
+          </div> -->
+          <div class="btn-group contentbtn" dropdown [autoClose]="true">
+              <button id="button-disabled-item" dropdownToggle type="button" class="dropdown-toggle"
+                      aria-controls="dropdown-disabled-item">
+                      Select file to download <i class="fa fa-caret-down" aria-hidden="true"></i><span class="caret"></span>
+              </button>
+              <ul id="dropdown-disabled-item" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-disabled-item">
+                <li><a href="../../../../assets/file/Scora Bulk Items Import Template - V4.1.xlsx">Items and Item Set</a></li>
+                <li><a href="../../../../assets/file/Bulk Users Import (3).xlsx">Users</a></li>
+                <li><a href="../../../../assets/file/Bulk Attributes Import.xlsx">Attributes</a></li>
+                <li><a href="../../../../assets/file/User Response Data Template.xlsx">User Response</a></li>
+                <li><a href="../../../../assets/file/User Profile Data Template.xlsx">User Profile</a></li>
+                <li><a href="../../../../assets/file/match-items-mapping-template.xlsx">Match Items</a></li>
+                <li><a href="../../../../assets/file/QP Rank & Section Preference.xlsx">Question paper rank and Section preferences</a></li>
+              </ul>
+            </div>
+    <button class="btn btn-primary" [routerLink]="['/Upload/UploadedFiles']"> < Back</button>
+</div>
+
+<div class="jobFileUploadDiv">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-5 lable">
+        <p>Select upload file type</p>
+      </div>
+      <div class="col-md-6 lable">
+        <select class="form-control" [(ngModel)]="FileDataTypeSelected" (change)="selectFileTypes()" [ngModelOptions]="{standalone: true}" id="fileType" name="fileType" #fileType="ngModel" required>
+          <option disabled [selected]="FileDataTypeSelected == 'undefined' " [value]="undefined">Select File Type</option>
+          <option value="1">User Profile Data</option>
+          <option value="2">User Response Data</option>
+          <option value="3">Items and Item Set</option>
+          <option value="4">Match Items</option>
+          <option value="5">Users</option>
+          <option value="6">Attributes</option>
+          <option value="7">Question paper rank and Section preferences</option>
+        </select>
+      </div>
+      <div class="col-md-4 lable" *ngIf="FileDataTypeSelected == 3 && reviewWorkFlowFlag == true">
+        <p>Reviewer</p>
+      </div>
+      <div class="col-md-6 lable" *ngIf="FileDataTypeSelected == 3 && reviewWorkFlowFlag == true">
+        <select class="form-control" [(ngModel)]="reviewer" [ngModelOptions]="{standalone: true}" id="rev" name="rev" #rev="ngModel" required>
+          <option disabled [selected]="reviewer == 'undefined' " [value]="undefined">Select Reviewer</option>
+          <option [value]="data" *ngFor="let data of reviewerList;">{{data}}</option>
+
+        </select>
+      </div>
+      <div class="col-md-5 lable" *ngIf="FileDataTypeSelected == 2">
+        <p>Select user profile batch</p>
+      </div>
+      <div class="col-md-6 lable" *ngIf="FileDataTypeSelected == 2">
+        <select class="form-control" #selectedVal [(ngModel)]="UserProfileBatchNumber" (change)="UserProfileBatchNumber = selectedVal.value" required>
+          <option disabled [selected]="UserProfileBatchNumber == null || UserProfileBatchNumber == undefined" [value]="null">Select user profile batch</option>
+          <option *ngFor="let batch of batchListData.batch_numbers.profile" value="{{batch.profile_id}}">{{batch.profile_id}}</option>
+        </select>
+      </div>
+      <div class="col-md-12" style="text-align: center;margin: 10px auto;" *ngIf="FileDataTypeSelected == 1 || FileDataTypeSelected == 2 || FileDataTypeSelected == 7">
+        <div class="row">
+          <span class="col-md-5" style="text-align: right;">Enter Batch Number <sup>*</sup></span>
+          <span class="col-md-6">
+            <input type="text" [(ngModel)]="newBatchID" style="padding: 5px 10px;border: 1px solid #bebebe;border-radius: 3px;color: gray;width: 100%;">
+          </span>
+        </div>
+      </div>
+      <div class="col-md-12 text-center">
+        <div class="fileUploadExcelJOB btn">
+          <span>Click Here to Upload File</span>
+        <input type="file" onclick="this.value = null" [disabled]="FileDataTypeSelected == undefined || FileDataTypeSelected == 3 && reviewer == undefined && reviewWorkFlowFlag == true || FileDataTypeSelected == 1 && newBatchID == '' || FileDataTypeSelected == 2 && newBatchID == '' || FileDataTypeSelected == 2 && UserProfileBatchNumber == null || FileDataTypeSelected == 7 && newBatchID == '' " (change)="uploadFileDataExcel($event,FileDataTypeSelected)" placeholder="Upload file" accept=".xlsx" name="file" class="upload">
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

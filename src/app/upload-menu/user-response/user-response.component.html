@@ -1,0 +1,98 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+
+    <p class="header">Uploaded Files</p>
+    <hr class="headerLine">
+</div>
+
+<!-- user response 5 menus to uncomment - not in use-->
+<!-- Keerthana Code Start -->
+<!-- <div style="margin-top:6%;">
+<p class="txtCenter">
+  <i class="fa fa-envelope iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" disabled>Email User Response</button>
+
+  <i class="fa fa-sort-numeric-asc iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="emailRanking()">Email Rank List</button>
+</p>
+
+<p class="txtCenter">
+  <i class="fa fa-circle-thin iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="ProcessUserData()" disabled>Process Data</button>
+  <i class="fa fa-line-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="emailThemeReport()">Email Theme Reports</button>
+</p>
+
+<p class="txtCenter">
+  <i class="fa fa-bar-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1" (click)="EmailReport()">Email Report</button>
+</p>
+</div> -->
+<!-- Keerthana Code End -->
+
+<!-- Sakkeer Code Start -->
+<!-- <div style="margin-top:6%;">
+  <p class="txtCenter">
+
+      <i class="fa fa-bar-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1"
+      (click)="EmailReport()">Email Score Report</button>
+
+    <i class="fa fa-sort-numeric-asc iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1"
+      disabled>Email Rank List</button>
+
+  </p>
+
+  <p class="txtCenter">
+      <i class="fa fa-line-chart iconstag" aria-hidden="true"></i><button class="btn btn-3 btn-3d pro-icon1"
+      disabled>Email Theme Report</button>
+  </p>
+</div> -->
+<!-- Sakkeer Code End -->
+
+<!-- user response 5 menus to uncomment - not in use-->
+
+
+
+<!-- jobs file upload list screen -->
+<!-- <div class="col-md-12" class="text-right">
+  <button class="btn btn-primary uploadbtn cursor" [routerLink]="['/Upload/FileUpload']">Upload</button>
+</div> -->
+<div class="col-md-12" >
+  <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>File Name</th>
+        <th>Batch No</th>
+        <th>File Data Type</th>
+        <th>Created By</th>
+        <th>Created At</th>
+        <th>Updated By</th>
+        <th>Updated At</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf=" uplodedFileDetails == undefined || uplodedFileDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="3" style="padding:4px 10px">No data found</td></tr>
+      <tr *ngFor="let data of uplodedFileDetails;let i= index;">
+        <td>{{data.file_name}}</td>
+        <td>{{!!data.batch_no ? data.batch_no : '-'}}</td>
+        <td >{{data.file_type}}</td>
+        <td>{{data.created_by}}</td>
+        <td>{{data.created_at}}</td>
+        <td>{{data.updated_by}}</td>
+        <td>{{data.updated_at}}</td>
+        <td *ngIf="data.status != null">{{data.status}}</td>
+        <td *ngIf="data.status == null">--</td>
+        <td class="cursor" (click)="ViewFileDetails(data.file_id,data.file_type)" ><span style="font-size: 13px;"><fa [name]="'eye'" [size]=1 tooltip="View File Details" placement="top"></fa></span></td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <span style="margin-left: 0px;color: red;background-color: #ededed; font-size: 11px;">Date & Time are in {{timeZoneName}}</span>
+
+</div>
+
+
+
+

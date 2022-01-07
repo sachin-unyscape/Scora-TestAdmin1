@@ -1,0 +1,101 @@
+.tickIcon{
+    border: 1px solid green;
+    border-radius: 50%;
+    padding: 12px 14px;
+}
+.textclr{
+    margin: 20px 0px;
+    color: green;
+}
+.messageMArgin{
+    margin-top: 13%;
+    text-align: center;
+    height: 58%;
+}
+
+.bg{
+    background: rgba(96, 165, 234, 0.05);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.confMsg{
+    text-align: center;
+    padding: 20px;
+    color: #716666;
+    font-size: 15px;
+    font-weight: 600;
+}
+.acctLink{
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    color: orange !important;
+}
+.fa-check{
+    color: green;   
+}
+.buynowBtn{
+    border-radius: 3px;
+    padding: 4px 15px;
+    
+    border: 1px solid #00aed9;
+    background: white;
+    color: #00aed9;
+    transition: all 0.25s ease-in-out;
+    font-family: Roboto,sans-serif;
+}
+
+.buynowBtn:hover{
+    border: 1px solid #00aed9;
+    background: #00aed9;
+    color: white;
+    transition: all 0.25s ease-in-out;
+    font-family: Roboto,sans-serif;
+    cursor: pointer;
+}
+
+
+.buynowBtn:focus{
+    background: #00aed9;
+    color: white;
+    font-family: Roboto,sans-serif;
+    border: 1px solid #00aed9;
+}
+
+
+.TenantLogo{
+    width: auto;
+    height: 46px;margin-top: 8px;margin-left: 25px;
+    float: left;
+}
+
+
+.USERbTN{
+    background: #ffffff;
+    float: right;
+    border: hidden;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.dropdown-item{
+    padding: 5px 15px !important;
+    text-align: center;
+}
+
+.navBar{
+    height: 60px;
+    box-shadow: 1px 1px 1px #e4e4e4;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background: white;
+}
+
+.open > .dropdown-menu{
+    left: -278% !important;
+}
+

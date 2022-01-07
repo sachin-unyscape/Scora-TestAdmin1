@@ -1,0 +1,868 @@
+<app-loader *ngIf="showLoad"></app-loader>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+<div class="col-md-12 col-lg-12 col-sm-6" *ngIf="!showitemset" style="padding: 0px;">
+    <div >
+        <header>
+        <p class="createTestHEad head" *ngIf="path == 0"><span>Create Test</span> - <span *ngIf="testInfo ==1" style="color:#00aed9">Test Info</span> <span *ngIf="testInfo ==2" style="color:#00aed9">Test Engine Settings</span> <span *ngIf="testInfo ==3" style="color:#00aed9">Test Engine Customisation</span></p>
+        <p class="createTestHEad head" *ngIf="path == 'edit'"><span>Edit Test</span> - <span *ngIf="testInfo ==1" style="color:#00aed9">Test Info</span> <span *ngIf="testInfo ==2" style="color:#00aed9">Test Engine Settings</span> <span *ngIf="testInfo ==3" style="color:#00aed9">Test Engine Customisation</span> <span *ngIf="testInfo == 4 || scoring_required == true" style="color:#00aed9"> Evaluation Settings </span></p>
+        <hr class="headerLine">
+        </header>
+    </div>
+</div>
+    <div class="col-lg-12 col-md-12 col-sm-6" style="padding-top: 13px;" *ngIf="!showitemset">
+        <div class="">
+
+                <div class = "tabDisplay justify-content-center container ">
+                    <div class="row">
+                        <div class="eachTab col-lg-{{colId}} col-md-{{colId}} col-sm-2 justify-content-center"><p class="numbers1 ">1 </p> <p class="tabText1">Test Info</p><p class="tabText1">Provides info about the test.</p><hr [ngClass]="{'hrClr':testInfo ==2 || testInfo ==3 || testInfo == 4,'joinTab1': scoring_required == true,'joinTab': scoring_required == false }"></div>
+                        <div class="eachTab col-lg-{{colId}} col-md-{{colId}} col-sm-2 justify-content-center"><p class="numbers " [ngClass]="{'changeBgClr': testInfo ==2 || testInfo ==3 || testInfo ==4}">2 </p> <p class="tabText"  [ngClass]="{'changeTxtClr':testInfo ==2 || testInfo ==3 || testInfo ==4}"> Test Engine Settings</p><p class="tabText"  [ngClass]="{'changeTxtClr':testInfo ==2 || testInfo ==3 || testInfo ==4}"> Controls the participant interface and makes it secure.</p><hr [ngClass]="{'hrClr':testInfo == 3 || testInfo == 4,'joinTab1': scoring_required == true,'joinTab2': scoring_required == false }"></div>
+                        <div class="eachTab col-lg-{{colId}} col-md-{{colId}} col-sm-2 justify-content-center" [ngClass]="{'changeTxtClr': testInfo ==3 || testInfo ==4}"><p class="numbers " [ngClass]="{'changeBgClr': testInfo ==3 || testInfo ==4 }">3 </p> <p class="tabText" [ngClass]="{'changeTxtClr':testInfo ==3 || testInfo ==4}"> Test Engine Customisation</p> <p class="tabText" [ngClass]="{'changeTxtClr':testInfo ==3 || testInfo ==4}"> Allows Test Admin to configure participant interface.</p><hr *ngIf="scoring_required == true" [ngClass]="{'hrClr':testInfo == 4,'joinTab1': scoring_required == true,'joinTab2': scoring_required == false }"></div>
+                        <div *ngIf="scoring_required == true" class="eachTab col-lg-{{colId}} col-md-{{colId}} col-sm-2 justify-content-center" [ngClass]="{'changeTxtClr': testInfo ==4 }"><p class="numbers " [ngClass]="{'changeBgClr': testInfo ==4 }">4 </p> <p class="tabText"> Evaluation Settings</p> <p class="tabText">Choose the evaluation settings</p></div>
+                    </div>
+                </div>
+        <!-- test info -->
+            <div class ="">
+                <div *ngIf="testInfo ==1" class="testInfoDiv">
+
+                    <form class="form-horizontal testStep1">
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="name">Test Name</label>
+                            <input type="text" autocomplete="off" class="form-control col-lg-5 col-md-5 col-sm-5" id="name" placeholder="Enter Test Name" name="name" [(ngModel)]="testCreation.test_name" [ngClass]="{'has-error':testNameError == -1 && (!pattern1.test(testCreation.test_name))}" maxlength="50">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="test_type_label" for="summativeformative">Test Type</label>
+                           <input style="margin-left: 11px;"  (change) = "selectnoOfattemptValue('Summative')" [checked]="summativeformative === 'Summative'" name="summativeformative" type="radio">
+                           <label style="margin-left: 6px;" for="summativeformative">Summative</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                           <input (change) = "selectnoOfattemptValue('Formative')" name="summativeformative" type="radio">
+                           <label style="margin-left: 6px;" for="summativeformative">Formative</label>
+                        </div>
+                        <!-- <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-3 test_Lable" for="Testtype">Test Type</label>
+                            <select class="form-control col-sm-5" name="testtype" id="testtype" [(ngModel)]="testCreation.test_type" [ngModelOptions]="{standalone: true}"  #testtype ="ngModel" [ngClass]="{'has-error':testtypeErr == -1 && testCreation.test_type == undefined,'dropdownPlaceholder':testtype.value == undefined}" >
+                                <option [disabled]="true" [selected]="testCreation.test_type == undefined" [value]="undefined" style="font-size:12px;">Select Test Type</option>
+                                <option class="optionclr" *ngFor="let data of testTypes" [value]="data">{{data}}</option>
+                            </select>
+
+                            </div>
+                        </div> -->
+                        <div class="form-group" *ngIf="showTestAttempts === true">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testattmpt">Test Attempts</label>
+                            <select class="form-control col-lg-5 col-md-5 col-sm-5" [(ngModel)]="testCreation.test_attempts" name="testattempt" id="testattempt" [ngModelOptions]="{standalone: true}" #testattempt ="ngModel"  [ngClass]="{'has-error':testAttemptErr == -1 && testCreation.test_attempts == undefined,'dropdownPlaceholder':testattempt.value == undefined}">
+                                    <option [disabled]="true" [selected]="testCreation.test_attempts == undefined" [ngValue]="undefined" style="font-size:12px;">Select Attempts</option>
+                                <option class="optionclr" *ngFor="let data of testAttempts"  [value]="data">{{data}}</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top: 5px;
+                        ">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testtype">Result Type</label>
+                            <select class="form-control col-lg-5 col-md-5 col-sm-5" [(ngModel)]="testCreation.test_result_type" name="result" id="result"   [ngClass]="{'has-error':resultErr == -1 && testCreation.test_result_type == ''}" [disabled]="true">
+                                    <option [disabled]="true" [selected]="true"  [ngValue]="undefined">select Result Type</option>
+                                <option *ngFor="let data of resultTypes"  [value]="data" [selected]="data == 'Immediate'">{{data}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testtype">Evaluation Type</label>
+                            <select class="form-control col-lg-5 col-md-5 col-sm-5"  name="evaluation" [(ngModel)]="testCreation.test_evaluation" id="evaluation"   [ngClass]="{'has-error':evaluationErr == -1 && testCreation.test_evaluation == '' }" [disabled]="true">
+                                    <option [disabled]="true" [selected]="true"  [ngValue]="undefined">select Evaluation Type</option>
+                                <option *ngFor="let data of evaluationTypes"  [value]="data" [selected]="data == 'System'">{{data}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testtype">Add Item Set(s)</label>
+
+                            <tag-input class="col-lg-5 col-md-5 col-md-5 tagInput" [(ngModel)]='testCreation.itemsets' [removable]='false' name="itemset" theme='bootstrap' [editable]='false' [readonly]="true" placeholder="Search for ItemSets" [disable]="true"  [ngClass]="{'has-error':itemsetErr == -1 && testCreation.itemsets.length == 0}"></tag-input>
+                            <button type="button" class="btn btn-primary addBtn" (click)="itemsetMap()" tooltip="Add Item Sets" placement="top">Add / Edit</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="sub">Subject</label>
+                            <input type="text" autocomplete="off" class="form-control col-lg-5 col-md-5 col-sm-5" id="sub" placeholder="Subjects Covered" name="subject" [(ngModel)]="testCreation.subject_name" [disabled]="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="noitems">No of Items</label>
+                            <input type="text" autocomplete="off" class="form-control col-lg-5 col-md-5 col-sm-5" id="noitems" placeholder="Total Number of Items" name="no of items" [(ngModel)]="testCreation.no_of_items"  [disabled]="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="duration">Duration</label>
+
+                            <input id="settime" type="time" step="1" class="form-control col-lg-5 col-md-5 col-sm-5" id="duration" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="testCreation.test_duration"  [disabled]="true" name="duration">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="row">
+                                <label class="test_expires_label">Test expires on</label>
+                               <my-date-picker [ngClass]="{'showBorder': showErrorForDateTime == true && expiry_date == null || showErrorForDateTime == true && expiry_date == '' || showErrorForDateTime == true && expiry_date == undefined || startTimeErrShow === true}" name="mydateStart" id="mydateExpire" class="datePicker" [options]="myDatePickerOptions" [(ngModel)]="expiry_date" (dateChanged)="testExpiresDate($event)" ></my-date-picker> &nbsp;&nbsp;
+                               <timepicker [ngClass]="{'showBorder': showErrorForTime == true && expiry_time == null || showErrorForTime == true && expiry_time == '' || showErrorForTime == true && expiry_time == undefined || startTimeErrShow === true}" [(ngModel)]="expiry_time" id="expired_time" name="strttime" (isValid)="isValid($event)" (ngModelChange)="EndTimechanged($event,expiry_time)" class="col-md-2 timerPadding1" [showMeridian]="false" (keypress)="onlyNumberKey($event)" ></timepicker>&nbsp;&nbsp;
+                            <p class="hint">(24 Hrs) Format</p>
+                            </div>
+                        </div>
+                        <span style="margin-left: 225px;color: red;background-color: #ededed; font-size: 11px; word-spacing: 5px;">Date & Time are in {{timeZoneName}}</span>
+
+                        <div class="form-group" style="margin-top: 10px;">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="maxscore">Maximum Score</label>
+                            <input type="text" autocomplete="off" class="form-control col-lg-5 col-md-5 col-sm-5" id="maxscore" placeholder="Maximum Applicable Score" maxlength="4" name="max score" [(ngModel)]="testCreation.maximum_score"  [disabled]="true"  (keypress)="onlyNumberKey($event)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="minscore">Minimum Score</label>
+                            <div class="col-lg-5 col-md-5 col-sm-5" style="padding:0px;">
+                                <input type="text" autocomplete="off" class="form-control" id="minscore" placeholder="Enter Passing Score"  maxlength="4" name="passing score" [(ngModel)]="testCreation.passing_score" [ngClass]="{'has-error':passScoreErr == -1 && testCreation.passing_score == ''}" (keypress)="onlyNumberKey($event)">
+                                <span *ngIf="passScoreMin && testCreation.passing_score > testCreation.maximum_score" style="color:#e84242;">Minimum Score cannot be greater than Maximum Score.</span>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testtype">Display Alert in Test Engine</label>
+                            <select class="form-control col-lg-5 col-md-5 col-sm-5" [(ngModel)]="testCreation.Alert_Timer" name="alert" id="alert" [ngModelOptions]="{standalone: true}" #alert ="ngModel" [ngClass]="{'has-error':AlertErr == -1 && testCreation.Alert_Timer == undefined,'dropdownPlaceholder':alert.value == undefined}">
+                                    <option [disabled]="true" [selected]="testCreation.Alert_Timer == undefined"  [ngValue]="undefined" style="font-size:12px;">Show Display Alert or Not?</option>
+                                <option  class="optionclr" *ngFor="let data of alertTime"  [value]="data">{{data}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-lg-3 col-md-3 col-sm-3 test_Lable" for="Testtype">Rules</label>
+                            <!-- <textarea class="form-control col-lg-5 col-md-5 col-sm-5" rows="3" placeholder="Enter Test Rules" [(ngModel)]="testCreation.test_rule" name="rule"  [ngClass]="{'has-error':rulesErr == -1 && testCreation.test_rule == ''}" maxlength="3000"></textarea> -->
+                            <div class="col-lg-5 col-md-5 col-sm-5" style="padding:0px;" [ngClass]="{'has-errorRules':rulesErr == -1 && (testCreation.test_rule == '' || testCreation.test_rule == null)}">
+                                <quill-editor  [(ngModel)]="testCreation.test_rule" name="rule" (keydown)="removeSpc($event, testCreation.test_rule)"  #desc1QE id="description1-qe" [style]="{'height': '100px'}"
+                                [options]="editorOptions"
+                                ></quill-editor>
+                            </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- <table align="center" style="width: 73%;margin-top: 16px;">
+                            <tbody>
+                            <tr>
+                                <td class="tableAlign">Test Name</td>
+                                <td class="tableAlign"><input type="text" autocomplete="off" class="form-control col-sm-5" id="name" placeholder="Enter Test Name" name="name" [(ngModel)]="testCreation.test_name" [ngClass]="{'has-error':testNameError == -1 && testCreation.test_name == ''}"></td>
+                            </tr>
+                            <tr>
+                                <td class="tableAlign">Test Type</td>
+                                <td class="tableAlign"> <select class="form-control col-sm-5" [(ngModel)]="testCreation.test_type" name="testname" id="testname"  [ngClass]="{'has-error':testtypeErr == -1 && testCreation.test_type == ''}">
+                                        <option [disabled]="true"  [value]="undefined" >select Test Type</option>
+                                        <option *ngFor="let data of testTypes" [value]="data">{{data}}</option>
+                                        </select></td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign">Test Attempts</td>
+                                    <td class="tableAlign"> <select class="form-control col-sm-5" [(ngModel)]="testCreation.test_attempts" name="testattempt" id="testattempt"  [ngClass]="{'has-error':testAttemptErr == -1 && testCreation.test_attempts == ''}">
+                                            <option [disabled]="true" [selected]="true" [ngValue]="undefined">select Test Attempts</option>
+                                        <option *ngFor="let data of testAttempts"  [value]="data">{{data}}</option>
+                                        </select></td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign">Result Type</td>
+                                    <td class="tableAlign"><select class="form-control col-sm-5" [(ngModel)]="testCreation.test_result_type" name="result" id="result"   [ngClass]="{'has-error':resultErr == -1 && testCreation.test_result_type == ''}" [disabled]="true">
+                                            <option [disabled]="true" [selected]="true"  [ngValue]="undefined">select Result Type</option>
+                                        <option *ngFor="let data of resultTypes"  [value]="data" [selected]="data == 'Immediate'">{{data}}</option>
+                                        </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableAlign">Evaluation Type</td>
+                                        <td class="tableAlign"> <select class="form-control col-sm-5"  name="evaluation" [(ngModel)]="testCreation.test_evaluation" id="evaluation"   [ngClass]="{'has-error':evaluationErr == -1 && testCreation.test_evaluation == '' }" [disabled]="true">
+                                                <option [disabled]="true" [selected]="true"  [ngValue]="undefined">select Evaluation Type</option>
+                                            <option *ngFor="let data of evaluationTypes"  [value]="data" [selected]="data == 'System'">{{data}}</option>
+                                            </select></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableAlign">Item Sets(s) Mapped</td>
+                                        <td class="tableAlign">  <tag-input class="col-md-5 tagInput" [(ngModel)]='testCreation.itemsets' [removable]='false' name="itemset" theme='bootstrap' [editable]='false' [readonly]="true" placeholder="Search for ItemSets" [disable]="true"  [ngClass]="{'has-error':itemsetErr == -1 && testCreation.itemsets.length == 0}"></tag-input>
+                                        </td>
+                                        <td class="tableAlign"><button type="button" class="btn btn-primary addBtn" (click)="itemsetMap()" tooltip="Add ItemSets" placement="top">+</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableAlign">Subject</td>
+                                            <td class="tableAlign"> <input type="text" autocomplete="off" class="form-control col-sm-5" id="Testtype" placeholder="Subjects Covered" name="subject" [(ngModel)]="testCreation.subject_name" [disabled]="true"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableAlign">No of Items</td>
+                                            <td class="tableAlign"><input type="text" autocomplete="off" class="form-control col-sm-5" id="Testtype" placeholder="Total Number of Items" name="no of items" [(ngModel)]="testCreation.no_of_items"  [disabled]="true"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tableAlign">Duration</td>
+                                                <td class="tableAlign"><input id="settime" type="time" step="1" class="form-control col-sm-5" placeholder="HH:MM:SS" style="height: 33px !important;" [(ngModel)]="testCreation.test_duration"  [disabled]="true" name="duration" [ngClass]="{'has-error':durationErr == -1 && testCreation.test_duration == ''}"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tableAlign">Maximum Score</td>
+                                                <td class="tableAlign"><input type="text" autocomplete="off" class="form-control col-sm-5" id="Testtype" placeholder="Maximum Applicable Score" maxlength="4" name="max score" [(ngModel)]="testCreation.maximum_score"  [disabled]="true" [ngClass]="{'has-error':maxScoreErr == -1 && testCreation.maximum_score == ''}" (keypress)="onlyNumberKey($event)"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tableAlign">Minimum Score</td>
+                                                    <td class="tableAlign"><input type="text" autocomplete="off" class="form-control col-sm-5" id="Testtype" placeholder="Enter Passing Score"  maxlength="4" name="passing score" [(ngModel)]="testCreation.passing_score" [ngClass]="{'has-error':passScoreErr == -1 && testCreation.passing_score == ''}" (keypress)="onlyNumberKey($event)"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="tableAlign">Display Alert in Test Engine</td>
+                                                    <td class="tableAlign"><select class="form-control col-sm-5" [(ngModel)]="testCreation.Alert_Timer" name="alert" id="alert" [ngClass]="{'has-error':AlertErr == -1 && testCreation.Alert_Timer == ''}">
+                                                            <option [disabled]="true" [selected]="true"  [ngValue]="undefined">select Alert</option>
+                                                        <option *ngFor="let data of alertTime"  [value]="data">{{data}}</option>
+                                                        </select></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="tableAlign" style="vertical-align:text-bottom !important;">Rules</td>
+                                                        <td class="tableAlign"> <textarea class="form-control col-sm-5" rows="3" placeholder="Enter Test Rules" [(ngModel)]="testCreation.test_rule" name="rule"  [ngClass]="{'has-error':rulesErr == -1 && testCreation.test_rule == ''}"></textarea></td>
+                                                    </tr>
+                            </tbody>
+                    </table> -->
+
+                    <div class="btnDiv">
+                        <button type="button" class="btn btn-primary btnCss" (click)="gotoSecondTab()">Continue</button>
+                        <a class="btnCss" style="color: #00aed9;" (click)="cancelTestPOPup(deleteTestPopup)">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- test engine settings -->
+
+                <div *ngIf="testInfo ==2"  class="testInfoDiv">
+                    <form class="form-horizontal testStep2">
+
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                        <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="Enabling the timer limits the time spent on each section. When time is up, participant must move on to the next section or exit the test." placement="left">Sectionwise Timer</span></label>
+
+                        <label class="switch">
+                            <input type="checkbox" (change)="timer(timerToggle)" [checked]="timerToggle" [disabled]="sectionWiseTimerFlag">
+                            <span class="slider"></span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testattmpt"><span tooltip="Allows the participant to attempt items from all sections in a test, in any order." placement="left">Cross Section Navigation</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="navigation(navigationToggle)" [checked]="navigationToggle" [disabled]="crossSectionNavFlag">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="name"><span tooltip="Allows the participant to attempt any section." placement="left">Can user choose section order?</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" [checked]="sectionOrderToggle" (change)="sectionOrder(sectionOrderToggle)" [disabled]="sectionOrderFlag">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="The participant can submit the completed test well before the alloted time." placement="left">Submit Before Time Ends</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="timeEnds(timeEndsToggle)" [checked]="timeEndsToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="row rowWidth">
+                          <label class="control-label col-sm-4 test_Lable" for="Testtype">Can Participant Print Certificate</label>
+
+                          <label class="switch">
+                              <input type="checkbox" (change)="printCertificateKey(canUserPrintCertificate)" [checked]="canUserPrintCertificate">
+                              <span class="slider"></span>
+                          </label>
+                          </div>
+                      </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="To avoid malpractice, a group of participants attempting the same test will receive shuffled sets of the same questions." placement="left">Randomise Questions</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="randomQues(randomQuesToggle)" [checked]="randomQuesToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="To avoid malpractice, answer choices will be shuffled." placement="left">Answer Option Shuffling</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="answerShuffling(answerShufflingToggle)" [checked]="answerShufflingToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="Allows the participant to take breaks during the test." placement="left">Can user pause the test?</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="pauseExam(pauseExamToggle)" [checked]="pauseExamToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="Allows the participant to view any available hints to solve the item." placement="left">Should hint be displayed?</span></label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="displayHint(displayHintToggle)" [checked]="displayHintToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testtype">Display Correct Answers in Dashboard</label>
+
+                            <label class="switch">
+                                <input type="checkbox" (change)="displayCorrtAns(displayCorrtAnsToggle)" [checked]="displayCorrtAnsToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div> -->
+                    </form>
+
+                    <!-- <table align="center" style="width: 73%;margin-top: 16px;">
+                        <tbody>
+                            <tr>
+                            <td class="tableAlign">Can User Choose Section Order ?</td>
+                            <td class="tableAlign"> <label class="switch">
+                                    <input type="checkbox" [checked]="sectionOrderToggle" (change)="sectionOrder(sectionOrderToggle)">
+                                    <span class="slider"></span>
+                                </label></td>
+                            </tr>
+                            <tr>
+                                <td class="tableAlign">Sectionwise Timer</td>
+                                <td class="tableAlign">  <label class="switch">
+                                        <input type="checkbox" (change)="timer(timerToggle)" [checked]="timerToggle" [disabled]="sectionWiseTimerFlag">
+                                        <span class="slider"></span>
+                                    </label></td>
+                            </tr>
+                            <tr>
+                                <td class="tableAlign">Cross Section Navigation</td>
+                                <td class="tableAlign"> <label class="switch">
+                                        <input type="checkbox" (change)="navigation(navigationToggle)" [checked]="navigationToggle" [disabled]="crossSectionNavFlag">
+                                        <span class="slider"></span>
+                                    </label></td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign">Submit Before Time Ends</td>
+                                    <td class="tableAlign"><label class="switch">
+                                            <input type="checkbox" (change)="timeEnds(timeEndsToggle)" [checked]="timeEndsToggle">
+                                            <span class="slider"></span>
+                                        </label></td>
+                                </tr>
+                                <tr>
+                                    <td class="tableAlign">Randomize Questions</td>
+                                    <td class="tableAlign"><label class="switch">
+                                            <input type="checkbox" (change)="randomQues(randomQuesToggle)" [checked]="randomQuesToggle">
+                                            <span class="slider"></span>
+                                        </label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableAlign">Answer Option Shuffling</td>
+                                        <td class="tableAlign"><label class="switch">
+                                                <input type="checkbox" (change)="answerShuffling(answerShufflingToggle)" [checked]="answerShufflingToggle">
+                                                <span class="slider"></span>
+                                            </label></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tableAlign">Can User Pause the Exam ?</td>
+                                        <td class="tableAlign"><label class="switch">
+                                                <input type="checkbox" (change)="pauseExam(pauseExamToggle)" [checked]="pauseExamToggle">
+                                                <span class="slider"></span>
+                                            </label></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableAlign">Should Hint be Displayed ?</td>
+                                            <td class="tableAlign"><label class="switch">
+                                                    <input type="checkbox" (change)="displayHint(displayHintToggle)" [checked]="displayHintToggle">
+                                                    <span class="slider"></span>
+                                                </label></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tableAlign">Display Correct Answers in Dashboard</td>
+                                            <td class="tableAlign"> <label class="switch">
+                                                    <input type="checkbox" (change)="displayCorrtAns(displayCorrtAnsToggle)" [checked]="displayCorrtAnsToggle">
+                                                    <span class="slider"></span>
+                                                </label></td>
+                                            </tr>
+
+                        </tbody>
+                    </table> -->
+                    <div class="btnDiv tab2Btn">
+                        <a (click)="testInfo = 1" class="backOption"> < Back</a>
+                        <button type="button" class="btn btn-primary btnCss" (click)="goToThirdTab()">Continue</button>
+                        <a class="btnCss" style="color: #00aed9;" (click)="cancelTestPOPup(deleteTestPopup)">Cancel</a>
+                    </div>
+                </div>
+
+                <!-- test engine customisation -->
+
+                <div *ngIf="testInfo == 3"  class="testInfoDiv">
+                    <form class="form-horizontal testStep3" >
+                        <div class="form-group">
+                        <div class="row rowWidth">
+                        <label class="control-label col-sm-4 test_Lable" for="name"><span tooltip="Displays the item status to help the participant navigate to the desired item." placement="left">Is question palette required?</span></label>
+                        <!-- <span  [ngClass]="{'toggleInfoHide' :QuestPaletteToggle == true}" class="toggleInfo">OFF</span><ui-switch size="small" (change)="QuestPalette($event)" [checked]="QuestPaletteToggle" defaultBgColor="white" switchColor="#00aed9" color="rgb(172, 172, 172)" reverse></ui-switch><span *ngIf="QuestPaletteToggle == true" class="toggleInfo">ON</span> -->
+                        <label class="switch">
+                            <input type="checkbox" (change)="QuestPalette(QuestPaletteToggle)" [checked]="QuestPaletteToggle">
+                            <span class="slider"></span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                        <label class="control-label col-sm-4 test_Lable" for="Testtype"><span tooltip="Allows the participant to view the item status in the palette." placement="left">Are filters required?</span></label>
+                        <!-- <span  [ngClass]="{'toggleInfoHide' :filtersToggle == true}" class="toggleInfo">OFF</span><ui-switch size="small" (change)="filters($event)" [checked]="filtersToggle" defaultBgColor="white" switchColor="#00aed9" color="rgb(172, 172, 172)" reverse></ui-switch><span *ngIf="filtersToggle == true" class="toggleInfo">ON</span> -->
+                        <label class="switch">
+                            <input type="checkbox" (change)="filters(filtersToggle)" [checked]="filtersToggle" [disabled]="filterReqFlag">{{filterReqFlag}}
+                            <span class="slider"></span>
+                        </label>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <label class="control-label col-sm-4 test_Lable" for="Testattmpt"><span tooltip="Provides a quick view of all questions in a test or section." placement="left">Is question paper view required?</span></label>
+                            <!-- <span  [ngClass]="{'toggleInfoHide' :quePaperToggle == true}" class="toggleInfo">OFF</span><ui-switch size="small" (change)="quePaper($event)" [checked]="quePaperToggle" defaultBgColor="white" switchColor="#00aed9" color="rgb(172, 172, 172)" reverse></ui-switch><span *ngIf="quePaperToggle == true" class="toggleInfo">ON</span> -->
+                            <label class="switch">
+                                <input type="checkbox" (change)="quePaper(quePaperToggle)" [checked]="quePaperToggle">
+                                <span class="slider"></span>
+                            </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                            <input type="checkbox" class="col-sm-1 custCheck" [checked]="showPreviewBtn" (change)="changePreviewBtn(showPreviewBtn)">
+                            <input type="text" autocomplete="off" class="col-sm-3 form-control"  [(ngModel)]="testCreation.previous_button_value" name="preview" id="previous" [ngClass]="{'has-error':prevbtnErr == -1 && (testCreation.previous_button_value == '' || testCreation.previous_button_value == null || (!pattern1.test(testCreation.previous_button_value)))}" maxlength="8">
+                            <button type="button" class="btn btn-primary btnCss">Previous</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                                <input type="checkbox" class="col-sm-1 custCheck" [checked]="showMarkforReview" (change)="changeMArkforRev(showMarkforReview)" [disabled]="markForRevFlag">
+                                <input type="text" autocomplete="off" class="col-sm-3 form-control" [(ngModel)]="testCreation.mark_for_review_button_value" name="MFR" id="MFR" [ngClass]="{'has-error':markRevErr == -1 && (testCreation.mark_for_review_button_value == '' || testCreation.mark_for_review_button_value == null || (!pattern1.test(testCreation.mark_for_review_button_value)))}" [disabled]="markForRevFlag" maxlength="22">
+                                <button type="button" class="btn btn-primary btnCss">Mark For Review & Next</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                                <input type="checkbox" class="col-sm-1 custCheck" [checked]="ClearResponse" (change)="changeclearResponse(ClearResponse)">
+                                <input type="text" autocomplete="off" class="col-sm-3 form-control"  [(ngModel)]="testCreation.clear_response_button_value" name="clear" id="clear"  [ngClass]="{'has-error':clearResErr == -1 && (testCreation.clear_response_button_value == '' || testCreation.clear_response_button_value == null || (!pattern1.test(testCreation.clear_response_button_value)))}" maxlength="14">
+                                <button type="button" class="btn btn-primary btnCss">Clear Response</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                                <input type="checkbox" class="col-sm-1 custCheck"  [checked]="true" [disabled]="true">
+                                <input type="text" autocomplete="off" class="col-sm-3 form-control"  [(ngModel)]="testCreation.save_next_buton_value" name="save" [disabled]="true">
+                                <button type="button" class="btn btn-primary btnCss">Save & Next</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                                <input type="checkbox" class="col-sm-1 custCheck"  [checked]="true" [disabled]="true">
+                                <input type="text" autocomplete="off" class="col-sm-3 form-control" [(ngModel)]="testCreation.submit_button_value" name="submit" [disabled]="true">
+                                <button type="button" class="btn btn-primary btnCss">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <div class="btnDiv tab3btn">
+                        <a (click)="testInfo = 2" class="backOption"> < Back</a>
+                        <button *ngIf="scoring_required" type="button" class="btn btn-primary btnCss" (click)="gotoFourthTab()">Continue</button>
+                        <button type="button" class="btn btn-primary btnCss" (click)="createTest()" *ngIf="path == 0 && !scoring_required">Create Test</button>
+                        <button type="button" class="btn btn-primary btnCss" (click)="createTest()" *ngIf="path == 'edit' && !scoring_required">Update Test</button>
+                        <a class="btnCss" style="color: #00aed9;" (click)="cancelTestPOPup(deleteTestPopup)">Cancel</a>
+                    </div>
+                </div>
+
+                <div *ngIf="testInfo == 4 && scoring_required == true " class="testInfoDiv">
+                    <form class="form-horizontal testStep4">
+                            <div class="form-group" *ngIf="fourthRowFlag">
+                                    <div class="row rowWidth">
+                                        <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Section Level Scorers</label>
+                                        <label class="switch">
+                                        <input type="checkbox" (change)="secLevelScorers(scorersToggle)" [checked]="scorersToggle">
+                                        <span class="slider"></span>
+                                        </label>
+
+                                        <p class="toolTipSpace"><i class="fa fa-question-circle-o" tooltip="If yes Itemset section wise scorers allocated " placement="right" style="top: 2px;font-size: 18px;cursor: pointer;" aria-hidden="true"></i></p>
+                                    </div>
+                            </div>
+                            <div class="tab-pane" id="profile" role="tabpanel" style="margin-bottom: 20px;" aria-labelledby="profile-tab" *ngIf="scorersToggle">
+                              <table class="table table-hover viewTable" style="max-width: 80%;margin: 0 auto 0 0;">
+                                <thead class="theadData">
+                                    <tr class="trData">
+                                        <th class="thData">Item Set</th>
+                                        <th class="thData">Section</th>
+                                        <th class="thData">Scoring Type</th>
+                                        <th class="thData">No of Scorers</th>
+                                        <th class="thData">Scorers</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="tbodyData" style="display: inherit !important;">
+                                     <tr class="trData" *ngFor="let itemSet of sectionWiseAllocationArray;let itemsetInd = index">
+                                        <td style="width: 20%;border-right: 1px solid white;vertical-align: middle;" class="tdData">{{itemSet.itemset_name}}</td>
+                                        <table style="border:none;">
+                                            <tbody>
+                                                <tr class="trData" *ngFor="let section of itemSet?.sectionWise;let ind = index">
+                                                    <td class="tdData">{{section.section_name}}</td>
+                                                    <td class="tdData">
+                                                            <select class="form-control" [(ngModel)]="section.scoring_type" name="evaluationLevel1" id="evaluationLevel1{{ind}}" [ngModelOptions]="{standalone: true}" [ngClass]="{'has-error':evaluationLevelErr == -1 && section.scoring_type == null,'dropdownPlaceholder':section.scoring_type == null}">
+                                                                <option disabled [selected]="section.scoring_type == null" [ngValue]="null" style="font-size:12px;">Select Level of Scoring</option>
+                                                                <option class="optionclr" *ngFor="let data of section.scoring_type_arr"  [value]="data" >{{data}}</option>
+                                                            </select>
+                                                     </td>
+                                                     <td class="tdData"><input class="pCss" type="text" autocomplete="off" value="0" id="secName{{ind}}" [(ngModel)]="section.no_of_scorers" [ngModelOptions]="{standalone: true}" (keypress)="onlyNumberKey($event)" maxlength="5"></td>
+                                                     <td class="tdData">
+                                                        <p style="min-width: 100%;" class="form-control-static multiSelect">
+                                                            <angular2-multiselect style="font-size:12px" [data]="scorers"
+                                                             [(ngModel)]="section.secScorers" [ngModelOptions]="{standalone: true}"
+                                                             [settings]="evaluators1" id="scorersId{{ind}}" #Evaluators="ngModel" required [selected]="section.secScorers == scorers">
+                                                            </angular2-multiselect>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                     </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group" *ngIf="!scorersToggle">
+                            <div class="row rowWidth">
+                                    <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Scoring Type</label>
+                                    <select class="form-control col-lg-4 col-md-4 col-sm-4" [(ngModel)]="scoringType" name="evaluationLevel" id="evaluationLevel" [ngModelOptions]="{standalone: true}" #evaluationLevel ="ngModel"  [ngClass]="{'has-error':evaluationLevelErr == -1 && scoringType == undefined,'dropdownPlaceholder':scoringType == undefined}">
+                                        <option [disabled]="true" [selected]="true" [ngValue]="undefined" style="font-size:12px;">Select Level of Scoring</option>
+                                        <option class="optionclr" *ngFor="let data of scoringTypeArr"  [value]="data" >{{data}}</option>
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!scorersToggle" class="form-group">
+                                <div class="row rowWidth">
+                                        <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Number of Scorers</label>
+                                        <input type="text" autocomplete="off" class="form-control col-lg-4 col-md-4 col-sm-2" [(ngModel)]="noOfScorers" id="name" placeholder="Enter Number of Scorers" name="name" (keypress)="onlyNumberKey($event)" maxlength="5" [ngClass]="{'has-error':noOfScorersError == -1 }">
+                                </div>
+                        </div>
+
+                        <div class="form-group" *ngIf="!scorersToggle">
+                                <div class="row rowWidth">
+                                        <label style="top:10px" class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Scorers </label>
+                                        <p class="form-control-static col-lg-4 col-md-4 col-sm-4 multiSelect">
+                                                <angular2-multiselect style="font-size:12px" [data]="scorers"
+                                                [(ngModel)]="selected_Scorers" [ngModelOptions]="{standalone: true}"
+                                                    [settings]="evaluators1" id="scorers" #Evaluators="ngModel" required [selected]="selected_Scorers == scorers" [ngClass]="{'has-error':scorersError == -1 }" >
+                                                </angular2-multiselect>
+                                        </p>
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                                <div class="row rowWidth">
+                                        <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Anonymity</label>
+                                    <label class="switch">
+                                    <input type="checkbox" (change)="anonymity(anonymityToggle)" [checked]="anonymityToggle" >
+                                    <span class="slider"></span>
+                                    </label>
+                                <p class="toolTipSpace"><i class="fa fa-question-circle-o" tooltip="If yes Show username to evaluators else hide the username" placement="right" style="top: 2px;font-size: 18px;cursor: pointer;" aria-hidden="true"></i></p>
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                                <div class="row rowWidth">
+                                        <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Show Keywords</label>
+                                    <label class="switch">
+                                    <input type="checkbox" (change)="keywords(keywordsToggle)" [checked]="keywordsToggle" [disabled]="">
+                                    <span class="slider"></span>
+                                    </label>
+
+                                    <p class="toolTipSpace"><i class="fa fa-question-circle-o" tooltip="If yes show keywords to evaluators else hide the keywords " placement="right" style="top: 2px;font-size: 18px;cursor: pointer;" aria-hidden="true"></i></p>
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row rowWidth">
+                                    <label class="control-label col-lg-4 col-md-3 col-sm-3 test_Lable" for="name">Start Scoring Once Test is Completed</label>
+                                <label class="switch">
+                                <input type="checkbox" (change)="completed(completedToggle)" [checked]="completedToggle" [disabled]="">
+                                <span class="slider"></span>
+                                </label>
+
+                                <p class="toolTipSpace"><i class="fa fa-question-circle-o" tooltip="Once the test is completed then click here" placement="right" style="top: 2px;font-size: 18px;cursor: pointer;" aria-hidden="true"></i></p>
+                            </div>
+                    </div>
+                    </form>
+
+                    <div class="btnDiv tab4Btn">
+                            <a (click)="testInfo = 3" class="backOption"> < Back</a>
+                            <button type="button" class="btn btn-primary btnCss" (click)="createTest()" *ngIf="path == 0">Create Test</button>
+                            <button type="button" class="btn btn-primary btnCss" (click)="createTest()" *ngIf="path == 'edit' && scoring_required == true">Update Test</button>
+                            <a class="btnCss" style="color: #00aed9;" (click)="cancelTestPOPup(deleteTestPopup)">Cancel</a>
+                        </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<!-- success message popup -->
+<!-- <p class="successMsg" [@dialog1] *ngIf="saveMsg">{{showMsg}}</p> -->
+
+<!-- error message popup -->
+<!-- <p class="errorMsg" [@dialog1] *ngIf="saveMsgError">{{showMsgError}}</p> -->
+
+<!-- itemset search popup-->
+
+<div class="col-lg-12 col-md-12 col-sm-6 itemsetView" *ngIf="showitemset">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-6">
+        <!-- <p class="createTestHEad">Manage Item Sets</p> -->
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-6">
+        <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link " id="home-tab" data-toggle="tab"  role="tab" aria-controls="home" aria-selected="true" (click)="activeTab =1" [ngClass]="{'active' : activeTab ==1}">Item Set Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" (click)="activeTab =2" [ngClass]="{'active' : activeTab ==2}">Requested Item Set</a>
+            </li>
+
+        </ul> -->
+          <!-- <div class="tab-content" id="myTabContent"> -->
+            <!-- <div class="tab-pane fade show " id="home" role="tabpanel" aria-labelledby="home-tab"  [ngClass]="{'active' : activeTab ==1}"> -->
+              <!-- <form class="form-horizontal"  style="margin-left:28%;margin-top: 27px;">
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="control-label col-sm-2 test_Lable" for="name">Subject</label>
+                    <div class="col-sm-4">
+                    <angular2-multiselect style="font-size:12px" [data]="subjectList"  (ngModelChange)="getTopic($event)"
+                              [(ngModel)]="itemsetSearch.subjects" [ngModelOptions]="{standalone: true}"
+                            [settings]="settings1" id="Subjects" #Subjects="ngModel" required >
+
+                    </angular2-multiselect>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="control-label col-sm-2 test_Lable" for="name">Topic</label>
+                    <div class="col-sm-4">
+                    <angular2-multiselect  [data]="topicsList"
+                        [(ngModel)]="itemsetSearch.topics" [ngModelOptions]="{standalone: true}"
+                        [settings]="settings2" id="topics" #topics="ngModel" required class="col-sm-4">
+                    </angular2-multiselect>
+                    </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="row">
+                    <label class="control-label col-sm-2 test_Lable" for="name">Date Range</label>
+                    <div class="col-sm-4">
+                    <my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions"
+                    [(ngModel)]="itemsetSearch.date_range" required></my-date-range-picker >
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="row">
+                      <label class="control-label col-sm-2 test_Lable" for="name">Author</label>
+                      <div class="col-sm-4">
+                      <input list="browsers" class="form-control" id="name" placeholder="Enter Author Name" name="name" [(ngModel)]="testCreation.author" (ngModelChange)="SearchAuthor(testCreation.author)">
+                      <datalist id="browsers">
+                        <option [value]="data" *ngFor="let data of searchedData">
+                      </datalist>
+                      </div>
+                      </div>
+                    </div>
+              </form>
+                <div class="btnDiv">
+                  <button type="button" class="btn btn-primary btnCss" >Search</button>
+                  <button type="button" class="btn btn-default btnCss" (click)="showitemset = false">Cancel</button>
+                </div> -->
+            <!-- </div> -->
+            <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" [ngClass]="{'active' : activeTab ==2,'show':activeTab ==2}">profile</div> -->
+          <!-- </div> -->
+          <div class="searchDiv" (click)="showSearchBlk == true? showSearchBlk=false:showSearchBlk=true">
+              <p class="searchText" >Search <fa [name]="'search'" [size]=1 class="searchIcon" ></fa></p>
+          </div>
+          <div *ngIf="showSearchBlk" class="search_form">
+              <p *ngIf="ItemsetSearchErr" class="ItemsetErr">Please enter any of these fields to search</p>
+            <form class="col-md-12" style="display:inline-flex">
+                <div class="form-group col-md-4 form-margin">
+                    <div class="row rowWidthForm">
+                    <label class="control-label col-md-6 test_Lable" for="name">ItemSet Name</label>
+                    <input list="browsers" class="form-control col-md-6 labelHeight" name="itemset name" [(ngModel)]="itemsetSearch.itemset_name" (ngModelChange)="SearchItemSetName(itemsetSearch.itemset_name)" placeholder="Enter Itemset Name">
+                    <datalist id="browsers">
+                            <option [value]="data" *ngFor="let data of itemSetSearchData">
+                    </datalist>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 form-margin">
+                    <div class="row rowWidthForm">
+                    <label class="control-label col-md-3 test_Lable" for="name">{{subLabelName}}</label>
+                    <div class="col-md-9 form1Res" style=" margin-top: -8px;">
+                    <div class="form-control-static">
+                        <angular2-multiselect style="font-size:12px" [data]="subjectList"  (ngModelChange)="getTopic($event)"
+                                [(ngModel)]="itemsetSearch.subjects" [ngModelOptions]="{standalone: true}"
+                                [settings]="settings1" id="Subjects" #Subjects="ngModel" required >
+
+                        </angular2-multiselect>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 form-margin">
+                    <div class="row rowWidthForm">
+                    <label class="control-label col-md-4 test_Lable" for="name">{{topLabelName}}</label>
+                    <div class="col-md-7 form1Res">
+                    <angular2-multiselect  [data]="topicsList"
+                        [(ngModel)]="itemsetSearch.topics" [ngModelOptions]="{standalone: true}"
+                        [settings]="settings2" id="topics" #topics="ngModel" required>
+                    </angular2-multiselect>
+                    </div>
+                    </div>
+                </div><br>
+
+            </form>
+            <form style="display:inline-flex" class="col-md-12">
+                <div class="form-group col-md-4 form-margin">
+                    <div class="row rowWidthForm">
+                    <label class="control-label col-md-6 test_Lable" for="name">Created Date Range</label>
+                    <div class="col-md-6" style="padding-left: 0px;padding-right: 0px;">
+                    <my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions"
+                    [(ngModel)]="itemsetSearch.date_range" required [placeholder]="placeholder" title="{{itemsetSearch.date_range}}"></my-date-range-picker >
+                    </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 form-margin">
+                    <div class="row rowWidthForm">
+                    <label class="control-label col-md-3 test_Lable" for="name">Author</label>
+                    <div class="col-md-9 form1Res">
+                    <angular2-multiselect style="font-size:12px" [data]="authorSearchData"
+                            [(ngModel)]="itemsetSearch.authors" [ngModelOptions]="{standalone: true}"
+                            [settings]="settings3" id="author" #author="ngModel" required name="author">
+
+                    </angular2-multiselect>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding-top: 12px;">
+                        <button type="button" class="btn btn-primary btnCss" (click)="searchItemSet()">Search</button>
+                        <a class="cancelBtn" (click)="cancel()">Clear Search Results</a>
+                </div>
+            </form>
+
+          </div>
+          <div class="mapitemsetbtn-top">
+                <!-- <button type="button" class="btn btn-primary btnCss" (click)="mapItemSet()" *ngIf="itemSetDetails.length != 0" [disabled]="selectedItemSets.length == 0">Map Item Set</button> -->
+            </div>
+         <div style="padding: 11px 7px;">
+                <p style="cursor: pointer;margin-bottom: 0px;" (click)="backToTest()">< Back</p>
+         </div>
+            <table class="table1 table table-hover">
+                <thead class="thead1">
+                  <tr>
+                    <th class="" style="width:2%"></th>
+                    <th class="th1 dataWidth">Item Set/Section</th>
+                    <th class="th1 dataWidth">{{subLabelName}}</th>
+                    <th class="th1 dataWidth">{{topLabelName}}</th>
+                    <th class="th1 dataWidth">Duration</th>
+                    <th class="th1 dataWidth">Score</th>
+                    <th class="th1 dataWidth">Author</th>
+                    <th class="th1 dataWidth">Max Score</th>
+                    <th class="th1 dataWidth">Date Created</th>
+                    <th class="th1 dataWidth">No of Items</th>
+                    <th class="th1 dataWidth">No of Items in Pool</th>
+
+
+                  </tr>
+                </thead>
+                <tbody class="tbody1" style="display: table !important">
+                    <tr *ngIf="itemSetDetails.length == 0" style="text-align: center;opacity: 0.7;border-bottom: 1px solid rgba(174, 204, 218, 0.58) ; width: 100%; display: table;"><td colspan="10">No data found</td></tr>
+                  <tr *ngFor = "let data of itemSetDetails" class="cursor"  [style.background-color]="data.color" [style.font-size.px]="data.size" >
+                    <td style="width:2%"><input type="checkbox" *ngIf="data.section_id == undefined" (click)="selectItemSet(data)" [(ngModel)]="data.checked"></td>
+                    <td  class="td1 dataWidth">{{data.title_name}}</td>
+                    <td class="td1 dataWidth">{{data.subjects}}</td>
+                    <td class="td1 dataWidth">{{data.topics}}</td>
+                    <td class="td1 dataWidth">{{data.timer}}</td>
+                    <td class="td1 dataWidth">{{data.score}}</td>
+                    <td class="td1 dataWidth">{{data.author}}</td>
+                    <td class="td1 dataWidth">{{data.score}}</td>
+                    <td class="td1 dataWidth">{{data.created_date}}</td>
+                    <td class="td1 dataWidth">{{data.no_of_items}}</td>
+                    <td class="td1 dataWidth" *ngIf="data.no_of_items_in_pool != undefined">{{data.no_of_items_in_pool}}</td>
+                    <td class="td1 dataWidth" *ngIf="data.no_of_items_in_pool == undefined">--</td>
+                  </tr>
+
+                </tbody>
+            </table>
+
+            <div class="mapitemsetbtn-bottom">
+                <button type="button" class="btn btn-primary btnCss"  (click)="mapItemSet()" *ngIf="itemSetDetails.length != 0"  [disabled]="selectedItemSets.length == 0">Map Item Set</button>
+            </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showitemset" class="itemset_overlay"></div>
+<!-- itemset search popup ends-->
+
+<!-- <div *ngIf="deleteTestPopup" class="deleteTestPopupCss">
+    <button  aria-label="Close" class="dialog__close-btn" (click)="deleteTestPopup = false">X</button>
+    <p class="modalHead">Alert!</p>
+      <div class="formAlign">
+          <p class="" style="text-align:center">Are You Sure Want To Cancel ?</p>
+
+      </div>
+    <div class="saveBtn">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelTest()">Ok</button>
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="deleteTestPopup = false">Cancel</button>
+    </div>
+  </div>
+<div *ngIf="deleteTestPopup" class="overlay_edit"></div> -->
+
+
+
+<!-- cancel test popup -->
+<ng-template #deleteTestPopup>
+        <div class="modal-header">
+                <p class="modalHead">Alert!</p>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="formAlign">
+                    <p class="" style="text-align:center">Are you sure you want to cancel the test?</p>
+
+                </div>
+                <div class="saveBtn">
+                <button class="btn btn-primary btnCss creategrpBtn" (click)="cancelTest()">Yes</button>
+                <button class="btn btn-primary btnCss creategrpBtn" (click)="modalRef.hide()">No</button>
+            </div>
+        </div>
+</ng-template>

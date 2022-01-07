@@ -1,0 +1,26 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<div class="navBar">
+    <img src="{{tenantLogo}}" class="TenantLogo">
+    <div class="btn-group " dropdown style="margin-right: 44px;float:right;margin-top: 15px;">
+        <a id="button-basic" dropdownToggle type="" class="dropdown-toggle USERbTN"
+                aria-controls="dropdown-basic">
+                <i class="fa fa-user" aria-hidden="true"></i> <i class="fa fa-caret-down" aria-hidden="true"></i>
+        </a>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" style="left: -278% !important;"
+            role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">Logout</a></li>
+         
+        </ul>
+    </div>
+      
+</div>
+
+<div class="bg">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 messageMArgin">
+        <span class="tickIcon"><i class="fa fa-check" aria-hidden="true"></i></span>
+        <h4 class="textclr">Order Successfully Placed</h4>
+        <hr>
+        <h6 class="confMsg">We will send you the invoice shortly</h6>
+    <div class="confMsg"><button class="buynowBtn">Dashboard</button></div>
+    </div>
+</div>

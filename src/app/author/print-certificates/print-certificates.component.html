@@ -1,0 +1,43 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<p class="_uploadMsg" *ngIf="uploadingMsg != '' && uploadingMsg == 'Please wait. Uploading the template.'">{{uploadingMsg}}</p>
+<p class="_uploadMsgP" *ngIf="uploadingMsg != '' && uploadingMsg != 'Please wait. Uploading the template.'">{{uploadingMsg}}</p>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+    <p class="header">Print Certificate</p>
+    <hr class="headerLine">
+</div>
+
+
+<p *ngIf="showError != ''" class="alertMSg col-md-12">{{showError}}</p>
+
+<div class="btnp">
+  <div class="btn-group contentbtn" dropdown [autoClose]="true">
+    <!-- <li><a href="../../../../assets/file/match-items-mapping-template.xlsx">Match Items</a> </li> -->
+    <a class="_DnTemp" href="../../../../assets/file/Certificate.xlsx"> <span><i class="fa fa-download" aria-hidden="true"></i></span> Download Template</a>
+  </div>
+</div>
+
+<div class="jobFileUploadDiv">
+  <!-- <p *ngIf="selectedFileName != ''" style="text-align: center;font-size: 16px;font-weight: 500;color: #616161;">File Name.xlsx</p> -->
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="fileUploadExcelJOB btn">
+        <span>Click here to upload files</span>
+        <input [disabled]="selectedFileName != '' || getZipURL != ''" type="file" #getPDF onclick="this.value = null" (change)="uploadFileDataExcel($event)" placeholder="Upload file" accept=".xlsx" name="file" class="upload">
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="selectedFileName != ''" style="width: 50%;margin: auto;text-align: center;">
+
+  <p class="_selText">{{selectedFileName}} <span class="_SelClose" (click)="deleteSelectedFile()"><i class="fa fa-times" aria-hidden="true"></i></span></p>
+  <p class="_actField"><button class="_DnTemp" (click)="generatePDF()"> Generate PDF </button><a
+      class="_DnTempA" [ngClass]="{'_dis': getZipURL == ''}" href="{{getZipURL}}"> Download ZIP </a></p>
+</div>

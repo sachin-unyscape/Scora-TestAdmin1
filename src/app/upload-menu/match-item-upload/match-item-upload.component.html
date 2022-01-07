@@ -1,0 +1,123 @@
+<app-loader *ngIf="fullpageload"></app-loader>
+<p class="_uploadMsg" *ngIf="showLoadMessage == true">Please wait as data are being processed. This may take a few minutes.</p>
+<simple-notifications [options]="Notificationoptions"></simple-notifications>
+
+
+
+<div class="col-md-12" style="padding: 0px;">
+
+    <p class="header">File Details<span style="
+      float: right;
+      margin: 0px 26px;cursor:pointer;
+  " [routerLink]="['/Upload/UploadedFiles']"> < Back</span></p>
+    <hr class="headerLine">
+</div>
+
+<!-- upload match item sheet not in use -->
+  <!-- <p *ngIf="showError != ''" class="alertMSg col-md-12">{{showError}}</p>
+
+  <div class="uploadPos">
+    <div class="fileUploadExcel btn" >
+        <span>Click here to upload files</span>
+      <input type="file" onclick="this.value = null" (change)="uploadExcel($event)" placeholder="Upload file" accept=".xlsx" name="file" class="upload">
+    </div>
+    <p class="noteMsg"><span>Note:</span> Upload Match Item Sheet here</p>
+  </div> -->
+
+<!-- upload match item sheet ends.... not in use -->
+
+
+<!--############# view Uploaded files in detail ##################-->
+
+<div class="col-md-12" class="text-right">
+  <button class="btn btn-primary uploadbtn cursor" [ngClass]="{'disabledIt': listOfUploadFileDetails.batch_no == null }" [disabled]="listOfUploadFileDetails.batch_no == null" (click)="processData(listOfUploadFileDetails.file_type,listOfUploadFileDetails.file_id)">Process Data</button>
+</div>
+
+<p class="head1">File Details</p>
+
+<div class="col-md-12 fileDetDiv">
+  <div class="row">
+    <div class="col-md-2 label">File Name :</div>
+    <div class="col-md-4" style="margin: 5px 0px;">{{listOfUploadFileDetails.file_name}}</div>
+    <div class="col-md-2 label">File Type :</div>
+    <div class="col-md-4" style="margin: 5px 0px;">{{listOfUploadFileDetails.file_type}}</div>
+    <div class="col-md-2 label">Created By :</div>
+    <div class="col-md-4" style="margin: 5px 0px;">{{listOfUploadFileDetails.created_by}}</div>
+    <div class="col-md-2 label">Created At :</div>
+    <div class="col-md-4" style="margin: 5px 0px;">{{listOfUploadFileDetails.created_at}}</div>
+  </div>
+</div>
+
+<p class="head1">Data Details</p>
+
+<div class="col-md-12" style="margin-bottom:30px;" *ngIf="listOfUploadFileDetails.file_type == 'User Response Data'">
+  <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>User Role Number</th>
+        <th>Tenant Question ID</th>
+        <th>Question Response</th>
+        <th>Status</th>
+
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf=" listOfUploadFileDetails == undefined || listOfUploadFileDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="3" style="padding:4px 10px">No data found</td></tr>
+      <tr *ngFor="let data of returnedArray;let i= index;">
+        <td>{{data.roll_number}}</td>
+        <td >{{data.tenant_item_id}}</td>
+        <td>{{data.answer_choice}}</td>
+        <td><span *ngIf="data.load_status != null">{{data.load_status}}</span><span *ngIf="data.load_status == null">--</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <pagination class="pagination" [totalItems]="listOfUploadFileDetails.total_data_count" (pageChanged)="pageChanged($event)" [maxSize]="maxSize" [rotate]="rotate"></pagination>
+</div>
+
+<div class="col-md-12" style="margin-bottom:30px;" *ngIf="listOfUploadFileDetails.file_type == 'User Profile Data'">
+  <table class="table table-hover viewTable">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Roll Number</th>
+        <th>Test Track</th>
+        <th>Set</th>
+        <th>Type</th>
+        <th>Language</th>
+        <th>QP Name</th>
+
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf=" listOfUploadFileDetails == undefined || listOfUploadFileDetails.length ==0" style="text-align: center;opacity: 0.7;"><td colspan="3" style="padding:4px 10px">No data found</td></tr>
+      <tr *ngFor="let data of returnedArray;let i= index;">
+        <td>{{data.user_id}}</td>
+        <td>{{data.roll_number}}</td>
+        <td>{{data.subject_track}}</td>
+        <td>{{data.set_number}}</td>
+        <td>{{data.test_track_type}}</td>
+        <td>{{data.language}}</td>
+        <td>{{data.itemset_name}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+  <pagination class="pagination" [totalItems]="listOfUploadFileDetails.total_data_count" (pageChanged)="pageChanged($event)" [maxSize]="maxSize" [rotate]="rotate"></pagination>
+</div>
+
+<div class="_modePo" *ngIf="showErrPop != 0">
+  <div class="_modePoHead">
+    <p class="">Alert!</p>
+  </div>
+  <div class="modal-body">
+    <div style="text-align: center;">
+      <p *ngIf="showErrPop == 1">Records Processed Successfully.</p>
+      <p *ngIf="showErrPop == 2">Unfortunately, some records couldn't be processed. Please try processing the remaining records by clicking the 'Process' button.</p>
+    </div>
+    <div class="saveBtn" style="text-align: center;">
+      <button class="btn btn-primary btnCss creategrpBtn" (click)="showErrPop = 0">Done</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" *ngIf="showErrPop != 0"></div>

@@ -1,0 +1,278 @@
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    padding: 5px 18px;
+    border-radius: 50%;
+    margin-top: -71px;
+    background: rgba(220, 230, 236, 0.43);
+    z-index: 9999;
+    width: 70px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    width: 70px;
+    height: 70px;
+}
+.overlay{
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.fa .fa-camera:hover{
+    color: #000;
+}
+
+.iconcolor{
+    color: rgba(0, 0, 0, 0.53);
+}
+.nav-item-menu{
+  color: #a5a4a4;
+} 
+.nav-item-menu-theme{
+  color: #ffffff;
+}
+
+   
+
+
+//   .topNavBg{
+//     background-color: #e8eff7;
+
+//   }
+
+//   .sideNavBg{
+//     background: #3d464f;
+
+//   }
+// .Sidenavitem .nav-link:hover{
+//     background: #292d34;
+//     border: 1px solid transparent;
+//     border-left: 3px solid #41acd6;
+//     cursor: pointer;
+// }
+// .sidebar .nav .nav-item .nav-link.active, .sidebar .nav .nav-item .navbar .active.dropdown-toggle, .navbar .sidebar .nav .nav-item .active.dropdown-toggle{
+//     background: #292d34;
+//     border: 1px solid transparent;
+//     border-left: 3px solid #41acd6;
+// }
+
+
+
+
+// .sidebar .nav .nav-item.nav-dropdown.open {
+//     background: none;
+//   }
+
+  .profileLoader{
+    font-size: 20px;
+    opacity: 0.6;
+    position: absolute;
+    left: 45%;
+    top: 10%;
+  }
+
+  .disableSideMenus{
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .alertPOPup{
+    position: fixed;
+    top: 10%;
+    left: 41%;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    width: 20%;
+    text-align: center;
+}
+
+.alertMsgs{
+    position: absolute;
+    margin-top: 5.5%;
+    left: -2%;
+    background: black;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 9999;
+}
+
+.alertMsgs:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 62%;
+    margin-left: -50px;
+    width: 0;
+    height: 0;
+    border-top: solid 8px #000000;
+    border-left: solid 10px transparent;
+    border-right: solid 10px transparent;
+}
+
+@media (max-width: 991px){
+
+    .app-header .navbar-toggler {
+        color: rgb(104, 113, 122) !important;
+        height: 35px !important;
+        cursor: pointer !important;
+        width: 35px !important;
+        border: 1px solid silver !important;
+        margin: 12px 0px 0px 10px !important;
+        padding: 0px !important;
+    }
+}
+
+
+.modal-header{
+    padding: 0px 0px !important;
+    background: #68717a;
+    color: white;
+  }
+
+  button.close {
+    padding: 8px;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    color: white;
+}
+.modal-body {
+    position: relative;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 3px;
+}
+
+
+.overlay_edit {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+ .creategroupPopupCss {
+    z-index: 1000;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 200px;
+    width: 37%;
+    max-width: 100%;
+    height: auto;
+    background-color: #fff;
+    // padding: 12px;
+    box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+  }
+  
+  @media (min-width: 768px) {
+    .creategroupPopupCss {
+      top: 40px;
+    }
+  }
+  
+  .dialog__close-btn {
+    border: 0;
+    background: none;
+    color: #fff;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+  .modalHead{
+    background: black;
+    padding: 5px;
+    color: white;
+    padding: 7px;
+    text-align: center;
+    margin: 0px;
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .createuserPopupCss {
+    z-index: 1000;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 100px;
+    width: 40%;
+    max-width: 100%;
+    height: auto;
+    background-color: #fff;
+    // padding: 12px;
+    box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+  }
+  
+  @media (min-width: 768px) {
+    .createuserPopupCss {
+      top: 40px;
+    }
+  }
+.content{
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 23px;
+    margin: 20px 0px;
+}
+
+
+.orgLogoTagLine{
+  line-height: 9;
+    font-size: 10px;
+    color: #00aed9;
+    padding: 0px 8px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 2px;
+  background: darkgray;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: grey;
+  // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+.navToggle{
+  // position: absolute;
+  bottom: 0;
+  margin: 65px 0px 0px 0px;
+}
+.submenus{
+  padding-left: 26px !important;
+    padding-right: 0 !important;
+}
+.submenus:hover{
+  padding-left: 26px !important;
+    padding-right: 0 !important;
+}
