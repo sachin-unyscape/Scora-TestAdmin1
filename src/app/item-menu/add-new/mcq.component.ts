@@ -62,6 +62,7 @@ import tinymce from 'tinymce/tinymce';
 //import { type } from 'os';
 import * as _ from 'lodash';
 
+declare var tinyMCE:any;
 
 @Component({
   selector: 'app-add-new',
@@ -92,6 +93,7 @@ export class MCQComponent implements OnInit {
   @ViewChild('autoShownModal') autoShownModal: ModalDirective;
   ckeConfig: any;
  // @ViewChild("ckeditor") ckeditor: any;
+ 
   isModalShown: boolean = false;
   public attributesDet: attributevalue;
   public custom_attributes: attributevalue;
@@ -191,6 +193,12 @@ export class MCQComponent implements OnInit {
   openTableModalOnclick: ElementRef;
 
   constructor(private http: Http, private dragulaService: DragulaService, public router: Router, public route: ActivatedRoute, public getItemService: GetItemService, private cookieService: CookieService, private authService: AuthServiceService, private modalService: BsModalService, private _notifications: NotificationsService, public sanitizer: DomSanitizer) {
+    // tinyMCE.overrideDefaults({
+    //   base_url: '/tinymce/',  // Base for assets such as skins, themes and plugins
+    //   suffix: '.min'          // This will make Tiny load minified versions of all its assets
+    // });
+
+
     let dragIndex: number, dropIndex: number;
     dragulaService.setOptions('bag', {
       invalid(el, handle) {
@@ -9441,29 +9449,29 @@ export class MCQComponent implements OnInit {
 
   ngOnInit() {
 
-    tinymce.init({
-    external_plugins: {
-    'tiny_mce_wiris': `node_modules/@wiris/mathtype-tinymce5/plugin.min.js`,
-    }
-  });
-   tinymce.init({
- toolbar: 'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry',
- // Necessary
- htmlAllowedTags: ['.*'],
- htmlAllowedAttrs: ['.*'],
+//   //   tinymce.init({
+//   //   external_plugins: {
+//   //   'tiny_mce_wiris': `node_modules/@wiris/mathtype-tinymce5/plugin.min.js`,
+//   //   }
+//   // });
+//    tinymce.init({
+//  toolbar: 'tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry',
+//  // Necessary
+//  htmlAllowedTags: ['.*'],
+//  htmlAllowedAttrs: ['.*'],
 
- // We recommend to set 'draggable_modal' to true to avoid overlapping issues
- // with the different UI modal dialog windows implementations between core and third-party plugins on TinyMCE.
- // @see: https://github.com/wiris/html-integrations/issues/134#issuecomment-905448642
- draggable_modal: true,
+//  // We recommend to set 'draggable_modal' to true to avoid overlapping issues
+//  // with the different UI modal dialog windows implementations between core and third-party plugins on TinyMCE.
+//  // @see: https://github.com/wiris/html-integrations/issues/134#issuecomment-905448642
+//  draggable_modal: true,
 
- // You could set a different language for MathType editor:
- // language: 'fr_FR',
- // mathTypeParameters: {
- //   editorParameters: { language: 'fr' },
- // },
+//  // You could set a different language for MathType editor:
+//  // language: 'fr_FR',
+//  // mathTypeParameters: {
+//  //   editorParameters: { language: 'fr' },
+//  // },
 
-}); 
+// }); 
 
   this.answer_Option_data = null;
   this.sec_attr_0 = null;
