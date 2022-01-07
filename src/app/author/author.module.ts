@@ -81,6 +81,7 @@ import { ViewRubricComponent } from './test-admin1/view-rubric/view-rubric.compo
 import { CreateRubricComponent } from './test-admin1/create-rubric/create-rubric.component';
 import { EditRubricComponent } from './test-admin1/edit-rubric/edit-rubric.component';
 import { EditorModule } from "@tinymce/tinymce-angular";
+import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insights.component';
 
 
 @NgModule({
@@ -144,7 +145,8 @@ import { EditorModule } from "@tinymce/tinymce-angular";
     RubricListingComponent,
     ViewRubricComponent,
     CreateRubricComponent,
-    EditRubricComponent
+    EditRubricComponent,
+    ScoraInsightsComponent
   ],
   providers: [GetItemService,CookieService,PagerService,AuthServiceService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
