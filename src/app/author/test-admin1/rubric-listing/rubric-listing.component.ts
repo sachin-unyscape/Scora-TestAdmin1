@@ -30,6 +30,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ["./rubric-listing.component.scss"],
 })
 export class RubricListingComponent implements OnInit {
+  item_type_id: any;
   constructor(
     private http: Http,
     private router: Router,
@@ -49,9 +50,11 @@ export class RubricListingComponent implements OnInit {
   originalList:any=[];
   public showload = true;
   rubric_list: any[] = [];
+  item_types: any[] = [];
 
   ngOnInit() {
-    this.get_rubric_list();
+    this.get_rubric_list(null);
+    this.get_item_type_list();
   }
 
 
@@ -79,8 +82,13 @@ export class RubricListingComponent implements OnInit {
     console.log(this.pagedItems);
   }
 
+  get_filterId(event)
+  {
+    this.item_type_id = event;
+    this.get_rubric_list(this.item_type_id)
+  }
 
-  get_rubric_list() {
+  get_rubric_list(item_type_id) {
     this.showload = true;
     var body = {};
     var headers = new Headers();
@@ -89,7 +97,9 @@ export class RubricListingComponent implements OnInit {
       "Bearer " + this.cookieService.get("_PTBA")
     );
     body["orgId"] = parseInt(this.cookieService.get("_PAOID"));
-    body["itemTypeId"] = null;
+    body["itemTypeId"] = item_type_id;
+  
+    
     console.log(credentials.host + "/list_rubric");
     return this.http
       .post(credentials.host + "/list_rubric", body, {
@@ -119,6 +129,46 @@ export class RubricListingComponent implements OnInit {
           this.allItems = modified_data;
           console.log(this.allItems);
           this.setPage(1);
+          setTimeout(() => {
+            this.showload = false;
+          }, 300);
+        },
+        (error) => {
+          this.showload = false;
+          if (error.status == 404) {
+            this.router.navigateByUrl("pages/NotFound");
+          } else if (error.status == 401) {
+            this.cookieService.deleteAll();
+            window.location.href = credentials.accountUrl;
+            // window.location.href='http://accounts.scora.in';
+          } else {
+            this.router.navigateByUrl("pages/serverError");
+          }
+        }
+      );
+  }
+
+  get_item_type_list() {
+    this.showload = true;
+    var body = {};
+    var headers = new Headers();
+    headers.append(
+      "Authorization",
+      "Bearer " + this.cookieService.get("_PTBA")
+    );
+    return this.http
+      .post(credentials.host + "/list_item_type_rubric",body, {
+        headers: headers,
+      })
+      .map((res) => res.json())
+      .catch((e: any) => {
+        return Observable.throw(e);
+      })
+
+      .subscribe(
+        (data) => {
+          this.item_types = data.data;
+          console.log(this.item_types);
           setTimeout(() => {
             this.showload = false;
           }, 300);
