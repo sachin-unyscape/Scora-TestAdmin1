@@ -16,8 +16,8 @@
                                     <div class="adduser-action">
                                         <div class="select-wrap">
                                             <label class="label mr-2">Item Type</label>
-                                            <select name="" id="" class="select">
-                                                <option value="">Free Text</option>
+                                            <select name="" id="" class="select" (change)="get_filterId($event.target.value)">
+                                                <option [value]="option.Item_Type_ID" *ngFor= "let option of item_types">{{option.Item_Type_Nm}}</option>
                                             </select>
                                         </div>
                                         <div class="serach-wrap">
@@ -67,6 +67,12 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!rubric_list || rubric_list.length==0">
+                                    <figure>
+                                        <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                    </figure>
+                                    <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                                </div>
                             </div>
                             <div class="pagination-custom">
                                 <ul *ngIf="pager.pages && pager.pages.length">

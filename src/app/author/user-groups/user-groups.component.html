@@ -31,7 +31,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngIf="pagedItems.length==0"><td colspan="4" align="center">No data found</td></tr>
+                                        <!-- <tr *ngIf="pagedItems.length==0"><td colspan="4" align="center">No data found</td></tr> -->
                                         <tr *ngFor = "let data of pagedItems;let i=index">
                                             <td>{{data.group_name}}</td>
                                             <td *ngIf="data.group_description != null">{{data.group_description}}</td>
