@@ -22,6 +22,7 @@ import { AlertComponent } from 'ngx-bootstrap/alert/alert.component';
 import { PagerService } from '../../_services/index';
 import * as _ from 'underscore';
 import {Location} from '@angular/common';
+import { flatMap } from 'lodash';
 
 @Component({
   selector: 'app-view-user-group',
@@ -124,6 +125,9 @@ export class ViewUserGroupComponent implements OnInit {
   getUserId(user){
    if(user){
     this.usersId.push(user);
+    if(this.disableDelete == false){
+      $('#delete').modal('show');
+    }
    }
   }
 
@@ -172,7 +176,12 @@ export class ViewUserGroupComponent implements OnInit {
     }
     console.log(this.disableDelete)
   }
- 
+showPopUp(){
+  $('#multi-delete').modal('show');
+} 
+hidePopUp(){
+  $('#multi-delete').modal('hide');
+}
 //delete multiple users
 deleteSelected(){
   let selectedUsers = this.finalUsers.map(Number);
@@ -203,14 +212,15 @@ deleteSelected(){
           $("#selectAll").prop('checked', false);
           // this.showMsg = data.message;
           // this.saveMsg = true;
+          $('#multi-delete').modal('hide');
           this._notifications.info(data.message, '');
-          $('#multi-delete-succ').modal('show');
           setTimeout(()=>{
             this.getGroupUsersList(this.Group_Id);
             this.saveMsg = false;
            this.searchUsers = '';
            this.userNameLists = [];
-            },3000);
+           $('#multi-delete-succ').modal('show');
+            },1000);
 
         }else{
           $('#multi-delete-succ').modal('hide');
@@ -278,10 +288,12 @@ deleteSelected(){
               this.saveMsg = false;
              this.searchUsers = '';
              this.userNameLists = [];
-              },3000);
+             $('#multi-delete-succ').modal('show');
+              },1000);
 
           }else{
             $('#delete').modal('hide');
+            $('#multi-delete-succ').modal('hide');
             this.showload = false;
           //   this.showMsg = data.message;
           // this.saveMsg = true;
@@ -294,6 +306,7 @@ deleteSelected(){
           },
           error => {
             $('#delete').modal('hide');
+            $('#multi-delete-succ').modal('hide');
             this.showload= false;
             if(error.status == 404){
               this.router.navigateByUrl('pages/NotFound');
