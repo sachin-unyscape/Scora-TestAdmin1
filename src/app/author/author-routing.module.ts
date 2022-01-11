@@ -262,7 +262,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'view-rubric',
+    path: 'view-rubric/:Item_Type_ID/:Item_ID',
     component: ViewRubricComponent,
     data: {
       title: 'view-listing'
