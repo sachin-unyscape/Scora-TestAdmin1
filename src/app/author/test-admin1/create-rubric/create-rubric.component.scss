@@ -1,0 +1,14 @@
+.customContainer {
+    max-height: 30px;
+    overflow: hidden;
+  }
+  
+  .show {
+    overflow: visible;
+    height: auto;
+  }
+
+  a.disabled {
+    pointer-events: none;
+    cursor: not-allowed; 
+}

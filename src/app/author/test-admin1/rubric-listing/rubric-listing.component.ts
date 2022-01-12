@@ -79,7 +79,7 @@ export class RubricListingComponent implements OnInit {
       this.pager.endIndex + 1
     );
     this.originalList = this.pagedItems;
-    console.log(this.pagedItems);
+    console.log('all items ',this.pagedItems);
   }
 
   get_filterId(event)
@@ -113,6 +113,7 @@ export class RubricListingComponent implements OnInit {
       .subscribe(
         (data) => {
           this.rubric_list = data.data;
+          console.log('rubrics list',this.rubric_list);
           let modified_data = this.rubric_list.map((item)=>{
             const container = {};
             container['Subject_Nm'] = item.Subject_Nm
@@ -122,6 +123,7 @@ export class RubricListingComponent implements OnInit {
             container['version'] = item.version
             container['status'] = item.status
             container['Stmt'] = item.Stmt;
+            container['Item_ID']=item.Item_ID
 
             // container['Stmt'] = this.sanitizer.bypassSecurityTrustHtml(item.Stmt);
            return container;
