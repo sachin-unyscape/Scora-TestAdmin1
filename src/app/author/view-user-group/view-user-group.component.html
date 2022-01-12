@@ -11,7 +11,7 @@
                             <h3 class="card-title mt-2"><a (click)= "backClicked()"><i   class="fa fa-angle-left mr-3"></i></a>{{grp_name}} <span class="u-no">({{addedUsersCount}})</span></h3>
                             <a [routerLink]="['/author/add-user-group',Group_Id,grp_name ]" class="take-test float-right mt-3" >Add User</a>
                             <a  *ngIf = "finalUsers.length == 0" class="white-btn disbale-btn float-right mr-4 " >Delete Users</a>
-                            <a *ngIf = "finalUsers.length > 0" (click)= "deleteSelected()" class="white-btn float-right mr-4  primary-btn">Delete Selected</a>
+                            <a *ngIf = "finalUsers.length > 0" (click)= "showPopUp()" class="white-btn float-right mr-4  primary-btn">Delete Selected</a>
                         </div>
                         <div class="card-body pt-0">
                             <div class="table-responsive">
@@ -66,7 +66,7 @@
                                                 {{data.username}}</td>
                                             <td>{{data.user_email}}</td>
                                             <td >
-                                                <a [class.disabledAnchor]="disableDelete == true" (click) = "getUserId(data.user_id)"  data-toggle="modal" data-target="#delete"><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
+                                                <a [class.disabledAnchor]="disableDelete == true"  (click) = "getUserId(data.user_id)" ><img src="src/assets/img/admin-icons/delete-icon.png" alt=""></a>
                                             </td>
                                         </tr>
                                     </ng-container>
@@ -127,14 +127,34 @@
             </div>
         </div>
     </div>
+
+     <!-- Delete Modal -->
+     <div class="modal fade delete-modal" id="multi-delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <button type="button" (click)="hidePopUp()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <figure class="delete-img">
+                    <img src="src/assets/img/delete-img.png" alt="">
+                </figure>
+                <div class="title">Delete?</div>
+                <p class="text">This will delete the user permanently.<br> Are you sure you want to proceed?</p>
+                <div class="button-groups">
+                    <button (click)="deleteSelected()" class="delete-btn w190 mb-3">Delete</button>
+                    <button (click)="hidePopUp()" class="white-btn w190">No! Go back</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--multiple Delete success model -->
-    <div class="modal fade delete-modal" id="multi-delete-succ" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal fade delete-modal " id="multi-delete-succ" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <button type="button" (click)="closeSucessDelete()" class="close close-btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
-                <figure class="delete-img">
+                <figure class="delete-img mt-5 pt-5">
                     <img src="src/assets/img/delete-success.svg" alt="">
                 </figure>
                 <div class="title">Successfully Deleted!</div>

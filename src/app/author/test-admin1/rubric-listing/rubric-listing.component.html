@@ -21,7 +21,7 @@
                                             </select>
                                         </div>
                                         <div class="serach-wrap">
-                                            <input type="text" class="form-control" placeholder="Search here">
+                                            <input type="text" class="form-control" placeholder="Search here" (keyup)="filterUsers($event.target.value)">
                                         </div>
                                     </div>
                                 </div>
@@ -56,11 +56,11 @@
                                             </td>
                                             <td>
                                                 <a *ngIf="data.status == null" [routerLink]="['/author/create-rubric',data.Item_ID]">
-                                                    <img src="src/test-admin1-assets/img/author-icons/create-icon.svg"
+                                                    <img src="src/assets/test-admin1-assets/img/author-icons/create-icon.svg"
                                                         alt="">
                                                 </a>
-                                                <a *ngIf="data.status != null && data.status == 'y'" [routerLink]="['/author/view-rubric']">
-                                                    <img src="src/test-admin1-assets/img/author-icons/view-rep.svg"
+                                                <a *ngIf="data.status != null && data.status == 'y'" [routerLink]="['/author/view-rubric',data.Item_Type_ID,data.Item_ID ]">
+                                                    <img src="src/assets/test-admin1-assets/img/author-icons/view-rep.svg"
                                                         alt="">
                                                 </a>
                                             </td>

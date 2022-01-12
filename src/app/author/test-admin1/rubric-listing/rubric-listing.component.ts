@@ -53,7 +53,6 @@ export class RubricListingComponent implements OnInit {
   item_types: any[] = [];
 
   ngOnInit() {
-    this.get_rubric_list(null);
     this.get_item_type_list();
   }
 
@@ -80,6 +79,10 @@ export class RubricListingComponent implements OnInit {
     );
     this.originalList = this.pagedItems;
     console.log('all items ',this.pagedItems);
+  }
+
+  filterUsers(val:string){
+    this.pagedItems=this.originalList.filter((data) =>  JSON.stringify(data).toLowerCase().indexOf(val.toLowerCase()) !== -1);
   }
 
   get_filterId(event)
@@ -123,8 +126,8 @@ export class RubricListingComponent implements OnInit {
             container['version'] = item.version
             container['status'] = item.status
             container['Stmt'] = item.Stmt;
-            container['Item_ID']=item.Item_ID
-
+            container['Item_ID'] = item.Item_ID;
+            container['Item_Type_ID'] = item.Item_Type_ID;
             // container['Stmt'] = this.sanitizer.bypassSecurityTrustHtml(item.Stmt);
            return container;
           });
@@ -171,6 +174,11 @@ export class RubricListingComponent implements OnInit {
         (data) => {
           this.item_types = data.data;
           console.log(this.item_types);
+          if(this.item_types.length > 0){
+            let data = this.item_types[0];
+            this.item_type_id = data.Item_Type_ID;
+            this.get_rubric_list(this.item_type_id);
+          }
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -188,5 +196,6 @@ export class RubricListingComponent implements OnInit {
           }
         }
       );
-  }
+  };
+
 }
