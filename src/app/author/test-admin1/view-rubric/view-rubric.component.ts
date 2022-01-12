@@ -81,6 +81,7 @@ export class ViewRubricComponent implements OnInit {
       .subscribe(
         (data) => {
           this.view_rubric_data = data.data;
+          console.log(this.view_rubric_data)
           setTimeout(() => {
             this.showload = false;
           }, 300);
