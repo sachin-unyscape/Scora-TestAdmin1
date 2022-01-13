@@ -248,11 +248,12 @@ const routes: Routes = [
     }
   },
   {
-    path: 'create-rubric',
+    path: 'create-rubric/:itemID',
     component: CreateRubricComponent,
     data: {
       title: 'create-rubric'
-    }
+    },
+    pathMatch: 'full'
   },
   {
     path: 'edit-rubric',
