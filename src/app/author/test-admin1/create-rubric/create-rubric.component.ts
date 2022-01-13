@@ -12,40 +12,89 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class CreateRubricComponent implements OnInit {
 
-  showload=false;
-  baseURL='http://15.207.209.163/new-scora/scoraauthor/public/api/';
-  rubricData:any=[];
+  showload = false;
+  baseURL = 'http://15.207.209.163/new-scora/scoraauthor/public/api/';
+  rubricData: any = [];
   show = false;
-  headingsList=['test1','test2'];
-  subHeadingsList=['test-a','test-b'];
+  totalPoints = 0;
+  keywords = '';
+  rubricItems = [
+    {
+      'performance_rating_name': 'Title',
+      'criteria': [
+        {
+          'criteria_name': 'Sub Title 1',
+          'description': '',
+          'point': 0.0
+        },
+        {
+          'criteria_name': 'Sub Title 1',
+          'description': '',
+          'point': 0.0
+        }
+      ]
+    }
+  ];
 
-  constructor(private activeRouter: ActivatedRoute,private authService: AuthServiceService, private cookieService: CookieService,private http: HttpClient,private _notifications: NotificationsService) { }
+  constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService) { }
 
   ngOnInit() {
     this.getData();
   }
 
-  addHeading(){
-    this.headingsList.push('new col');
+  getTotalPoints() {
+    let total = 0;
+    this.rubricItems.forEach(x => {
+      x.criteria.forEach(y => {
+        total += +y.point;
+      })
+    })
+    this.totalPoints = total;
   }
 
-  addSub(){
-    this.subHeadingsList.push('new row');
+  deleteMainItem() {
+    this.rubricItems.pop();
+    this.getTotalPoints();
   }
 
-  deleteHeading(){
-    this.headingsList.pop();
+  addMainItem() {
+    let no = this.rubricItems[0].criteria.length;
+    let subItems = [];
+    for (let i = 0; i < no; i++) {
+      subItems.push({
+        'criteria_name': '',
+        'description': '',
+        'point': 0.0
+      })
+    }
+    this.rubricItems.push({
+      'performance_rating_name': '',
+      'criteria': subItems
+    })
   }
 
-  deleteSub(){
-    this.subHeadingsList.pop();
+  addSubItems() {
+    this.rubricItems.forEach(x => {
+      x.criteria.push({
+        'criteria_name': '',
+        'description': '',
+        'point': 0.0
+      })
+    })
   }
 
-  getData(){
+  deleteSubItems() {
+    this.rubricItems.forEach(x => {
+      x.criteria.pop();
+    })
+    this.getTotalPoints();
+  }
+
+  getData() {
     if (this.authService.canActivate()) {
       this.showload = true;
-      let formData={
-        itemId:this.activeRouter.snapshot.params['itemID'],
+      let formData = {
+        itemId: this.activeRouter.snapshot.params['itemID'],
         orgId: this.cookieService.get('_PAOID')
       }
       let headers = new HttpHeaders();
@@ -53,30 +102,29 @@ export class CreateRubricComponent implements OnInit {
         "Authorization",
         "Bearer " + this.cookieService.get("_PTBA")
       );
-      this.http.post<any>(this.baseURL+'get_rubric_item',formData,{ headers: headers }).subscribe(data=>{
+      this.http.post<any>(this.baseURL + 'get_rubric_item', formData, { headers: headers }).subscribe(data => {
         this.showload = false;
         console.log(data);
-        if(!data.success){
+        if (!data.success) {
           return;
         }
-        this.rubricData=data.data;
+        this.rubricData = data.data;
       },
-      (error) => {
-        this.showload = false;
-        this._notifications.error(JSON.parse(error._body).message);
-      })
+        (error) => {
+          this.showload = false;
+          this._notifications.error(JSON.parse(error._body).message);
+        })
     }
   }
 
-  getValues(){
-    var table = <HTMLTableElement>document.getElementById("hoursContainer");
-    //iterate trough rows
-     for (var i = 0, row; row = table.rows[i]; i++) {
-    console.log(row);
-         for (var j = 0, col; col = row.cells[j]; j++) {
-            console.log(col);
-            }
-         }
-     }
+  getValues() {
+    let formData = {
+      performance: this.rubricItems,
+      orgId: this.cookieService.get('_PAOID'),
+      itemId: this.activeRouter.snapshot.params['itemID'],
+      keywords: this.keywords
+    };
+    console.log(formData);
+  }
 
 }

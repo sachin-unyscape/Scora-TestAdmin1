@@ -5,7 +5,7 @@
   
   .show {
     overflow: visible;
-    height: auto;
+    max-height: fit-content;
   }
 
   a.disabled {
