@@ -24,6 +24,7 @@ import * as _ from 'underscore';
 import {Location} from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+
 @Component({
   selector: 'app-view-rubric',
   templateUrl: './view-rubric.component.html',
@@ -32,6 +33,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class ViewRubricComponent implements OnInit {
   Item_Type_ID: string;
   Item_ID: string;
+ 
 
   constructor(
     private http: Http,
@@ -55,8 +57,14 @@ export class ViewRubricComponent implements OnInit {
   }
 
   public showload = true;
+  public show = false; 
   view_rubric_data: any[] = [];
-  
+  rubric:  any[] = [];
+
+  backClicked() {
+    this._location.back();
+  }
+
   get_rubric_details(Item_Type_ID,Item_ID) {
    
     this.showload = true;
@@ -79,9 +87,10 @@ export class ViewRubricComponent implements OnInit {
         return Observable.throw(e);
       })
       .subscribe(
-        (data) => {
+        (data:any) => {
           this.view_rubric_data = data.data;
           console.log(this.view_rubric_data)
+          this.rubric = data.data.rubric;
           setTimeout(() => {
             this.showload = false;
           }, 300);
