@@ -58,8 +58,10 @@ export class ViewRubricComponent implements OnInit {
 
   public showload = true;
   public show = false; 
+  public edit = false;
   view_rubric_data: any[] = [];
   rubric:  any[] = [];
+  keywords: any[] =[];
 
   backClicked() {
     this._location.back();
@@ -91,6 +93,8 @@ export class ViewRubricComponent implements OnInit {
           this.view_rubric_data = data.data;
           console.log(this.view_rubric_data)
           this.rubric = data.data.rubric;
+          this.keywords = data.data.keywords.toString();
+          console.log(this.keywords)
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -109,5 +113,13 @@ export class ViewRubricComponent implements OnInit {
         }
       );
   }
+  isedit(){
+    this.edit = true;
+  };
+  cancel(){
+    this.edit = false;
+  }
+  saveRubric(){
 
+  }
 }
