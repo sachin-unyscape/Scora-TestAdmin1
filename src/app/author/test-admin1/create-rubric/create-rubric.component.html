@@ -1,352 +1,361 @@
 <app-loader *ngIf="showload"></app-loader>
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Main content -->
-          <div class="content p-4">
-              <div class="container-fluid">
-                  <div class="row">
-                      <div class="col-md-12">
-                          <div class="card">
-                              <div class="card-header p-4">
-                                  <div class="row">
-                                      <div class="col-md-3">
-                                          <h3 class="card-title mt-2"><a ><i class="fa fa-angle-left mr-2"></i> Create Rubric</a></h3>
-                                      </div>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h3 class="card-title mt-2"><a><i class="fa fa-angle-left mr-2"></i> Create
+                                            Rubric</a></h3>
+                                </div>
 
-                                      <!-- <div class="col-md-9 text-right">
+                                <!-- <div class="col-md-9 text-right">
                                           <a  class="skip-btn" data-toggle="modal" data-target="#fetch-rubic">Fetch Rubric</a>
                                           <a  data-toggle="modal" data-target="#noun">noun</a>
                                           <a  data-toggle="modal" data-target="#rubic-preview">preview</a>
                                       </div> -->
-                                  </div>
-                              </div>
-                              <div class="card-body pt-0">
-                                  <div class="questions border-0">
-                                      <div class="hd font-weight-bold mb-2">Question
-                                          <div class="float-right">
-                                            <a  data-toggle="modal" data-target="#tag-dailog"><img
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="questions border-0">
+                                <div class="hd font-weight-bold mb-2">Question
+                                    <div class="float-right">
+                                        <a data-toggle="modal" data-target="#tag-dailog"><img
                                                 src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg"
                                                 alt=""></a>
-                                          </div>
-                                      </div>
-                                        <div class="customContainer" [class.showquestion]="show">
-                                            <div [innerHTML]="rubricData.statement"></div>
-                                        </div>
-                                      <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less': 'View More' }}</a></p>
-
-                                      <div class="instru-wrap">
-                                          <div class="ttl">Instructions</div>
-                                          <a class="close close-intro" href="javascript:void(0)">
-                                              <img src="src/assets/test-admin1-assets/img/author-icons/close-icon.svg" alt="">
-                                          </a>
-                                          <p>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis adipiscing praesentium voluptatum deleniti atque corrupti quos dolores et quas moles excepturi
-                                              sint occaecati cupiditate.</p>
-                                          <p>SCORA allows you to create your own customised Rubric for a question Item that requires manual scoring (Free Text: Descriptive and Fill-in and Upload Item Types) using a table. Use the Rows to create as many
-                                              criteria as you need and columns to define proficiency levels under each criterion. Define the Points to be awarded for each level, moving from lowest level in the first column to the highest level in the
-                                              last column. Click on ‘+’ and ‘-‘ icons to add or delete rows and columns, as required.</p>
-                                          <p>SCORA encourages reusability of Rubrics to save you time. You can clone Rubrics or create different versions by making minor changes to an existing Rubric and use it for a different Item or for the same Item
-                                              in a different context/Test. Add unique Keywords for each Rubric that will help users search and retrieve relevant Rubrics.</p>
-                                      </div>
-                                  </div>
-
-                                  <!-- ------------------------ -->
-                                  <div class="create-table">
-                                    <div class="border-bottom">
-                                        <table class="rubic-table" id="hoursContainer">
-                                            <thead>
-                                                <tr>
-                                                    <th>Max Points: {{totalPoints | number:'1.2-2'}}</th>
-                                                    <th *ngFor="let list of rubricItems"><span class="grey font-14"><input type="text" [(ngModel)]="list.performance_rating_name" placeholder="Enter title"/></span></th>
-                                                    <th class="relative">
-                                                        <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()" class="add-row"><img src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg" alt=""></a>
-                                                        <!-- <span class="grey font-14">Column header 2</span> -->
-                                                        <a [class.disabled]="rubricItems.length<2" (click)="deleteMainItem()" class="delete-row"><img src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg" alt=""></a>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let list of rubricItems[0].criteria; let i=index">
-                                                  <td><input [(ngModel)]="list.criteria_name" placeholder="Enter criteria name"/></td>
-                                                  <td *ngFor="let list2 of rubricItems; let i2=index">
-                                                      <input type="text" [(ngModel)]="list2.criteria[i].description" placeholder="Enter description"/><br/>
-                                                      Points : <input placeholder="Points" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" type="number" [(ngModel)]="list2.criteria[i].point" (keyup)="getTotalPoints()"/><br/>
-                                                      <span class="text-info" *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">* enter point > {{getLastPoint(i2,i)}}</span>
-                                                  </td>
-                                                  <td></td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody>
-                                                <tr>
-                                                    <td><br/><br/></td>
-                                                    <td *ngFor="let data2 of headingsList"></td>
-                                                    <td class="relative">
-                                                      <a [class.disabled]="rubricItems[0].criteria.length>3" (click)="addSubItems()" class="add-col mb-2"><img src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg" alt=""></a>
-                                                      <a [class.disabled]="rubricItems[0].criteria.length<2" (click)="deleteSubItems()" class="delete-col"><img src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg" alt=""></a>
-                                                  </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="pad24">
-                                        <input type="text" (keyup)="replaceSpace()" [(ngModel)]="keywords" class="form-control border-red" placeholder="Type keywords" style="width: calc(100% - 320px); margin-right: 15px; float: left;">
-                                        <input type="text" class="form-control" value="V2.1" placeholder="Type keywords" style="max-width:305px; float: left; background-color: var(--secound);">
-                                        <div class="clearfix"></div>
                                     </div>
                                 </div>
-                                  <!-- ----------------------- -->
+                                <div class="customContainer" [class.showquestion]="show">
+                                    <div [innerHTML]="rubricData.statement"></div>
+                                </div>
+                                <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less':
+                                        'View More' }}</a></p>
 
-
-                              </div>
-                          </div>
-                          <!-- /.card -->
-                      </div>
-                      <div class="col-lg-12">
-                          <div class="card">
-                              <div class="card-body pl-3 pr-3">
-                                  <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                                  <a (click)="getValues()" data-toggle="modal" data-target="#rubic-preview" class="default-btn float-right">Preview</a>
-                              </div>
-                          </div>
-                          <!-- /.card -->
-                      </div>
-                  </div>
-                  <!-- /.row -->
-              </div>
-              <!-- /.container-fluid -->
-          </div>
-          <!-- /.content -->
-      </div>
-      <!-- /.content-wrapper -->
-
-      <!-- Tag Modal -->
-      <div class="modal fade modal-custom" id="tag-dailog" tabindex="-1" aria-labelledby="exampleModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">×</span>
-              </button>
-              <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Tags
-              </div>
-              <div class="text m-0">
-                  <table class="tables m-0 w-100">
-                      <tbody>
-                          <tr>
-                              <td>Subject:</td>
-                              <td *ngIf="rubricData?.itemTags?.SubTopic_Nm != null">
-                                  {{rubricData.itemTags.Subject_Nm}}
-                              </td>
-                              <td *ngIf="rubricData?.itemTags?.SubTopic_Nm == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Topic:</td>
-                              <td *ngIf="rubricData?.itemTags?.Topic_Nm != null">
-                                  {{rubricData.itemTags.Topic_Nm}}
-                              </td>
-                              <td *ngIf="rubricData?.itemTags?.Topic_Nm == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Subtopic:</td>
-                              <td *ngIf="rubricData?.itemTags?.SubTopic_Nm != null">
-                                  {{rubricData.itemTags.SubTopic_Nm}}
-                              </td>
-                              <td *ngIf="rubricData?.itemTags?.SubTopic_Nm == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Language:</td>
-                              <td *ngIf="rubricData?.itemTags?.Languge != null">
-                                  {{rubricData.itemTags.Languge}}</td>
-                              <td *ngIf="rubricData?.itemTags?.Languge == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Bloom's Taxonomy:</td>
-                              <td *ngIf="rubricData?.itemTags?.Taxonomy_Nm != null">
-                                  {{rubricData.itemTags.Taxonomy_Nm}}</td>
-                              <td *ngIf="rubricData?.itemTags?.Taxonomy_Nm == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Category:</td>
-                              <td *ngIf="rubricData?.itemTags?.Category != null">
-                                  {{rubricData.itemTags.Category}}</td>
-                              <td *ngIf="rubricData?.itemTags?.Category == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Measure:</td>
-                              <td *ngIf="rubricData?.itemTags?.measure_name != null">
-                                  {{rubricData.itemTags.measure_name}}</td>
-                              <td *ngIf="rubricData?.itemTags?.measure_name == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Difficulty Level:</td>
-                              <td *ngIf="rubricData?.itemTags?.Diff_Lvl_Nm != null">
-                                  {{rubricData.itemTags.Diff_Lvl_Nm}}</td>
-                              <td *ngIf="rubricData?.itemTags?.Diff_Lvl_Nm == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Usage:</td>
-                              <td *ngIf="rubricData?.itemTags?.usage_name != null">
-                                  {{rubricData.itemTags.usage_name}}</td>
-                              <td *ngIf="rubricData?.itemTags?.usage_name == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Numerical Answer:</td>
-                              <td *ngIf="rubricData?.itemTags?.numerical_value != null">
-                                  {{rubricData.itemTags.numerical_value}}</td>
-                              <td *ngIf="rubricData?.itemTags?.numerical_value == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>Status:</td>
-                              <td *ngIf="rubricData?.itemTags?.status_name != null">
-                                  {{rubricData.itemTags.status_name}}</td>
-                              <td *ngIf="rubricData?.itemTags?.status_name == null">
-                                  <div class="no-data">No Data</div>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
-  </div>
-
-       <!-- Modal Rubic Preview-->
-    <div class="modal fade modal-custom" id="rubic-preview" tabindex="-1" role="dialog" aria-labelledby="rubicLabel-preview" aria-modal="true">
-        <div class="modal-dialog" role="document" style="max-width: 1285px;">
-            <div class="modal-content" style=" min-width: auto; background: #F5F6F8; padding: 24px;">
-                <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                <div class="card mt-3">
-                    <div class="card-header border-0 ttl">Rubric Preview</div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="qustion">Question</div>
-                        <div class="customContainer" [class.showquestion]="show">
-                            <div [innerHTML]="rubricData.statement"></div>
-                        </div>
-                      <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less': 'View More' }}</a></p>
-                        <div class="response-wrap border-0 p-0 mt-3" style="max-width: 80%;">
-                            <!-- Repeat Response Div -->
-                            <div class="response-data border-0">
-                                <div class="marks-wrap m-0">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="rubic">
-                                                <i><img src="src/assets/test-admin1-assets/img/author-icons/rubric.svg" alt=""></i> Rubric
-                                            </div>
-                                        </div>
-                                        <div class="col-md-9 text-right">
-                                            <div class="score">
-                                                <span>Total Points: {{totalPoints | number:'1.2-2'}}</span>
-                                                <div class="green d-block">Points Scored: 2.00</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Slider 1 -->
-                                    <div class="demo-output">
-                                        <div class="left-wrap">
-                                            <label class="label">Clarity</label>
-                                            <input class="single-slider" type="hidden" value="0.5" />
-                                            <input class="range_4" type="text" name="range_4" value="0;1">
-                                            <ul class="numbers">
-                                                <li class="hint">0 <span class="grey">(Needs Improvement)</span>
-                                                    <i class="tooltip"><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt="">
-                                                        <!-- <span class="tooltiptext">Item Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incidi. Item Lorem ipsum dolor sit amet, consectetur adipiscing elit</span> -->
-                                                    </i>
-                                                </li>
-                                                <li>0.5 <span class="grey">(Sufficient)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                                <li>1 <span class="grey">(Abobe Average)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                            </ul>
-                                        </div>
-                                        <div class="right-wrap">
-                                            <input type="text" class="values">
-                                        </div>
-                                    </div>
-
-                                    <!-- Slider 1 -->
-                                    <div class="demo-output">
-                                        <div class="left-wrap">
-                                            <label class="label">Clarity</label>
-                                            <input class="single-slider" type="hidden" value="0.5" />
-                                            <input class="range_4" type="text" name="range_4" value="0;1">
-                                            <ul class="numbers">
-                                                <li class="hint">0 <span class="grey">(Needs Improvement)</span>
-                                                    <i class="tooltip"><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt="">
-                                                    </i>
-                                                </li>
-                                                <li>0.5 <span class="grey">(Sufficient)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                                <li>1 <span class="grey">(Abobe Average)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                            </ul>
-                                        </div>
-                                        <div class="right-wrap">
-                                            <input type="text" class="values">
-                                        </div>
-                                    </div>
-
-                                    <!-- Slider 1 -->
-                                    <div class="demo-output">
-                                        <div class="left-wrap">
-                                            <label class="label">Clarity</label>
-                                            <input class="single-slider" type="hidden" value="0.5" />
-                                            <input class="range_4" type="text" name="range_4" value="0;1">
-                                            <ul class="numbers">
-                                                <li class="hint">0 <span class="grey">(Needs Improvement)</span>
-                                                    <i class="tooltip"><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt="">
-                                                    </i>
-                                                </li>
-                                                <li>0.5 <span class="grey">(Sufficient)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                                <li>1 <span class="grey">(Abobe Average)</span> <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg" alt=""></i></li>
-                                            </ul>
-                                        </div>
-                                        <div class="right-wrap">
-                                            <input type="text" class="values">
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12 text-right">
-                                            <div class="panelty">
-                                                <label class="labels">Penalties, if any</label>
-                                                <input type="text" class="values">
-                                            </div>
-                                            <a  class="default-btn w190 mt-3">Save</a>
-                                        </div>
-                                    </div>
+                                <div class="instru-wrap">
+                                    <div class="ttl">Instructions</div>
+                                    <a class="close close-intro" href="javascript:void(0)">
+                                        <img src="src/assets/test-admin1-assets/img/author-icons/close-icon.svg" alt="">
+                                    </a>
+                                    <p>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto
+                                        odio dignissimos ducimus qui blanditiis adipiscing praesentium voluptatum
+                                        deleniti atque corrupti quos dolores et quas moles excepturi
+                                        sint occaecati cupiditate.</p>
+                                    <p>SCORA allows you to create your own customised Rubric for a question Item that
+                                        requires manual scoring (Free Text: Descriptive and Fill-in and Upload Item
+                                        Types) using a table. Use the Rows to create as many
+                                        criteria as you need and columns to define proficiency levels under each
+                                        criterion. Define the Points to be awarded for each level, moving from lowest
+                                        level in the first column to the highest level in the
+                                        last column. Click on ‘+’ and ‘-‘ icons to add or delete rows and columns, as
+                                        required.</p>
+                                    <p>SCORA encourages reusability of Rubrics to save you time. You can clone Rubrics
+                                        or create different versions by making minor changes to an existing Rubric and
+                                        use it for a different Item or for the same Item
+                                        in a different context/Test. Add unique Keywords for each Rubric that will help
+                                        users search and retrieve relevant Rubrics.</p>
                                 </div>
                             </div>
 
-                            <div class="clearfix"></div>
+                            <!-- ------------------------ -->
+                            <div class="create-table">
+                                <div class="border-bottom">
+                                    <table class="rubic-table" id="hoursContainer">
+                                        <thead>
+                                            <tr>
+                                                <th>Max Points: {{totalPoints | number:'1.2-2'}}</th>
+                                                <th *ngFor="let list of rubricItems"><span class="grey font-14"><input
+                                                            type="text" [(ngModel)]="list.performance_rating_name"
+                                                            placeholder="Enter title" /></span></th>
+                                                <th class="relative">
+                                                    <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
+                                                        class="add-row"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
+                                                            alt=""></a>
+                                                    <!-- <span class="grey font-14">Column header 2</span> -->
+                                                    <a [class.disabled]="rubricItems.length<2"
+                                                        (click)="deleteMainItem()" class="delete-row"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
+                                                            alt=""></a>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let list of rubricItems[0].criteria; let i=index">
+                                                <td><input [(ngModel)]="list.criteria_name"
+                                                        placeholder="Enter criteria name" /></td>
+                                                <td *ngFor="let list2 of rubricItems; let i2=index">
+                                                    <input type="text" [(ngModel)]="list2.criteria[i].description"
+                                                        placeholder="Enter description" /><br />
+                                                    Points : <input placeholder="Points"
+                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                        maxlength="3" type="number"
+                                                        [(ngModel)]="list2.criteria[i].point"
+                                                        (keyup)="getTotalPoints()" /><br />
+                                                    <span class="text-info"
+                                                        *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
+                                                        enter point > {{getLastPoint(i2,i)}}</span>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td><br /><br /></td>
+                                                <td *ngFor="let data2 of headingsList"></td>
+                                                <td class="relative">
+                                                    <a [class.disabled]="rubricItems[0].criteria.length>3"
+                                                        (click)="addSubItems()" class="add-col mb-2"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
+                                                            alt=""></a>
+                                                    <a [class.disabled]="rubricItems[0].criteria.length<2"
+                                                        (click)="deleteSubItems()" class="delete-col"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
+                                                            alt=""></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pad24">
+                                    <input type="text" (keyup)="replaceSpace()" [(ngModel)]="keywords"
+                                        class="form-control border-red" placeholder="Type keywords"
+                                        style="width: calc(100% - 320px); margin-right: 15px; float: left;">
+                                    <input type="text" class="form-control" value="V2.1" placeholder="Type keywords"
+                                        style="max-width:305px; float: left; background-color: var(--secound);">
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <!-- ----------------------- -->
+
+
                         </div>
                     </div>
+                    <!-- /.card -->
                 </div>
-                <div class="card">
-                    <div class="card-footer">
-                        <button (click)="Previous()" class="skip-btn float-left">Previous</button>
-                        <button (click)="createRubric()" class="default-btn float-right">Create Rubric</button>
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body pl-3 pr-3">
+                            <a (click)="backClicked()" class="skip-btn">Cancel</a>
+                            <a (click)="getValues()" data-toggle="modal" data-target="#rubicpreview"
+                             class="default-btn float-right">Preview</a>
+                        </div>
                     </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Tag Modal -->
+<div class="modal fade modal-custom" id="tag-dailog" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Tags
+            </div>
+            <div class="text m-0">
+                <table class="tables m-0 w-100">
+                    <tbody>
+                        <tr>
+                            <td>Subject:</td>
+                            <td *ngIf="rubricData?.itemTags?.SubTopic_Nm != null">
+                                {{rubricData.itemTags.Subject_Nm}}
+                            </td>
+                            <td *ngIf="rubricData?.itemTags?.SubTopic_Nm == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Topic:</td>
+                            <td *ngIf="rubricData?.itemTags?.Topic_Nm != null">
+                                {{rubricData.itemTags.Topic_Nm}}
+                            </td>
+                            <td *ngIf="rubricData?.itemTags?.Topic_Nm == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Subtopic:</td>
+                            <td *ngIf="rubricData?.itemTags?.SubTopic_Nm != null">
+                                {{rubricData.itemTags.SubTopic_Nm}}
+                            </td>
+                            <td *ngIf="rubricData?.itemTags?.SubTopic_Nm == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Language:</td>
+                            <td *ngIf="rubricData?.itemTags?.Languge != null">
+                                {{rubricData.itemTags.Languge}}</td>
+                            <td *ngIf="rubricData?.itemTags?.Languge == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bloom's Taxonomy:</td>
+                            <td *ngIf="rubricData?.itemTags?.Taxonomy_Nm != null">
+                                {{rubricData.itemTags.Taxonomy_Nm}}</td>
+                            <td *ngIf="rubricData?.itemTags?.Taxonomy_Nm == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Category:</td>
+                            <td *ngIf="rubricData?.itemTags?.Category != null">
+                                {{rubricData.itemTags.Category}}</td>
+                            <td *ngIf="rubricData?.itemTags?.Category == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Measure:</td>
+                            <td *ngIf="rubricData?.itemTags?.measure_name != null">
+                                {{rubricData.itemTags.measure_name}}</td>
+                            <td *ngIf="rubricData?.itemTags?.measure_name == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Difficulty Level:</td>
+                            <td *ngIf="rubricData?.itemTags?.Diff_Lvl_Nm != null">
+                                {{rubricData.itemTags.Diff_Lvl_Nm}}</td>
+                            <td *ngIf="rubricData?.itemTags?.Diff_Lvl_Nm == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Usage:</td>
+                            <td *ngIf="rubricData?.itemTags?.usage_name != null">
+                                {{rubricData.itemTags.usage_name}}</td>
+                            <td *ngIf="rubricData?.itemTags?.usage_name == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Numerical Answer:</td>
+                            <td *ngIf="rubricData?.itemTags?.numerical_value != null">
+                                {{rubricData.itemTags.numerical_value}}</td>
+                            <td *ngIf="rubricData?.itemTags?.numerical_value == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status:</td>
+                            <td *ngIf="rubricData?.itemTags?.status_name != null">
+                                {{rubricData.itemTags.status_name}}</td>
+                            <td *ngIf="rubricData?.itemTags?.status_name == null">
+                                <div class="no-data">No Data</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rubic Preview-->
+<div class="modal fade modal-custom" id="rubicpreview" tabindex="-1" role="dialog" aria-labelledby="rubicLabel-preview"
+    aria-modal="true">
+    <div class="modal-dialog" role="document" style="max-width: 1285px;">
+        <div class="modal-content" style=" min-width: auto; background: #F5F6F8; padding: 24px;">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <div class="card mt-3">
+                <div class="card-header border-0 ttl">Rubric Preview</div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="qustion">Question</div>
+                    <div class="customContainer" [class.showquestion]="show">
+                        <div [innerHTML]="rubricData.statement"></div>
+                    </div>
+                    <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less': 'View More'
+                            }}</a></p>
+                    <div class="response-wrap border-0 p-0 mt-3" style="max-width: 80%;">
+                        <!-- Repeat Response Div -->
+                        <div class="response-data border-0">
+                            <div class="marks-wrap m-0">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="rubic">
+                                            <i><img src="src/assets/test-admin1-assets/img/author-icons/rubric.svg"
+                                                    alt=""></i> Rubric
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 text-right">
+                                        <div class="score">
+                                            <span>Total Points: {{totalPoints | number:'1.2-2'}}</span>
+                                            <div class="green d-block">Points Scored: 2.00</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Slider 1 -->
+                                <div class="demo-output" *ngFor="let list of rubricItems[0].criteria; let i=index">
+                                    <div class="left-wrap">
+                                        <label class="label">{{list.criteria_name}}</label>
+                                        <!-- <input class="single-slider" type="hidden" value="0.5" />
+                                        <input class="range_4" type="text" name="range_4" value="0.1"> -->
+
+                                        <!-- <input for="customRange1" class="single-slider"> -->
+                                         <!-- <input type="range"class="range_4"  value="0.1" id="customRange1"> -->
+                                        <ul class="numbers">
+                                            <li class="hint" *ngFor="let list2 of rubricItems; let i2=index">
+                                                {{list2.criteria[i].point}}
+                                                <span class="grey">({{list2.performance_rating_name}})</span>
+                                                <a [popover]="popTemplate" triggers="mouseenter:mouseleave"
+                                                    [placement]="'right'" [outsideClick]="true" #popOver>
+                                                    <i><img src="src/assets/test-admin1-assets/img/author-icons/slider-alert.svg"
+                                                            alt="">
+                                                    </i>
+                                                </a>
+                                                <ng-template #popTemplate>
+                                                    <span class="tooltiptext">{{list2.criteria[i].description}}</span>
+                                                </ng-template>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="right-wrap">
+                                        <input type="text" class="values" value="0.50">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <div class="panelty">
+                                            <label class="labels">Penalties, if any</label>
+                                            <input type="text" class="values" value="0.00">
+                                        </div>
+                                        <a class="default-btn w190 mt-3">Save</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-footer">
+                    <button (click)="previous()" class="skip-btn float-left">Previous</button>
+                    <button (click)="createRubric()" class="default-btn float-right">Create Rubric</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
