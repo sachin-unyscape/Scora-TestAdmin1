@@ -42,12 +42,19 @@ export class CreateRubricComponent implements OnInit {
     this.getData();
   }
 
+  getLastPoint(index1:number,index2:number){
+    return this.rubricItems[index1-1].criteria[index2].point;
+  }
+
   getTotalPoints() {
     let total = 0;
-    this.rubricItems.forEach(x => {
-      x.criteria.forEach(y => {
-        total += +y.point;
-      })
+    // this.rubricItems.forEach(x => {
+    //   x.criteria.forEach(y => {
+    //     total += +y.point;
+    //   })
+    // })
+    this.rubricItems[this.rubricItems.length-1].criteria.forEach(x=>{
+      total += +x.point;
     })
     this.totalPoints = total;
   }
@@ -71,6 +78,7 @@ export class CreateRubricComponent implements OnInit {
       'performance_rating_name': '',
       'criteria': subItems
     })
+    this.getTotalPoints();
   }
 
   addSubItems() {
@@ -81,6 +89,7 @@ export class CreateRubricComponent implements OnInit {
         'point': 0.0
       })
     })
+    this.getTotalPoints();
   }
 
   deleteSubItems() {
@@ -118,6 +127,9 @@ export class CreateRubricComponent implements OnInit {
   }
 
   getValues() {
+    if(!this.checkIfValid()){
+      return;
+    }
     let formData = {
       performance: this.rubricItems,
       orgId: this.cookieService.get('_PAOID'),
@@ -125,6 +137,22 @@ export class CreateRubricComponent implements OnInit {
       keywords: this.keywords
     };
     console.log(formData);
+  }
+
+  checkIfValid(){
+    let isValid=true;
+    this.rubricItems.forEach((x,index1)=>{
+      x.criteria.forEach((y,index2)=>{
+        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point)
+          isValid=false;
+      })
+    })
+    return isValid;
+  }
+
+  replaceSpace(){
+    this.keywords=this.keywords.replace(/ /g,",");
+    return 1;
   }
 
 }
