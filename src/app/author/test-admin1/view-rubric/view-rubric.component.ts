@@ -24,6 +24,7 @@ import * as _ from 'underscore';
 import {Location} from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+
 @Component({
   selector: 'app-view-rubric',
   templateUrl: './view-rubric.component.html',
@@ -32,6 +33,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class ViewRubricComponent implements OnInit {
   Item_Type_ID: string;
   Item_ID: string;
+ 
 
   constructor(
     private http: Http,
@@ -55,8 +57,17 @@ export class ViewRubricComponent implements OnInit {
   }
 
   public showload = true;
+  public show = false; 
+  public edit = false;
   view_rubric_data: any[] = [];
-  
+  rubric:  any[] = [];
+  keywords: any[] =[];
+  rubric_col: any[] = []
+
+  backClicked() {
+    this._location.back();
+  }
+
   get_rubric_details(Item_Type_ID,Item_ID) {
    
     this.showload = true;
@@ -79,9 +90,13 @@ export class ViewRubricComponent implements OnInit {
         return Observable.throw(e);
       })
       .subscribe(
-        (data) => {
+        (data:any) => {
           this.view_rubric_data = data.data;
           console.log(this.view_rubric_data)
+          this.rubric = data.data.rubric;
+          this.rubric_col = data.data.rubric_col;
+          this.keywords = data.data.keywords.toString();
+          console.log(this.keywords)
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -100,5 +115,33 @@ export class ViewRubricComponent implements OnInit {
         }
       );
   }
+  isedit(){
+    this.edit = true;
+  };
+  cancel(){
+    this.edit = false;
+  }
+  saveRubric(){
+    let data = {
+      performance:[],
+      "orgId": parseInt(this.cookieService.get("_PAOID")),
+      "itemId": parseInt(this.Item_ID),
+      "keywords": this.keywords
+    };
+    this.rubric_col.forEach(element => {
+      data.performance.push(element);
+    });
+    let data_arr = [];
+    let data_arr1 = [];
+    let data_arr2 = [];
+    this.rubric.forEach((item,rubric_index)=>{
+     item.forEach((element,index) => {
+       if(rubric_index)
+        data_arr.push(item[index]);
+        data.performance[index].criteria = data_arr;
+     });
+    })
+   console.log("Formated data",data);
 
+  }
 }
