@@ -79,7 +79,6 @@ import { TRUEFALSEComponent } from '../item-menu/add-new/true-false.component';
 import { RubricListingComponent } from './test-admin1/rubric-listing/rubric-listing.component';
 import { ViewRubricComponent } from './test-admin1/view-rubric/view-rubric.component';
 import { CreateRubricComponent } from './test-admin1/create-rubric/create-rubric.component';
-import { EditRubricComponent } from './test-admin1/edit-rubric/edit-rubric.component';
 import { EditorModule } from "@tinymce/tinymce-angular";
 import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insights.component';
 
@@ -145,7 +144,6 @@ import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insig
     RubricListingComponent,
     ViewRubricComponent,
     CreateRubricComponent,
-    EditRubricComponent,
     ScoraInsightsComponent
   ],
   providers: [GetItemService,CookieService,PagerService,AuthServiceService],

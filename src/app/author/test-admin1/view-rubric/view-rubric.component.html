@@ -20,7 +20,7 @@
                                 </div>
 
                                 <div class="col-md-6 text-right mt-3">
-                                    <a (click) = "isedit()"  class="take-test">Edit</a>
+                                    <a (click)="isedit()" class="take-test">Edit</a>
                                 </div>
                             </div>
                         </div>
@@ -34,10 +34,11 @@
                                     </div>
                                 </div>
                                 <div class="customContainer" [class.show]="show">
-                                <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(view_rubric_data.statement)">
-                                    {{view_rubric_data.statement}}</p>
-                                 </div>   
-                                <p class="text-right" ><a (click)="show = !show" class="take-test">{{ show ? 'View Less': 'View More' }}</a></p>
+                                    <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(view_rubric_data.statement)">
+                                        {{view_rubric_data.statement}}</p>
+                                </div>
+                                <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less':
+                                        'View More' }}</a></p>
                             </div>
                             <div class="row">
                                 <div class="col-md-10">
@@ -46,20 +47,27 @@
                                             <thead>
                                                 <tr>
                                                     <th>
-                                                        <div class="primary">Total Points: {{view_rubric_data.max_points}}</div>
+                                                        <div class="primary">Total Points:
+                                                            {{view_rubric_data.max_points}}</div>
                                                     </th>
-                                                    <th *ngFor = "let items of view_rubric_data.rubric_col">{{items}}</th>
+                                                    <th *ngFor="let items of view_rubric_data.rubric_col">
+                                                        {{items.performance_rating_name}}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let rowitems of view_rubric_data.rubric;  let i = index">
-                                                    <td><span class="bold text-center d-block">{{rowitems[i].criteria_name}}</span></td>
+                                                    <td><span
+                                                            class="bold text-center d-block">{{rowitems[i].criteria_name}}</span>
+                                                    </td>
                                                     <ng-container *ngFor="let data of rowitems;  let i = index">
-                                                        <td >
-                                                            <span class="view-table-description">{{data.description}}</span>
+                                                        <td>
+                                                            <span
+                                                                class="view-table-description">{{data.description}}</span>
                                                             <div class="points">
                                                                 <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="{{data.points}}"></span>
+                                                                <span class="right"><input type="text"
+                                                                        class="form-control"
+                                                                        value="{{data.points}}"></span>
                                                             </div>
                                                         </td>
                                                     </ng-container>
@@ -67,7 +75,7 @@
                                             </tbody>
                                         </table>
 
-                                        <div class="keyword"><span class="bold">Keywords:</span>{{keywords}}</div>
+                                        <div class="keyword"><span class="bold">Keywords:</span> {{keywords}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -83,7 +91,7 @@
                     <div class="card">
                         <div class="card-body pl-3 pr-3">
                             <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                            <a  class="default-btn float-right">Use this Version</a>
+                            <a class="default-btn float-right">Use this Version</a>
                         </div>
                     </div>
                     <!-- /.card -->
@@ -95,8 +103,8 @@
     </div>
     <!-- /.content -->
 
-      <!-- Main content -->
-      <div class="content p-4" *ngIf="edit">
+    <!-- Main content -->
+    <div class="content p-4" *ngIf="edit">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -105,7 +113,9 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <h3 class="card-title">
-                                        <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/back-arrow.svg" class="mr-4" style="margin-top:-3px">Edit Rubrics</a>
+                                        <a (click)="cancel()"><img
+                                                src="src/assets/test-admin1-assets/img/author-icons/back-arrow.svg"
+                                                class="mr-4" style="margin-top:-3px">Edit Rubrics</a>
                                     </h3>
                                 </div>
                             </div>
@@ -114,16 +124,17 @@
                             <div class="questions mb-4">
                                 <div class="hd font-weight-bold mb-2">Question
                                     <div class="float-right">
-                                        <a href="" data-toggle="modal" data-target="#tag-dailog"><img
-                                            src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg"
-                                            alt=""></a>
+                                        <a data-toggle="modal" data-target="#tag-dailog"><img
+                                                src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg"
+                                                alt=""></a>
                                     </div>
                                 </div>
                                 <div class="customContainer" [class.show]="show">
                                     <p [innerHTML]="this.sanitizer.bypassSecurityTrustHtml(view_rubric_data.statement)">
                                         {{view_rubric_data.statement}}</p>
-                                     </div>   
-                                    <p class="text-right" ><a (click)="show = !show" class="take-test">{{ show ? 'View Less': 'View More' }}</a></p>
+                                </div>
+                                <p class="text-right"><a (click)="show = !show" class="take-test">{{ show ? 'View Less':
+                                        'View More' }}</a></p>
                             </div>
 
                             <div class="create-table">
@@ -133,79 +144,32 @@
                                             <table class="rubic-table">
                                                 <thead>
                                                     <tr>
-                                                        <th><span class="primary">Total Points: 3.00</span></th>
-                                                        <th>Bad</th>
-                                                        <th>Nice</th>
-                                                        <th>Good</th>
-                                                        <th>Excellent</th>
+                                                        <th>
+                                                            <div class="primary">Total Points:
+                                                                {{view_rubric_data.max_points}}</div>
+                                                        </th>
+                                                        <th *ngFor="let items of view_rubric_data.rubric_col">
+                                                            {{items.performance_rating_name}}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td rowspan="2"><span class="bold text-center d-block">Clarity</span></td>
-                                                        <td>Sed ut perspiciatis unde omnis iste natus error sit lorem ipsum.</td>
-                                                        <td>Qui dolorem ipsum quia dolor sit amet, consectetur.</td>
-                                                        <td>Adipisci velit, sed quia non numquam eius modi.</td>
-                                                        <td>Ut enim ad minima veniam, quis nostrum exercitationem</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
+                                                    <tr
+                                                        *ngFor="let rowitems of view_rubric_data.rubric;  let i = index">
+                                                        <td><span
+                                                                class="bold text-center d-block">{{rowitems[i].criteria_name}}</span>
                                                         </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td rowspan="2"><span class="bold text-center d-block">Language</span></td>
-                                                        <td>Sed ut perspiciatis unde omnis iste natus error sit lorem ipsum.</td>
-                                                        <td>Qui dolorem ipsum quia dolor sit amet, consectetur.</td>
-                                                        <td>Adipisci velit, sed quia non numquam eius modi.</td>
-                                                        <td>Ut enim ad minima veniam, quis nostrum exercitationem</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="points">
-                                                                <span class="left">Points</span>
-                                                                <span class="right"><input type="text" class="form-control" value="0.00"></span>
-                                                            </div>
-                                                        </td>
+                                                        <ng-container *ngFor="let data of rowitems;  let i = index">
+                                                            <td>
+                                                                <span
+                                                                    class="view-table-description">{{data.description}}</span>
+                                                                <div class="points">
+                                                                    <span class="left">Points</span>
+                                                                    <span class="right"><input type="text"
+                                                                            class="form-control"
+                                                                            value="{{data.points}}"></span>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -215,8 +179,12 @@
                                 </div>
                                 <div class="pad24" *ngIf="view_rubric_data">
                                     <label for="" class="labels d-block">Keywords</label>
-                                    <input type="text" class="form-control border-red" [(ngModel)] = "keywords" placeholder="Type keywords" style="width: calc(100% - 320px); margin-right: 15px; float: left;">
-                                    <input type="text" class="form-control" value="" [(ngModel)] = "view_rubric_data.version" placeholder="Type keywords" style="max-width:305px; float: left; background-color: var(--secound);">
+                                    <input type="text" class="form-control border-red" [(ngModel)]="keywords"
+                                        placeholder="Type keywords"
+                                        style="width: calc(100% - 320px); margin-right: 15px; float: left;">
+                                    <input type="text" class="form-control" value="" [disabled]="true"
+                                        [(ngModel)]="view_rubric_data.version" placeholder="Type keywords"
+                                        style="max-width:305px; float: left; background-color: var(--secound);">
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
@@ -249,7 +217,8 @@
                 <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
-                <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Tags</div>
+                <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Tags
+                </div>
                 <div class="text m-0">
                     <table class="tables m-0 w-100">
                         <tbody>

@@ -62,6 +62,7 @@ export class ViewRubricComponent implements OnInit {
   view_rubric_data: any[] = [];
   rubric:  any[] = [];
   keywords: any[] =[];
+  rubric_col: any[] = []
 
   backClicked() {
     this._location.back();
@@ -93,6 +94,7 @@ export class ViewRubricComponent implements OnInit {
           this.view_rubric_data = data.data;
           console.log(this.view_rubric_data)
           this.rubric = data.data.rubric;
+          this.rubric_col = data.data.rubric_col;
           this.keywords = data.data.keywords.toString();
           console.log(this.keywords)
           setTimeout(() => {
@@ -120,6 +122,26 @@ export class ViewRubricComponent implements OnInit {
     this.edit = false;
   }
   saveRubric(){
+    let data = {
+      performance:[],
+      "orgId": parseInt(this.cookieService.get("_PAOID")),
+      "itemId": parseInt(this.Item_ID),
+      "keywords": this.keywords
+    };
+    this.rubric_col.forEach(element => {
+      data.performance.push(element);
+    });
+    let data_arr = [];
+    let data_arr1 = [];
+    let data_arr2 = [];
+    this.rubric.forEach((item,rubric_index)=>{
+     item.forEach((element,index) => {
+       if(rubric_index)
+        data_arr.push(item[index]);
+        data.performance[index].criteria = data_arr;
+     });
+    })
+   console.log("Formated data",data);
 
   }
 }
