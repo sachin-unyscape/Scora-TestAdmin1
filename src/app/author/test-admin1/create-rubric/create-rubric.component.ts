@@ -1,18 +1,24 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit,TemplateRef,HostListener, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { AuthServiceService } from 'app/auth-service.service';
 import { CookieService } from 'ngx-cookie-service';
+import {Location} from '@angular/common';
+
+
 
 @Component({
   selector: 'app-create-rubric',
   templateUrl: './create-rubric.component.html',
-  styleUrls: ['./create-rubric.component.scss']
+  styleUrls: ['./create-rubric.component.scss'],
+  // encapsulation: ViewEncapsulation.None
 })
 export class CreateRubricComponent implements OnInit {
+  @ViewChild('popOver') popOver:ElementRef;
 
   showload = false;
+  Points_Scored = 0.50;
   baseURL = 'http://15.207.209.163/new-scora/scoraauthor/public/api/';
   rubricData: any = [];
   show = false;
@@ -35,13 +41,19 @@ export class CreateRubricComponent implements OnInit {
       ]
     }
   ];
+  keywordError: boolean;
 
-  constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService) { }
+  constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService, private _location: Location, private router: Router,
+    public route: ActivatedRoute) { }
 
   ngOnInit() {
     this.getData();
   }
 
+  backClicked() {
+    this._location.back();
+  }
+  
   getLastPoint(index1:number,index2:number){
     return this.rubricItems[index1-1].criteria[index2].point;
   }
@@ -69,7 +81,7 @@ export class CreateRubricComponent implements OnInit {
     let subItems = [];
     for (let i = 0; i < no; i++) {
       subItems.push({
-        'criteria_name': '',
+        'criteria_name': this.rubricItems[0].criteria[i].criteria_name,
         'description': '',
         'point': 0.0
       })
@@ -155,4 +167,41 @@ export class CreateRubricComponent implements OnInit {
     return 1;
   }
 
+
+  previous(){
+    $('#rubicpreview').modal('hide');
+  }
+
+  
+  createRubric(){
+    if (this.authService.canActivate()) {
+      this.showload = true;
+      let formData = {
+        performance: this.rubricItems,
+        orgId: this.cookieService.get('_PAOID'),
+        itemId: this.activeRouter.snapshot.params['itemID'],
+        keywords: this.keywords
+      };
+      let headers = new HttpHeaders();
+      headers.append(
+        "Authorization",
+        "Bearer " + this.cookieService.get("_PTBA")
+      );
+      this.http.post<any>(this.baseURL + 'create_rubric', formData, { headers: headers }).subscribe(data => {
+        this.showload = false;
+        console.log(data);
+        if (!data.success) {
+          return;
+        }
+        this.router.navigateByUrl("author/rubric")
+        setTimeout(() => {
+          this._notifications.create("", data.message, "info");  
+        }, 300);
+      },
+        (error) => {
+          this.showload = false;
+          this._notifications.error(JSON.parse(error._body).message);
+        })
+    }
+  }
 }
