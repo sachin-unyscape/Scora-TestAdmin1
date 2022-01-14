@@ -48,9 +48,10 @@ export class RubricListingComponent implements OnInit {
 
   currentPage = 1;
   originalList:any=[];
-  public showload = true;
+  showload = false;
   rubric_list: any[] = [];
   item_types: any[] = [];
+
 
   ngOnInit() {
     this.get_item_type_list();

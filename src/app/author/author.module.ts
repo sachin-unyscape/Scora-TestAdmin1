@@ -144,7 +144,7 @@ import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insig
     RubricListingComponent,
     ViewRubricComponent,
     CreateRubricComponent,
-    ScoraInsightsComponent
+    ScoraInsightsComponent,
   ],
   providers: [GetItemService,CookieService,PagerService,AuthServiceService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

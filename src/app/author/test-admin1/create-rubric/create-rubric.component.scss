@@ -3,7 +3,7 @@
     overflow: hidden;
   }
   
-  .show {
+  .showquestion {
     overflow: visible;
     max-height: fit-content;
   }
@@ -11,4 +11,9 @@
   a.disabled {
     pointer-events: none;
     cursor: not-allowed; 
+}
+
+.alertDanger{
+  color:rgb(235, 61, 61);
+  text-align: left;
 }

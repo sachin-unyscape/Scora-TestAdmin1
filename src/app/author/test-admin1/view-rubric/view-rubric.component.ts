@@ -56,7 +56,7 @@ export class ViewRubricComponent implements OnInit {
     this.get_rubric_details(this.Item_Type_ID,this.Item_ID);
   }
 
-  public showload = true;
+  public showload = false;
   public show = false; 
   public edit = false;
   view_rubric_data: any[] = [];

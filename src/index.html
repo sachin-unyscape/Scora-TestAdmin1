@@ -32,6 +32,13 @@
    
     <!--Test Admin 1 style-->
     <link href="assets/test-admin1-assets/css/ex-admin.css" rel="stylesheet">
+    <link href="assets/test-admin1-assets/css/examiner.css" rel="stylesheet">
+    
+    <!-- Range Slider -->
+    <!-- Ion Slider -->
+    <link rel="stylesheet" href="assets/test-admin1-assets/plugins/ion-rangeslider/css/ion.rangeSlider.min.css">
+    <!-- bootstrap slider -->
+    <link rel="stylesheet" href="assets/test-admin1-assets/plugins/bootstrap-slider/css/bootstrap-slider.min.css">
   
 
 
@@ -118,6 +125,37 @@
     <!-- AdminLTE -->
     <script src="assets/test-admin1-assets/js/adminlte.js"></script>
     <!-- <script src="https://wiris.net/demo/plugins/app/WIRISplugins.js?viewer=image"></script> -->
+     <!-- Range Slider -->
+    <!-- Bootstrap slider -->
+    <script src="assets/test-admin1-assets/plugins/bootstrap-slider/bootstrap-slider.min.js"></script>
+    <!-- Ion Slider -->
+    <script src="assets/test-admin1-assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+    <script>
+        $(function() {
+            /* BOOTSTRAP SLIDER */
+            $('.slider').bootstrapSlider()
+
+            $('.range_4').ionRangeSlider({
+                min: 0,
+                max: 2,
+                from: 0,
+                type: 'single',
+                step: 1,
+                postfix: '°',
+                prettify: false,
+                hasGrid: true
+            })
+        });
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+        });
+        $(document).ready(function() {
+            $(".close-intro").click(function() {
+                $(".instru-wrap").hide();
+            })
+        })
+    </script>
 
 
     <script>

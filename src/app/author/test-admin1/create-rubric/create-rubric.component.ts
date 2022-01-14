@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NotificationsService } from 'angular2-notifications';
 import { AuthServiceService } from 'app/auth-service.service';
 import { CookieService } from 'ngx-cookie-service';
+import {Location} from '@angular/common';
+
 
 @Component({
   selector: 'app-create-rubric',
@@ -35,13 +37,18 @@ export class CreateRubricComponent implements OnInit {
       ]
     }
   ];
+  keywordError: boolean;
 
-  constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService) { }
+  constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService, private _location: Location) { }
 
   ngOnInit() {
     this.getData();
   }
 
+  backClicked() {
+    this._location.back();
+  }
+  
   getTotalPoints() {
     let total = 0;
     this.rubricItems.forEach(x => {
@@ -127,4 +134,11 @@ export class CreateRubricComponent implements OnInit {
     console.log(formData);
   }
 
+  createRubric(){
+
+  }
+
+  Previous(){
+    $('#rubic-preview').modal('hide');
+  }
 }
