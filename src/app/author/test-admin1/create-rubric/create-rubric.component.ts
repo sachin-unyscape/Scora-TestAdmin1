@@ -38,21 +38,46 @@ export class CreateRubricComponent implements OnInit {
   keywords = '';
   rubricItems = [
     {
-      'performance_rating_name': 'Title',
+      'performance_rating_name': 'Bad',
+      'selected_value':0.00,
       'criteria': [
         {
           'criteria_name': 'Sub Title 1',
           'description': '',
-          'point': 0.0
+          'point': 0.5
         },
+        {
+          'criteria_name': 'Sub Title 2',
+          'description': '',
+          'point': 6
+        }
+      ]
+    },
+    {
+      'performance_rating_name': 'Good',
+      'selected_value':0.00,
+      'criteria': [
         {
           'criteria_name': 'Sub Title 1',
           'description': '',
-          'point': 0.0
+          'point': 0.33
+        },
+        {
+          'criteria_name': 'Sub Title 2',
+          'description': '',
+          'point': 6.33
         }
       ]
-    }
+    },
   ];
+
+  getRange(start,end){
+    return {
+      floor: start,
+      ceil: end
+    };
+  }
+
   keywordError: boolean;
 
   constructor(private activeRouter: ActivatedRoute, private authService: AuthServiceService, private cookieService: CookieService, private http: HttpClient, private _notifications: NotificationsService, private _location: Location, private router: Router,
@@ -100,6 +125,7 @@ export class CreateRubricComponent implements OnInit {
     }
     this.rubricItems.push({
       'performance_rating_name': '',
+      'selected_value':0.00,
       'criteria': subItems
     })
     this.getTotalPoints();

@@ -309,9 +309,14 @@ aria-hidden="true">
                                 <div class="demo-output" *ngFor="let list of rubricItems[0].criteria; let i=index">
                                     <div class="left-wrap">
                                         <label class="label">{{list.criteria_name}}</label>
-                                        <!-- <input class="single-slider" type="hidden" value="0.5" />
-                                        <input class="range_4" type="text" name="range_4" value="0.1"> -->
-                                        <ng5-slider [(value)]="value"  [options]="options"></ng5-slider>
+                                        <div>
+                                          <div *ngFor="let data of rubricItems">
+                                          <ngx-slider [(value)]="data.selected_value" [options]="getRange(data.criteria[0].point,data.criteria[data.criteria.length-1].point)"></ngx-slider>
+                                          </div>
+                                        </div>
+                                        <div>
+                                          <span *ngFor="let m of rubricItems; let i=index">{{i+1}} - {{m.selected_value}}<br/></span>
+                                        </div>
                                         <ul class="numbers">
                                             <li class="hint" *ngFor="let list2 of rubricItems; let i2=index">
                                                 {{list2.criteria[i].point}}
