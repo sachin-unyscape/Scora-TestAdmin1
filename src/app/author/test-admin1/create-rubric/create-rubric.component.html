@@ -268,8 +268,8 @@
 </div>
 
 <!-- Modal Rubic Preview-->
-<div class="modal fade modal-custom" id="rubicpreview" tabindex="-1" role="dialog" aria-labelledby="rubicLabel-preview"
-    aria-modal="true">
+<div class="modal fade modal-custom" id="rubicpreview" tabindex="-1" aria-labelledby="exampleModalLabel1"
+aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width: 1285px;">
         <div class="modal-content" style=" min-width: auto; background: #F5F6F8; padding: 24px;">
             <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
@@ -311,9 +311,7 @@
                                         <label class="label">{{list.criteria_name}}</label>
                                         <!-- <input class="single-slider" type="hidden" value="0.5" />
                                         <input class="range_4" type="text" name="range_4" value="0.1"> -->
-
-                                        <!-- <input for="customRange1" class="single-slider"> -->
-                                         <!-- <input type="range"class="range_4"  value="0.1" id="customRange1"> -->
+                                        <ng5-slider [(value)]="value"  [options]="options"></ng5-slider>
                                         <ul class="numbers">
                                             <li class="hint" *ngFor="let list2 of rubricItems; let i2=index">
                                                 {{list2.criteria[i].point}}

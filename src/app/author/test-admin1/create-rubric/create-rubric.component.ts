@@ -5,6 +5,8 @@ import { NotificationsService } from 'angular2-notifications';
 import { AuthServiceService } from 'app/auth-service.service';
 import { CookieService } from 'ngx-cookie-service';
 import {Location} from '@angular/common';
+import { Options } from 'ng5-slider';
+
 
 
 
@@ -17,8 +19,18 @@ import {Location} from '@angular/common';
 export class CreateRubricComponent implements OnInit {
   @ViewChild('popOver') popOver:ElementRef;
 
+  options: Options = {
+    showTicksValues: true,
+    stepsArray: [
+      {value: 2},
+      {value: 4},
+      {value: 6},
+      {value: 8},
+    ]
+  };
+
+  obj: any = {}
   showload = false;
-  Points_Scored = 0.50;
   baseURL = 'http://15.207.209.163/new-scora/scoraauthor/public/api/';
   rubricData: any = [];
   show = false;
@@ -148,7 +160,14 @@ export class CreateRubricComponent implements OnInit {
       itemId: this.activeRouter.snapshot.params['itemID'],
       keywords: this.keywords
     };
-    console.log(formData);
+    
+    this.rubricItems[0].criteria.forEach((item,index)=>{
+      this.rubricItems.forEach((v,i)=>{
+        this.obj.value = v.criteria[index].point;
+        this.options.stepsArray.push(this.obj)
+       console.log(">>>>>>>>><<<<",this.options.stepsArray);
+      })
+      })
   }
 
   checkIfValid(){
@@ -169,7 +188,11 @@ export class CreateRubricComponent implements OnInit {
 
 
   previous(){
-    $('#rubicpreview').modal('hide');
+    $("#myModal").removeClass("in");
+    $(".modal-backdrop").remove();
+    $('body').removeClass('modal-open');
+    $('body').css('padding-right', '');
+    $("#rubicpreview").modal('hide');
   }
 
   
@@ -193,6 +216,11 @@ export class CreateRubricComponent implements OnInit {
         if (!data.success) {
           return;
         }
+        $("#myModal").removeClass("in");
+        $(".modal-backdrop").remove();
+        $('body').removeClass('modal-open');
+        $('body').css('padding-right', '');
+        $("#rubicpreview").modal('hide');
         this.router.navigateByUrl("author/rubric")
         setTimeout(() => {
           this._notifications.create("", data.message, "info");  
