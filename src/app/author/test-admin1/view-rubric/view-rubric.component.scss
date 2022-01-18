@@ -7,3 +7,8 @@
     overflow: visible;
     max-height: fit-content;
   }
+
+  a.disabled {
+    pointer-events: none;
+    cursor: not-allowed; 
+  }

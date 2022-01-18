@@ -36,7 +36,8 @@ export class ViewRubricComponent implements OnInit {
   version: any;
   version_id: any;
   selected_version: any;
- 
+  rubricItems:any=[];
+  totalPoints = 0;
 
   constructor(
     private http: Http,
@@ -65,7 +66,7 @@ export class ViewRubricComponent implements OnInit {
   public edit = false;
   view_rubric_data: any[] = [];
   rubric:  any[] = [];
-  keywords: any[] =[];
+  keywords: any ='';
   rubric_col: any[] = []
 
   backClicked() {
@@ -152,7 +153,24 @@ export class ViewRubricComponent implements OnInit {
           this.rubric = data.data.rubric;
           this.rubric_col = data.data.rubric_col;
           this.keywords = data.data.keywords.toString();
-          console.log(this.keywords)
+
+          this.rubric_col.forEach((x,index1)=>{
+            let tempData =[];
+            this.rubric.forEach((y,index2)=>{
+             tempData.push({
+              criteria_name:y[index1].criteria_name,
+              description:y[index1].description,
+              points:y[index1].points
+             })
+            })
+            this.rubricItems.push({
+              performance_rating_name:x.performance_rating_name,
+              criteria : tempData
+            })
+            tempData=[];
+          })
+          console.log('-->',this.rubricItems)
+          this.getTotalPoints();
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -178,26 +196,85 @@ export class ViewRubricComponent implements OnInit {
     this.edit = false;
   }
   saveRubric(){
-    let data = {
-      performance:[],
-      "orgId": parseInt(this.cookieService.get("_PAOID")),
-      "itemId": parseInt(this.Item_ID),
-      "keywords": this.keywords
+    if(!this.checkIfValid()){
+      return;
+    }
+    let formData = {
+      performance: this.rubricItems,
+      orgId: this.cookieService.get('_PAOID'),
+      itemId: this.Item_ID,
+      keywords: this.keywords
     };
-    this.rubric_col.forEach(element => {
-      data.performance.push(element);
-    });
-    let data_arr = [];
-    let data_arr1 = [];
-    let data_arr2 = [];
-    this.rubric.forEach((item,rubric_index)=>{
-     item.forEach((element,index) => {
-       if(rubric_index)
-        data_arr.push(item[index]);
-        data.performance[index].criteria = data_arr;
-     });
-    })
-   console.log("Formated data",this.view_rubric_data);
-
+   console.log(formData);
   }
+
+  getTotalPoints() {
+    let total = 0;
+    this.rubricItems[this.rubricItems.length-1].criteria.forEach(x=>{
+      total += +x.points;
+    })
+    this.totalPoints = total;
+  }
+
+  getLastPoint(index1:number,index2:number){
+    return this.rubricItems[index1-1].criteria[index2].points;
+  }
+  deleteMainItem() {
+    this.rubricItems.pop();
+    this.getTotalPoints();
+  }
+
+  addMainItem() {
+    let no = this.rubricItems[0].criteria.length;
+    let subItems = [];
+    for (let i = 0; i < no; i++) {
+      subItems.push({
+        'criteria_name': this.rubricItems[0].criteria[i].criteria_name,
+        'description': '',
+        'points': 0.0
+      })
+    }
+    this.rubricItems.push({
+      'performance_rating_name': '',
+      'selected_value':0.00,
+      'criteria': subItems
+    })
+    this.getTotalPoints();
+  }
+
+  addSubItems() {
+    this.rubricItems.forEach(x => {
+      x.criteria.push({
+        'criteria_name': '',
+        'description': '',
+        'points': 0.0
+      })
+    })
+    this.getTotalPoints();
+  }
+
+  deleteSubItems() {
+    this.rubricItems.forEach(x => {
+      x.criteria.pop();
+    })
+    this.getTotalPoints();
+  }
+
+  checkIfValid(){
+    let isValid=true;
+    this.rubricItems.forEach((x,index1)=>{
+      x.criteria.forEach((y,index2)=>{
+        if(index1>0 && y.points<this.rubricItems[index1-1].criteria[index2].points)
+          isValid=false;
+      })
+    })
+    return isValid;
+  }
+
+  replaceSpace(){
+    this.keywords=this.keywords.replace(/ /g,",");
+    return 1;
+  }
+
 }
+``

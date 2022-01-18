@@ -229,6 +229,9 @@ export class CreateRubricComponent implements OnInit {
 
   
   createRubric(){
+    if(!this.checkIfValid()){
+      return;
+    }
     if (this.authService.canActivate()) {
       this.showload = true;
       let formData = {
