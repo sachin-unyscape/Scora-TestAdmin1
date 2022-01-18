@@ -139,6 +139,7 @@ export class RubricListingComponent implements OnInit {
           this.allItems = modified_data;
           console.log(this.allItems);
           this.setPage(1);
+          // this._notifications.create('',data.data.message, 'info', {timeOut: 3000});
           setTimeout(() => {
             this.showload = false;
           }, 300);
