@@ -81,7 +81,8 @@ import { ViewRubricComponent } from './test-admin1/view-rubric/view-rubric.compo
 import { CreateRubricComponent } from './test-admin1/create-rubric/create-rubric.component';
 import { EditorModule } from "@tinymce/tinymce-angular";
 import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insights.component';
-
+import { Ng5SliderModule } from 'ng5-slider';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   imports: [
@@ -109,7 +110,9 @@ import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insig
     InfiniteScrollModule,
     PaginationModule.forRoot(),
     PopoverModule.forRoot(),
-    EditorModule
+    EditorModule,
+    Ng5SliderModule,
+    NgxSliderModule
   ],
   declarations: [
    // DashboardComponent,
@@ -144,7 +147,7 @@ import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insig
     RubricListingComponent,
     ViewRubricComponent,
     CreateRubricComponent,
-    ScoraInsightsComponent
+    ScoraInsightsComponent,
   ],
   providers: [GetItemService,CookieService,PagerService,AuthServiceService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

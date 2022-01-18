@@ -255,7 +255,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'view-rubric/:Item_Type_ID/:Item_ID',
+    path: 'view-rubric/:Item_Type_ID/:Item_ID/:version',
     component: ViewRubricComponent,
     data: {
       title: 'view-listing'

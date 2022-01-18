@@ -33,6 +33,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class ViewRubricComponent implements OnInit {
   Item_Type_ID: string;
   Item_ID: string;
+  version: any;
+  version_id: any;
+  selected_version: any;
  
 
   constructor(
@@ -53,10 +56,11 @@ export class ViewRubricComponent implements OnInit {
   ngOnInit() {
     this.Item_Type_ID = this.route.snapshot.paramMap.get('Item_Type_ID');
     this.Item_ID = this.route.snapshot.paramMap.get('Item_ID');
-    this.get_rubric_details(this.Item_Type_ID,this.Item_ID);
+    this.version_id = this.route.snapshot.paramMap.get('version')
+    this.get_rubric_details(this.Item_Type_ID,this.Item_ID,this.version_id);
   }
 
-  public showload = true;
+  public showload = false;
   public show = false; 
   public edit = false;
   view_rubric_data: any[] = [];
@@ -68,7 +72,54 @@ export class ViewRubricComponent implements OnInit {
     this._location.back();
   }
 
-  get_rubric_details(Item_Type_ID,Item_ID) {
+  get_filterId(event)
+  {
+     this.version_id = event;
+    this.get_rubric_details(this.Item_Type_ID,this.Item_ID,this.version_id)
+  }
+  
+  useThisVersion(){
+    this.showload = true;
+    var body = {};
+    var headers = new Headers();
+    headers.append(
+      "Authorization",
+      "Bearer " + this.cookieService.get("_PTBA")
+    );
+    body["orgId"] = parseInt(this.cookieService.get("_PAOID"));
+    body["version"] = this.version_id;
+    body["itemId"] = this.Item_ID ;
+    return this.http
+      .post(credentials.host + "/use_this_version", body, {
+        headers: headers,
+      })
+      .map((res) => res.json())
+      .catch((e: any) => {
+        return Observable.throw(e);
+      })
+      .subscribe(
+        (data:any) => {
+          setTimeout(() => {
+            this.showload = false;
+          }, 300);
+          this._notifications.create('',data.message, 'info', {timeOut: 3000});
+        },
+        (error) => {
+          this.showload = false;
+          if (error.status == 404) {
+            this.router.navigateByUrl("pages/NotFound");
+          } else if (error.status == 401) {
+            this.cookieService.deleteAll();
+            window.location.href = credentials.accountUrl;
+            // window.location.href='http://accounts.scora.in';
+          } else {
+            this.router.navigateByUrl("pages/serverError");
+          }
+        }
+      );
+  }
+
+  get_rubric_details(Item_Type_ID,Item_ID,version_id) {
    
     this.showload = true;
     var body = {};
@@ -79,8 +130,10 @@ export class ViewRubricComponent implements OnInit {
     );
     body["orgId"] = parseInt(this.cookieService.get("_PAOID"));
     body["itemTypeId"] = parseInt(Item_Type_ID);
-    body["itemId"] = parseInt(Item_ID)  
-  
+    body["itemId"] = parseInt(Item_ID) ;
+    console.log("<>>>>>>>>>>>>>>>>>>>>>>>>>>>",version_id)
+    body["version"] = version_id;
+   
     return this.http
       .post(credentials.host + "/view_rubric", body, {
         headers: headers,
@@ -92,6 +145,9 @@ export class ViewRubricComponent implements OnInit {
       .subscribe(
         (data:any) => {
           this.view_rubric_data = data.data;
+          this.version = data.data.version;
+          this.selected_version = data.data.selected_version;
+          console.log(this.selected_version + "xdm,mc,xcmx,m")
           console.log(this.view_rubric_data)
           this.rubric = data.data.rubric;
           this.rubric_col = data.data.rubric_col;

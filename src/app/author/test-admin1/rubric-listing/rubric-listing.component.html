@@ -1,3 +1,4 @@
+<app-loader *ngIf="showload"></app-loader>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -55,11 +56,11 @@
                                                 -
                                             </td>
                                             <td>
-                                                <a *ngIf="data.status == null" [routerLink]="['/author/create-rubric',data.Item_ID]">
+                                                <a *ngIf="data.status == null && roles.includes('Create')" [routerLink]="['/author/create-rubric',data.Item_ID]">
                                                     <img src="src/assets/test-admin1-assets/img/author-icons/create-icon.svg"
                                                         alt="">
                                                 </a>
-                                                <a *ngIf="data.status != null && data.status == 'y'" [routerLink]="['/author/view-rubric',data.Item_Type_ID,data.Item_ID ]">
+                                                <a *ngIf="data.status != null && data.status == 'y' && roles.includes('View')" [routerLink]="['/author/view-rubric',data.Item_Type_ID,data.Item_ID,data.version ]">
                                                     <img src="src/assets/test-admin1-assets/img/author-icons/view-rep.svg"
                                                         alt="">
                                                 </a>
@@ -117,3 +118,5 @@
           <b>Version</b> 3.1.0
       </div>
   </footer> -->
+
+<simple-notifications></simple-notifications>

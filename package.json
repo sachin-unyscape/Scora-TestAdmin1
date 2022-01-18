@@ -20,6 +20,7 @@
   "dependencies": {
     "@ag-grid-community/all-modules": "^22.1.1",
     "@ag-grid-community/angular": "^22.1.2",
+    "@angular-slider/ngx-slider": "^2.0.3",
     "@angular/animations": "^5.2.2",
     "@angular/cdk": "^5.2.5",
     "@angular/common": "^5.2.2",
@@ -69,6 +70,7 @@
     "ng2-fancy-image-uploader": "^2.0.1",
     "ng2-split": "^0.1.6",
     "ng2-split-pane": "^1.4.0",
+    "ng5-slider": "^1.2.6",
     "ngx-bootstrap": "^2.0.3",
     "ngx-chips": "^1.6.7",
     "ngx-cookie-service": "^1.0.10",

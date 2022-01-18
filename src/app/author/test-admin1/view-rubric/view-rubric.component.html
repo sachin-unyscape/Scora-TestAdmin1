@@ -1,3 +1,4 @@
+<app-loader *ngIf="showload"></app-loader>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -13,8 +14,8 @@
                                         <a (click)="backClicked()"><img
                                                 src="src/assets/test-admin1-assets/img/author-icons/back-arrow.svg"
                                                 class="mr-4" style="margin-top:-3px"> Rubrics</a>
-                                        <select name="" id="" class="select ml-2">
-                                            <option value="">Version {{view_rubric_data.version}}</option>
+                                        <select name="" id=""  (change)="get_filterId($event.target.value)" class="select ml-2">
+                                            <option   *ngFor = "let item of version" [selected]="item == selected_version" [value]="item">Version {{item}}</option>
                                         </select>
                                     </h3>
                                 </div>
@@ -91,7 +92,7 @@
                     <div class="card">
                         <div class="card-body pl-3 pr-3">
                             <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                            <a class="default-btn float-right">Use this Version</a>
+                            <a  (click)="useThisVersion()" class="default-btn float-right">Use this Version</a>
                         </div>
                     </div>
                     <!-- /.card -->
@@ -185,7 +186,7 @@
                                         placeholder="Type keywords"
                                         style="width: calc(100% - 320px); margin-right: 15px; float: left;">
                                     <input type="text" class="form-control" value="" [disabled]="true"
-                                        [(ngModel)]="view_rubric_data.version" placeholder="Type keywords"
+                                        [(ngModel)]="view_rubric_data.selected_version" placeholder="Type keywords"
                                         style="max-width:305px; float: left; background-color: var(--secound);">
                                     <div class="clearfix"></div>
                                 </div>
@@ -323,3 +324,5 @@
     </div>
 </div>
 <!-- /.content-wrapper -->
+
+<simple-notifications></simple-notifications>

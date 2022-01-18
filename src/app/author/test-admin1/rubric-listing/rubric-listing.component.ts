@@ -31,6 +31,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class RubricListingComponent implements OnInit {
   item_type_id: any;
+  roles: any;
   constructor(
     private http: Http,
     private router: Router,
@@ -48,9 +49,10 @@ export class RubricListingComponent implements OnInit {
 
   currentPage = 1;
   originalList:any=[];
-  public showload = true;
+  showload = false;
   rubric_list: any[] = [];
   item_types: any[] = [];
+
 
   ngOnInit() {
     this.get_item_type_list();
@@ -115,7 +117,10 @@ export class RubricListingComponent implements OnInit {
 
       .subscribe(
         (data) => {
-          this.rubric_list = data.data;
+          console.log(data);
+          this.roles = data.data.user_rolls;
+          // this.is_view = this.roles.inci 
+          this.rubric_list = data.data.item;
           console.log('rubrics list',this.rubric_list);
           let modified_data = this.rubric_list.map((item)=>{
             const container = {};
@@ -134,6 +139,7 @@ export class RubricListingComponent implements OnInit {
           this.allItems = modified_data;
           console.log(this.allItems);
           this.setPage(1);
+          // this._notifications.create('',data.data.message, 'info', {timeOut: 3000});
           setTimeout(() => {
             this.showload = false;
           }, 300);
