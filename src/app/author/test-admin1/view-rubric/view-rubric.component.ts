@@ -141,7 +141,7 @@ export class ViewRubricComponent implements OnInit {
         data.performance[index].criteria = data_arr;
      });
     })
-   console.log("Formated data",data);
+   console.log("Formated data",this.view_rubric_data);
 
   }
 }

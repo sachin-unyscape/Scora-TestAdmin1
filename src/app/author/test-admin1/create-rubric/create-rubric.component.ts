@@ -28,7 +28,7 @@ export class CreateRubricComponent implements OnInit {
           'point': 0.0
         },
         {
-          'criteria_name': 'Sub Title 1',
+          'criteria_name': 'Sub Title 2',
           'description': '',
           'point': 0.0
         }
@@ -69,7 +69,7 @@ export class CreateRubricComponent implements OnInit {
     let subItems = [];
     for (let i = 0; i < no; i++) {
       subItems.push({
-        'criteria_name': '',
+        'criteria_name': this.rubricItems[0].criteria[i].criteria_name,
         'description': '',
         'point': 0.0
       })

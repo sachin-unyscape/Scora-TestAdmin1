@@ -149,19 +149,21 @@
                                                                 {{view_rubric_data.max_points}}</div>
                                                         </th>
                                                         <th *ngFor="let items of view_rubric_data.rubric_col">
-                                                            {{items.performance_rating_name}}</th>
+                                                            <input type="text" [(ngModel)]="items.performance_rating_name" />
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr
                                                         *ngFor="let rowitems of view_rubric_data.rubric;  let i = index">
-                                                        <td><span
-                                                                class="bold text-center d-block">{{rowitems[i].criteria_name}}</span>
+                                                        <td>
+                                                            <!-- <span class="bold text-center d-block"></span> -->
+                                                            <input type="text" [(ngModel)]="rowitems[i].criteria_name" />
                                                         </td>
                                                         <ng-container *ngFor="let data of rowitems;  let i = index">
                                                             <td>
-                                                                <span
-                                                                    class="view-table-description">{{data.description}}</span>
+                                                                <!-- <span class="view-table-description"></span> -->
+                                                                <input type="text" [(ngModel)]="data.description"/>
                                                                 <div class="points">
                                                                     <span class="left">Points</span>
                                                                     <span class="right"><input type="text"
