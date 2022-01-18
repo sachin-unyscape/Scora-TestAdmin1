@@ -125,7 +125,7 @@
                                     <input type="text" (keyup)="replaceSpace()" [(ngModel)]="keywords"
                                         class="form-control border-red" placeholder="Type keywords"
                                         style="width: calc(100% - 320px); margin-right: 15px; float: left;">
-                                    <input type="text" class="form-control" value="V2.1" placeholder="Type keywords"
+                                    <input type="text" class="form-control" value="V {{this.rubricData.version}}" [disabled]="true" placeholder="Type keywords"
                                         style="max-width:305px; float: left; background-color: var(--secound);">
                                     <div class="clearfix"></div>
                                 </div>
@@ -310,16 +310,11 @@ aria-hidden="true">
                                     <div class="left-wrap">
                                         <label class="label">{{list.criteria_name}}</label>
                                         <div>
-                                          <div *ngFor="let data of rubricItems">
-                                          <ngx-slider [(value)]="data.selected_value" [options]="getRange(data.criteria[0].point,data.criteria[data.criteria.length-1].point)"></ngx-slider>
-                                          </div>
-                                        </div>
-                                        <div>
-                                          <span *ngFor="let m of rubricItems; let i=index">{{i+1}} - {{m.selected_value}}<br/></span>
+                                            <ngx-slider [(value)]="value"></ngx-slider>
                                         </div>
                                         <ul class="numbers">
                                             <li class="hint" *ngFor="let list2 of rubricItems; let i2=index">
-                                                {{list2.criteria[i].point}}
+                                                <span>{{list2.criteria[i].point}}</span>
                                                 <span class="grey">({{list2.performance_rating_name}})</span>
                                                 <a [popover]="popTemplate" triggers="mouseenter:mouseleave"
                                                     [placement]="'right'" [outsideClick]="true" #popOver>

@@ -31,6 +31,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class RubricListingComponent implements OnInit {
   item_type_id: any;
+  roles: any;
   constructor(
     private http: Http,
     private router: Router,
@@ -116,7 +117,10 @@ export class RubricListingComponent implements OnInit {
 
       .subscribe(
         (data) => {
-          this.rubric_list = data.data;
+          console.log(data);
+          this.roles = data.data.user_rolls;
+          // this.is_view = this.roles.inci 
+          this.rubric_list = data.data.item;
           console.log('rubrics list',this.rubric_list);
           let modified_data = this.rubric_list.map((item)=>{
             const container = {};
