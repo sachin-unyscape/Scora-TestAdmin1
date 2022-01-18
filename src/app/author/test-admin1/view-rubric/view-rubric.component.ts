@@ -102,6 +102,7 @@ export class ViewRubricComponent implements OnInit {
           setTimeout(() => {
             this.showload = false;
           }, 300);
+          this._notifications.create('',data.message, 'info', {timeOut: 3000});
         },
         (error) => {
           this.showload = false;
