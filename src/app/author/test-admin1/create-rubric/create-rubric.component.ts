@@ -19,14 +19,11 @@ import { Options } from 'ng5-slider';
 export class CreateRubricComponent implements OnInit {
   @ViewChild('popOver') popOver:ElementRef;
 
+  value: number = 40;
+  highValue: number = 60;
   options: Options = {
-    showTicksValues: true,
-    stepsArray: [
-      {value: 2},
-      {value: 4},
-      {value: 6},
-      {value: 8},
-    ]
+    floor: 0,
+    ceil: 100
   };
 
   obj: any = {}
@@ -42,14 +39,14 @@ export class CreateRubricComponent implements OnInit {
       'selected_value':0.00,
       'criteria': [
         {
-          'criteria_name': 'Sub Title 1',
-          'description': '',
-          'point': 0.5
+          'criteria_name': 'Language',
+          'description': 'Language Discription',
+          'point': 2
         },
         {
-          'criteria_name': 'Sub Title 2',
-          'description': '',
-          'point': 6
+          'criteria_name': 'Clarity',
+          'description': 'Clarity Discription',
+          'point': 2
         }
       ]
     },
@@ -58,14 +55,30 @@ export class CreateRubricComponent implements OnInit {
       'selected_value':0.00,
       'criteria': [
         {
-          'criteria_name': 'Sub Title 1',
-          'description': '',
-          'point': 0.33
+          'criteria_name': 'Language',
+          'description': 'Language Discription 1',
+          'point': 4
         },
         {
-          'criteria_name': 'Sub Title 2',
-          'description': '',
-          'point': 6.33
+          'criteria_name': 'Clarity',
+          'description': 'Clarity Discription 1',
+          'point': 4
+        }
+      ]
+    },
+    {
+      'performance_rating_name': 'excellent',
+      'selected_value':0.00,
+      'criteria': [
+        {
+          'criteria_name': 'Language',
+          'description': 'Language Discription 2',
+          'point': 6
+        },
+        {
+          'criteria_name': 'Clarity',
+          'description': 'Clarity Discription 2',
+          'point': 6
         }
       ]
     },
@@ -186,14 +199,7 @@ export class CreateRubricComponent implements OnInit {
       itemId: this.activeRouter.snapshot.params['itemID'],
       keywords: this.keywords
     };
-    
-    this.rubricItems[0].criteria.forEach((item,index)=>{
-      this.rubricItems.forEach((v,i)=>{
-        this.obj.value = v.criteria[index].point;
-        this.options.stepsArray.push(this.obj)
-       console.log(">>>>>>>>><<<<",this.options.stepsArray);
-      })
-      })
+    console.log("formData",formData)
   }
 
   checkIfValid(){

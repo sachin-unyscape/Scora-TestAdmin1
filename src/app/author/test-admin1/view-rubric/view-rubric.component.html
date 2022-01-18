@@ -14,8 +14,8 @@
                                         <a (click)="backClicked()"><img
                                                 src="src/assets/test-admin1-assets/img/author-icons/back-arrow.svg"
                                                 class="mr-4" style="margin-top:-3px"> Rubrics</a>
-                                        <select name="" id="" class="select ml-2">
-                                            <option value="">Version {{view_rubric_data.version}}</option>
+                                        <select name="" id=""  (change)="get_filterId($event.target.value)" class="select ml-2">
+                                            <option   *ngFor = "let item of version" [selected]="item == selected_version" [value]="item">Version {{item}}</option>
                                         </select>
                                     </h3>
                                 </div>
@@ -92,7 +92,7 @@
                     <div class="card">
                         <div class="card-body pl-3 pr-3">
                             <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                            <a class="default-btn float-right">Use this Version</a>
+                            <a  (click)="useThisVersion()" class="default-btn float-right">Use this Version</a>
                         </div>
                     </div>
                     <!-- /.card -->
