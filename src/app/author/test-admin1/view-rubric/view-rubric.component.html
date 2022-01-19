@@ -172,10 +172,10 @@
                                                             Points : <input placeholder="Points"
                                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                 maxlength="3" type="number"
-                                                                [(ngModel)]="list2.criteria[i].points"
+                                                                [(ngModel)]="list2.criteria[i].point"
                                                                 (keyup)="getTotalPoints()" /><br />
                                                             <span class="text-info"
-                                                                *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].points)">*
+                                                                *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
                                                                 enter point > {{getLastPoint(i2,i)}}</span>
                                                         </td>
                                                         <td></td>

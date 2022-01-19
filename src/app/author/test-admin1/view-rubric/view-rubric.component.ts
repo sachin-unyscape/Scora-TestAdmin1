@@ -23,6 +23,7 @@ import { PagerService } from '../../../_services/index';
 import * as _ from 'underscore';
 import {Location} from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -38,9 +39,11 @@ export class ViewRubricComponent implements OnInit {
   selected_version: any;
   rubricItems:any=[];
   totalPoints = 0;
-
+  baseURL = 'http://15.207.209.163/new-scora/scoraauthor/public/api/';
+  
   constructor(
     private http: Http,
+    private httpClient: HttpClient,
     private router: Router,
     public route: ActivatedRoute,
     private cookieService: CookieService,
@@ -153,17 +156,19 @@ export class ViewRubricComponent implements OnInit {
           this.rubric = data.data.rubric;
           this.rubric_col = data.data.rubric_col;
           this.keywords = data.data.keywords.toString();
-
+          this.rubricItems=[];
           this.rubric_col.forEach((x,index1)=>{
             let tempData =[];
             this.rubric.forEach((y,index2)=>{
              tempData.push({
+              criteria_id:y[index1].criteria_id,
               criteria_name:y[index1].criteria_name,
               description:y[index1].description,
-              points:y[index1].points
+              point:y[index1].points
              })
             })
             this.rubricItems.push({
+              performance_rating_id:x.performance_id,
               performance_rating_name:x.performance_rating_name,
               criteria : tempData
             })
@@ -199,25 +204,43 @@ export class ViewRubricComponent implements OnInit {
     if(!this.checkIfValid()){
       return;
     }
-    let formData = {
-      performance: this.rubricItems,
-      orgId: this.cookieService.get('_PAOID'),
-      itemId: this.Item_ID,
-      keywords: this.keywords
-    };
-   console.log(formData);
+    if (this.authService.canActivate()) {
+      this.showload = true;
+      let formData = {
+        performance: this.rubricItems,
+        orgId: this.cookieService.get('_PAOID'),
+        itemId: this.Item_ID,
+        keywords: this.keywords
+      };
+      let headers = new HttpHeaders();
+      headers.append(
+        "Authorization",
+        "Bearer " + this.cookieService.get("_PTBA")
+      );
+      this.httpClient.post<any>(this.baseURL + 'edit_rubric', formData, { headers: headers }).subscribe(data => {
+        this.showload = false;
+        console.log(data);
+        if (!data.success) {
+          this._notifications.create("", data.message, "error");  
+          return;
+        }
+        this._notifications.create("", data.message, "info");  
+        this.edit=false;
+        this.get_rubric_details(this.Item_Type_ID,this.Item_ID,this.version_id);
+      });
+    }
   }
 
   getTotalPoints() {
     let total = 0;
     this.rubricItems[this.rubricItems.length-1].criteria.forEach(x=>{
-      total += +x.points;
+      total += +x.point;
     })
     this.totalPoints = total;
   }
 
   getLastPoint(index1:number,index2:number){
-    return this.rubricItems[index1-1].criteria[index2].points;
+    return this.rubricItems[index1-1].criteria[index2].point;
   }
   deleteMainItem() {
     this.rubricItems.pop();
@@ -231,7 +254,7 @@ export class ViewRubricComponent implements OnInit {
       subItems.push({
         'criteria_name': this.rubricItems[0].criteria[i].criteria_name,
         'description': '',
-        'points': 0.0
+        'point': 0.0
       })
     }
     this.rubricItems.push({
@@ -247,7 +270,7 @@ export class ViewRubricComponent implements OnInit {
       x.criteria.push({
         'criteria_name': '',
         'description': '',
-        'points': 0.0
+        'point': 0.0
       })
     })
     this.getTotalPoints();
@@ -264,7 +287,7 @@ export class ViewRubricComponent implements OnInit {
     let isValid=true;
     this.rubricItems.forEach((x,index1)=>{
       x.criteria.forEach((y,index2)=>{
-        if(index1>0 && y.points<this.rubricItems[index1-1].criteria[index2].points)
+        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point)
           isValid=false;
       })
     })
