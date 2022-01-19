@@ -121,14 +121,18 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="pad24">
+                                <div class="pad24 form-group">
                                     <input type="text" (keyup)="replaceSpace()" [(ngModel)]="keywords"
-                                        class="form-control border-red" placeholder="Type keywords"
+                                        class="form-control" placeholder="Type keywords"
                                         style="width: calc(100% - 320px); margin-right: 15px; float: left;">
                                     <input type="text" class="form-control" value="V {{this.rubricData.version}}" [disabled]="true" placeholder="Type keywords"
                                         style="max-width:305px; float: left; background-color: var(--secound);">
                                     <div class="clearfix"></div>
+                                    <div class="alertDanger" *ngIf="check_keywords == true" style="margin-bottom: -2px;">
+                                        Keywords are required.
+                                    </div>
                                 </div>
+                               
                             </div>
                             <!-- ----------------------- -->
 
@@ -141,8 +145,7 @@
                     <div class="card">
                         <div class="card-body pl-3 pr-3">
                             <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                            <a (click)="getValues()" data-toggle="modal" data-target="#rubicpreview"
-                             class="default-btn float-right">Preview</a>
+                            <a (click)="getValues()" class="default-btn float-right">Preview</a>
                         </div>
                     </div>
                     <!-- /.card -->
