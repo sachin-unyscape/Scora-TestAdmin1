@@ -93,7 +93,7 @@
                                                         placeholder="Enter description" /><br />
                                                     Points : <input placeholder="Points"
                                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                        maxlength="3" type="number"
+                                                        maxlength="4" type="number"
                                                         [(ngModel)]="list2.criteria[i].point"
                                                         (keyup)="getTotalPoints()" /><br />
                                                     <span class="text-info"
@@ -141,8 +141,7 @@
                     <div class="card">
                         <div class="card-body pl-3 pr-3">
                             <a (click)="backClicked()" class="skip-btn">Cancel</a>
-                            <a (click)="getValues()" data-toggle="modal" data-target="#rubicpreview"
-                             class="default-btn float-right">Preview</a>
+                            <a (click)="getValues()" class="default-btn float-right">Preview</a>
                         </div>
                     </div>
                     <!-- /.card -->
@@ -360,3 +359,4 @@ aria-hidden="true">
 
 
 <simple-notifications></simple-notifications>
+<button data-toggle="modal" data-target="#rubicpreview" id="showPreview" [hidden]="0"></button>

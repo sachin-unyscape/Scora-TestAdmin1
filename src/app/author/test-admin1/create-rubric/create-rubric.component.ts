@@ -193,24 +193,74 @@ export class CreateRubricComponent implements OnInit {
     if(!this.checkIfValid()){
       return;
     }
+    if(!this.checkIfValid2()){
+      this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
+      return;
+    }
     let formData = {
       performance: this.rubricItems,
       orgId: this.cookieService.get('_PAOID'),
       itemId: this.activeRouter.snapshot.params['itemID'],
       keywords: this.keywords
     };
-    console.log("formData",formData)
+    console.log("formData",formData);
+    document.getElementById('showPreview').click();
   }
 
   checkIfValid(){
     let isValid=true;
+    let prevHiherThanLast=false;
+    let notValid=false;
     this.rubricItems.forEach((x,index1)=>{
       x.criteria.forEach((y,index2)=>{
-        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point)
+        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point){
+          prevHiherThanLast=true;
           isValid=false;
+        }
+        let decPart = (y.point+"").split(".")[1];
+        if(y.point%0.25!=0 && (+(Math.floor( y.point ) - y.point).toFixed(2))%0.33!=0){
+          notValid=true;
+          isValid=false;
+        }
       })
     })
+    if(prevHiherThanLast)
+      this._notifications.error('','Points value must be higher than previous Column!');
+    else if(notValid)
+      this._notifications.error('','Only whole numbers or multiples of 0.25 (1/4) or 0.33 (1/3) are accepted!');
     return isValid;
+  }
+
+  checkIfValid2(){
+    let arr=[];
+    for(let i=0;i<this.rubricItems[0].criteria.length;i++){
+      let arr2=[];
+      for(let j=0;j<this.rubricItems.length;j++){
+        arr2.push(this.rubricItems[j].criteria[i].point)
+      }
+      arr.push(arr2);
+      arr2=[];
+    }
+  let isValid=true;
+   for(let i=0;i<arr.length;i++){
+     let type=1;
+     for(let j=0;j<arr[i].length;j++){
+
+       if(j==0){
+         if(arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33==0){
+          type=2;
+         }
+       }
+       else{
+        if(type==1 && arr[i][j]%0.25!=0)
+           isValid=false;
+         else if(type==2 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33!=0)
+           isValid=false;
+      }
+
+     }
+   }
+   return isValid;
   }
 
   replaceSpace(){
