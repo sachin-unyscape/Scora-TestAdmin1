@@ -200,16 +200,17 @@ export class CreateRubricComponent implements OnInit {
     if(!this.checkIfValid()){
       return;
     }
-    if(this.check_keywords == false){
-      let formData = {
-        performance: this.rubricItems,
-        orgId: this.cookieService.get('_PAOID'),
-        itemId: this.activeRouter.snapshot.params['itemID'],
-        keywords: this.keywords
-      };
-      $('#rubicpreview').modal('show');
-      console.log("formData",formData)
-    }
+    //what does this below code do???
+    // if(this.check_keywords == false){
+    //   let formData = {
+    //     performance: this.rubricItems,
+    //     orgId: this.cookieService.get('_PAOID'),
+    //     itemId: this.activeRouter.snapshot.params['itemID'],
+    //     keywords: this.keywords
+    //   };
+    //   $('#rubicpreview').modal('show');
+    //   console.log("formData",formData)
+    // }
     if(!this.checkIfValid2()){
       this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
       return;
