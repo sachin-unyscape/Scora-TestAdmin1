@@ -44,8 +44,8 @@ export class CreateRubricComponent implements OnInit {
           'point': 2
         },
         {
-          'criteria_name': 'Sub Title 2',
-          'description': '',
+          'criteria_name': 'Clarity',
+          'description': 'Clarity Discription',
           'point': 0.0
         }
       ]
@@ -83,6 +83,7 @@ export class CreateRubricComponent implements OnInit {
       ]
     },
   ];
+  check_keywords: boolean;
 
   getRange(start,end){
     return {
@@ -190,16 +191,25 @@ export class CreateRubricComponent implements OnInit {
   }
 
   getValues() {
+     this.check_keywords = false;
+    if (
+      this.keywords == "" || this.keywords.length == 0
+    ) {
+      this.check_keywords = true;
+    }
     if(!this.checkIfValid()){
       return;
     }
-    let formData = {
-      performance: this.rubricItems,
-      orgId: this.cookieService.get('_PAOID'),
-      itemId: this.activeRouter.snapshot.params['itemID'],
-      keywords: this.keywords
-    };
-    console.log("formData",formData)
+    if(this.check_keywords == false){
+      let formData = {
+        performance: this.rubricItems,
+        orgId: this.cookieService.get('_PAOID'),
+        itemId: this.activeRouter.snapshot.params['itemID'],
+        keywords: this.keywords
+      };
+      $('#rubicpreview').modal('show');
+      console.log("formData",formData)
+    }
   }
 
   checkIfValid(){
