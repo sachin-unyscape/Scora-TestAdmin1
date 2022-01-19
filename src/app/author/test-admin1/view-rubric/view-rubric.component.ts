@@ -211,7 +211,7 @@ export class ViewRubricComponent implements OnInit {
         orgId: this.cookieService.get('_PAOID'),
         itemId: this.Item_ID,
         keywords: this.keywords,
-        version: this.selected_version
+        version: this.version_id
       };
       let headers = new HttpHeaders();
       headers.append(
