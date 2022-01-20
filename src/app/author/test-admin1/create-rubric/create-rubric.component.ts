@@ -41,12 +41,12 @@ export class CreateRubricComponent implements OnInit {
         {
           'criteria_name': 'Language',
           'description': 'Language Discription',
-          'point': 2
+          'point': 0.00
         },
         {
           'criteria_name': 'Clarity',
           'description': 'Clarity Discription',
-          'point': 0.0
+          'point': 0.00
         }
       ]
     },
@@ -57,12 +57,12 @@ export class CreateRubricComponent implements OnInit {
         {
           'criteria_name': 'Language',
           'description': 'Language Discription 1',
-          'point': 4
+          'point': 0.00
         },
         {
           'criteria_name': 'Clarity',
           'description': 'Clarity Discription 1',
-          'point': 4
+          'point': 0.00
         }
       ]
     },
@@ -73,12 +73,12 @@ export class CreateRubricComponent implements OnInit {
         {
           'criteria_name': 'Language',
           'description': 'Language Discription 2',
-          'point': 6
+          'point': 0.00
         },
         {
           'criteria_name': 'Clarity',
           'description': 'Clarity Discription 2',
-          'point': 6
+          'point': 0.00
         }
       ]
     },
