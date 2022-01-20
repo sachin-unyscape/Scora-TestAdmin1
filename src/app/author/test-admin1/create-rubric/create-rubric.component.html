@@ -56,15 +56,15 @@
                             </div>
 
                             <!-- ------------------------ -->
-                            <div class="create-table">
-                                <div class="border-bottom">
+                            <div class="text">
+                                <div class="table-responsive">
                                     <table class="rubic-table" id="hoursContainer">
                                         <thead>
                                             <tr>
-                                                <th>Max Points: {{totalPoints | number:'1.2-2'}}</th>
-                                                <th *ngFor="let list of rubricItems"><span class="grey font-14"><input
-                                                            type="text" [(ngModel)]="list.performance_rating_name"
-                                                            placeholder="Enter title" /></span></th>
+                                                <th  style="min-width: 180px;"><span class="primary">Total Points: {{totalPoints | number:'1.2-2'}}</span></th>
+                                                <th *ngFor="let list of rubricItems">
+                                                    <input type="text" [(ngModel)]="list.performance_rating_name" placeholder="Enter title" />
+                                                </th>
                                                 <th class="relative">
                                                     <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
                                                         class="add-row"><img
@@ -80,16 +80,17 @@
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let list of rubricItems[0].criteria; let i=index">
-                                                <td><input [(ngModel)]="list.criteria_name"
-                                                        placeholder="Enter criteria name" /></td>
+                                                <td><span class="bold text-center d-block"><input [(ngModel)]="list.criteria_name"
+                                                            placeholder="Enter criteria name" /></span></td>
                                                 <td *ngFor="let list2 of rubricItems; let i2=index">
                                                     <input type="text" [(ngModel)]="list2.criteria[i].description"
                                                         placeholder="Enter description" /><br />
+                                                        <div class="points">    
                                                     Points : <input placeholder="Points"
                                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                         maxlength="4" type="number"
                                                         [(ngModel)]="list2.criteria[i].point"
-                                                        (keyup)="getTotalPoints()" /><br />
+                                                        (keyup)="getTotalPoints()" /></div><br />
                                                     <span class="text-info"
                                                         *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
                                                         enter point > {{getLastPoint(i2,i)}}</span>
