@@ -204,6 +204,14 @@ export class ViewRubricComponent implements OnInit {
     if(!this.checkIfValid()){
       return;
     }
+    if(!this.checkIfValid2()){
+      this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
+      return;
+    }
+    if(!this.checkIfValid3()){//checks if numbers are in series
+      this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
+      return;
+    }
     if (this.authService.canActivate()) {
       this.showload = true;
       let formData = {
@@ -286,13 +294,86 @@ export class ViewRubricComponent implements OnInit {
 
   checkIfValid(){
     let isValid=true;
+    let prevHiherThanLast=false;
+    let notValid=false;
     this.rubricItems.forEach((x,index1)=>{
       x.criteria.forEach((y,index2)=>{
-        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point)
+        if(index1>0 && y.point<this.rubricItems[index1-1].criteria[index2].point){
+          prevHiherThanLast=true;
           isValid=false;
+        }
+        if(y.point%0.25!=0 && (+(Math.floor( y.point ) - y.point).toFixed(2))%0.33!=0){
+          notValid=true;
+          isValid=false;
+        }
       })
     })
+    if(prevHiherThanLast)
+      this._notifications.error('','Points value must be higher than previous Column!');
+    else if(notValid)
+      this._notifications.error('','Only whole numbers or multiples of 0.25 (1/4) or 0.33 (1/3) are accepted!');
     return isValid;
+  }
+
+  checkIfValid2(){
+    let arr=[];
+    for(let i=0;i<this.rubricItems[0].criteria.length;i++){
+      let arr2=[];
+      for(let j=0;j<this.rubricItems.length;j++){
+        arr2.push(this.rubricItems[j].criteria[i].point)
+      }
+      arr.push(arr2);
+      arr2=[];
+    }
+  let isValid=true;
+   for(let i=0;i<arr.length;i++){
+     let type=1;
+     for(let j=0;j<arr[i].length;j++){
+
+       if(j==0){
+         if(arr[i][j]==0 || arr[i][j]%1==0)
+          type=3;
+         else if(arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33==0){
+          type=2;
+         }
+       }
+       else{
+        if(type==1 && arr[i][j]%0.25!=0)
+           isValid=false;
+         else if(type==2 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33!=0)
+           isValid=false;
+          else if(type==3 && arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33!=0)
+            isValid=false;
+      }
+
+     }
+   }
+   return isValid;
+  }
+
+  checkIfValid3(){
+    let arr=[];
+    for(let i=0;i<this.rubricItems[0].criteria.length;i++){
+      let arr2=[];
+      for(let j=0;j<this.rubricItems.length;j++){
+        arr2.push(this.rubricItems[j].criteria[i].point)
+      }
+      arr.push(arr2);
+      arr2=[];
+    }
+  let isValid=true;
+   for(let i=0;i<arr.length;i++){
+     for(let j=0;j<arr[i].length;j++){
+       if(j>0){
+         let decVal=+(arr[i][j]-arr[i][j-1]).toFixed(2);
+         if(decVal!= 1 && decVal!=0.25 && decVal!=0.33 && decVal!=0.34){
+           console.log('problem',decVal)
+          isValid=false;
+        }
+       }
+     }
+   }
+   return isValid;
   }
 
   replaceSpace(){
