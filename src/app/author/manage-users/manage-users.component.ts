@@ -77,6 +77,9 @@ export class ManageUsersComponent implements OnInit {
       backdrop: true,
       ignoreBackdropClick: true
     };
+  label: boolean;
+  fieldtype: boolean;
+  placehoder: boolean;
 
   constructor(private http:Http, private pagerService: PagerService,
     private router: Router,private _compiler: Compiler,public route:ActivatedRoute,private cookieService: CookieService,private authService :AuthServiceService,private modalService: BsModalService,private _notifications: NotificationsService,public GetItemService:GetItemService) {
@@ -2879,7 +2882,19 @@ export class ManageUsersComponent implements OnInit {
   }
 
   addNewField(obj1, obj2, closeModel?:string) {
-
+    const pattern1 = /^[^\s].*/;
+    this.label = false;
+    this.fieldtype = false;
+    this.placehoder =false;
+    if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
+        this.label = true;
+    }
+    if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
+      this.label = true;
+    }
+  if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
+    this.label = true;
+}
     // if(this.newrequired == false)
     // {
     //   this.newrequiredfield = '0';
