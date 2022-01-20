@@ -204,6 +204,10 @@ export class CreateRubricComponent implements OnInit {
       this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
       return;
     }
+    if(!this.checkIfValid3()){//checks if numbers are in series
+      this._notifications.error('','Incorrect Value(s) entered. Please read instructions!');
+      return;
+    }
     if(this.check_keywords == true){
       this._notifications.error('','Keywords are required!');
       return;
@@ -228,7 +232,6 @@ export class CreateRubricComponent implements OnInit {
           prevHiherThanLast=true;
           isValid=false;
         }
-        let decPart = (y.point+"").split(".")[1];
         if(y.point%0.25!=0 && (+(Math.floor( y.point ) - y.point).toFixed(2))%0.33!=0){
           notValid=true;
           isValid=false;
@@ -258,7 +261,9 @@ export class CreateRubricComponent implements OnInit {
      for(let j=0;j<arr[i].length;j++){
 
        if(j==0){
-         if(arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33==0){
+         if(arr[i][j]==0 || arr[i][j]%1==0)
+          type=3;
+         else if(arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33==0){
           type=2;
          }
        }
@@ -267,8 +272,35 @@ export class CreateRubricComponent implements OnInit {
            isValid=false;
          else if(type==2 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33!=0)
            isValid=false;
+          else if(type==3 && arr[i][j]%0.25!=0 && (+(Math.floor( arr[i][j] ) - arr[i][j]).toFixed(2))%0.33!=0)
+            isValid=false;
       }
 
+     }
+   }
+   return isValid;
+  }
+
+  checkIfValid3(){
+    let arr=[];
+    for(let i=0;i<this.rubricItems[0].criteria.length;i++){
+      let arr2=[];
+      for(let j=0;j<this.rubricItems.length;j++){
+        arr2.push(this.rubricItems[j].criteria[i].point)
+      }
+      arr.push(arr2);
+      arr2=[];
+    }
+  let isValid=true;
+   for(let i=0;i<arr.length;i++){
+     for(let j=0;j<arr[i].length;j++){
+       if(j>0){
+         let decVal=+(arr[i][j]-arr[i][j-1]).toFixed(2);
+         if(decVal!= 1 && decVal!=0.25 && decVal!=0.33 && decVal!=0.34){
+           console.log('problem',decVal)
+          isValid=false;
+        }
+       }
      }
    }
    return isValid;
