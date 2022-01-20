@@ -2886,15 +2886,15 @@ export class ManageUsersComponent implements OnInit {
     this.label = false;
     this.fieldtype = false;
     this.placehoder =false;
-    if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
-        this.label = true;
-    }
-    if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
+    if (this.newFieldLabel == "" || this.newFieldLabel == null || this.newFieldLabel.length == 0) {
       this.label = true;
     }
-  if (this.newFieldLabel == "" || !pattern1.test(this.newFieldLabel)) {
-    this.label = true;
-}
+    if (this.newFieldType == "" || this.newFieldType == null || this.newFieldType.length == 0) {
+      this.fieldtype = true;
+    }
+    if (this.newPlaceholdername == "" || this.newPlaceholdername == null || this.newPlaceholdername.length == 0) {
+      this.placehoder = true;
+    }
     // if(this.newrequired == false)
     // {
     //   this.newrequiredfield = '0';
