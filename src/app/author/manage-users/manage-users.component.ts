@@ -975,6 +975,8 @@ export class ManageUsersComponent implements OnInit {
 closeModal(){
   if(this.uploadedsuccessfully){
     $('#importdata').modal('hide');
+    this.fileToUpload = null,
+    this.uploadedsuccessfully = false;
   }
 }
   uploadUsers(event) {
