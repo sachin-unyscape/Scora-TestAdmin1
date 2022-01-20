@@ -174,15 +174,18 @@
                         <div class="form-group">
                             <label>File Type</label>
                             <select name="" id="" class="select h52 w-100">
-                                <option value="Please select">Please select</option>
+                                <option value="">Please select</option>
+                                <option value="xlsx">xlsx</option>
+                                <option value="xls">xls</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Upload File</label>
                             <div class="custom-files">
-                                <input type="file"  accept=".xlsx" name="file" id="" (change)="handleFileInput($event.target.files)">
+                                <input type="file"  accept="" name="file" id="" (change)="handleFileInput($event.target.files)">
                                 <div class="file-chose">
-                                    <span>Please select</span>
+                                    <span *ngIf="!fileToUpload">Please select</span>
+                                    <span *ngIf="fileToUpload && uploadedsuccessfully">{{fileToUpload.name}}</span>
                                     <span class="upload">Upload</span>
                                 </div>
                             </div>
@@ -204,7 +207,7 @@
                 </div>
             </div>
             <div class="button-groups">
-                <button class="default-btn mr-3 w190" (click)="uploadUsers($event)">Done</button>
+                <button class="default-btn mr-3 w190" (click)="closeModal()">Done</button>
                 <button class="skip-btn w190" (click)="close()" >Cancel</button>
             </div>
         </div>
