@@ -171,7 +171,7 @@
                                                                 placeholder="Enter description" /><br />
                                                             Points : <input placeholder="Points"
                                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                maxlength="3" type="number"
+                                                                maxlength="4" type="number"
                                                                 [(ngModel)]="list2.criteria[i].point"
                                                                 (keyup)="getTotalPoints()" /><br />
                                                             <span class="text-info"
