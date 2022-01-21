@@ -60,7 +60,7 @@ export class ManageUsersComponent implements OnInit {
   extension: any;
   virusScanning: boolean;
   uploadText:boolean=true;
-  uploadedsuccessfully: boolean;
+  uploadedsuccessfully: boolean = false;
   mandatoryFieldCheckBoxFlag=false;
   currentPage=1;
   edit_first_name="";
@@ -972,7 +972,13 @@ export class ManageUsersComponent implements OnInit {
     console.log(this.fileToUpload);
     this.uploadUsers(files);
 }
-
+closeModal(){
+  if(this.uploadedsuccessfully){
+    $('#importdata').modal('hide');
+    this.fileToUpload = null,
+    this.uploadedsuccessfully = false;
+  }
+}
   uploadUsers(event) {
     this.showBulkUploadDiv = false;
     console.log('function called!')

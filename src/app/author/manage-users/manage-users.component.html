@@ -174,15 +174,18 @@
                         <div class="form-group">
                             <label>File Type</label>
                             <select name="" id="" class="select h52 w-100">
-                                <option value="Please select">Please select</option>
+                                <option value="">Please select</option>
+                                <option value="xlsx">xlsx</option>
+                                <option value="xls">xls</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Upload File</label>
                             <div class="custom-files">
-                                <input type="file"  accept=".xlsx" name="file" id="" (change)="handleFileInput($event.target.files)">
+                                <input type="file"  accept="" name="file" id="" (change)="handleFileInput($event.target.files)">
                                 <div class="file-chose">
-                                    <span>Please select</span>
+                                    <span *ngIf="!fileToUpload">Please select</span>
+                                    <span *ngIf="fileToUpload && uploadedsuccessfully">{{fileToUpload.name}}</span>
                                     <span class="upload">Upload</span>
                                 </div>
                             </div>
@@ -193,18 +196,18 @@
                             <div class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
                         </div>
                         <div class="form-group">
-                            <div *ngIf = "virusScanning == true" style="line-height: 87px" class="scan"><img src="src/assets/img/scan-loader.png" alt=""> <span>Scanning for Viruses</span></div>
-                            <div *ngIf="virus" style="line-height: 87px"  class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Your file is infected. Please clean-up, quarantine and attempt upload again.</span></div>
-                            <div *ngIf="size" style="line-height: 87px" class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Files beyond 5MB cannot be uploaded.</span></div>
-                            <div *ngIf="extension" style="line-height: 87px" class="virus"><img src="src/assets/img/virus.png" alt=""> <span>File type allowed only:jpeg, jpg, png.</span> </div>
-                            <div *ngIf = "virusScanning == false && extension == false && size== false && virus == false" style="line-height: 87px" class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
-                            <div *ngIf = "uploadedsuccessfully" style="line-height: 87px" class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Successfully Uploaded!</span></div>
+                            <div *ngIf = "virusScanning == true"  class="scan"><img src="src/assets/img/scan-loader.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div *ngIf="virus"   class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Your file is infected. Please clean-up, quarantine and attempt upload again.</span></div>
+                            <div *ngIf="size"  class="virus"><img src="src/assets/img/virus.png" alt=""> <span>Files beyond 5MB cannot be uploaded.</span></div>
+                            <div *ngIf="extension"  class="virus"><img src="src/assets/img/virus.png" alt=""> <span>File type allowed only:jpeg, jpg, png.</span> </div>
+                            <div *ngIf = "virusScanning == false && extension == false && size== false && virus == false"  class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Scanning for Viruses</span></div>
+                            <div *ngIf = "uploadedsuccessfully"  class="suc-upload"><img src="src/assets/img/suc-upload.png" alt=""> <span>Successfully Uploaded!</span></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="button-groups">
-                <button class="default-btn mr-3 w190" (click)="uploadUsers($event)">Done</button>
+                <button class="default-btn mr-3 w190" (click)="closeModal()">Done</button>
                 <button class="skip-btn w190" (click)="close()" >Cancel</button>
             </div>
         </div>
