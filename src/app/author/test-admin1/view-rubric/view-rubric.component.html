@@ -154,7 +154,7 @@
                                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                                             alt=""></a>
                                                                     <!-- <span class="grey font-14">Column header 2</span> -->
-                                                                    <a class="deleteMain" [class.disabled]="rubricItems.length<2 || rubricItems.length<=rubric_col.length"
+                                                                    <a class="deleteMain" [class.disabled]="rubricItems.length<2"
                                                                         (click)="deleteMainItem(i)"><img
                                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
                                                                             alt=""></a>
@@ -183,15 +183,15 @@
                                                                 maxlength="4" type="number"
                                                                 [(ngModel)]="list2.criteria[i].point"
                                                                 (keyup)="getTotalPoints()" /><br />
-                                                            <span class="text-info"
+                                                            <!-- <span class="text-info"
                                                                 *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
-                                                                enter point > {{getLastPoint(i2,i)}}</span>
+                                                                enter point > {{getLastPoint(i2,i)}}</span> -->
                                                         </td>
                                                         <td class="tablecell"><a class="addSub" [class.disabled]="rubricItems[0].criteria.length>3"
                                                             (click)="addSubItems(i)"><img
                                                                 src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                                 alt=""></a>
-                                                        <a class="deleteSub" [class.disabled]="rubricItems[0].criteria.length<2 || rubricItems[0].criteria.length<=rubric.length"
+                                                        <a class="deleteSub" [class.disabled]="rubricItems[0].criteria.length<2"
                                                             (click)="deleteSubItems(i)"><img
                                                                 src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
                                                                 alt=""></a></td>

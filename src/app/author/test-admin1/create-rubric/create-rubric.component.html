@@ -106,9 +106,9 @@
                                                         maxlength="4" type="number"
                                                         [(ngModel)]="list2.criteria[i].point"
                                                         (keyup)="getTotalPoints()" /></div><br />
-                                                    <span class="text-info"
+                                                    <!-- <span class="text-info"
                                                         *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
-                                                        enter point > {{getLastPoint(i2,i)}}</span>
+                                                        enter point > {{getLastPoint(i2,i)}}</span> -->
                                                 </td>
                                                 <td class="tablecell">
                                                     <a class="addSub" [class.disabled]="rubricItems[0].criteria.length>3"
