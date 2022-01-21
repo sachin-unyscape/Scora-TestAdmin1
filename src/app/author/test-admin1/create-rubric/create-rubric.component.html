@@ -10,7 +10,8 @@
                         <div class="card-header p-4">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <h3 class="card-title mt-2"><a (click)="backClicked()"><i class="fa fa-angle-left mr-2"></i> Create
+                                    <h3 class="card-title mt-2"><a (click)="backClicked()"><i
+                                                class="fa fa-angle-left mr-2"></i> Create
                                             Rubric</a></h3>
                                 </div>
 
@@ -41,81 +42,120 @@
                                     <a class="close close-intro" href="javascript:void(0)">
                                         <img src="src/assets/test-admin1-assets/img/author-icons/close-icon.svg" alt="">
                                     </a>
-                                    <p>A Rubric is a framework for grading constructed responses such as descriptive answers,
-                                        fill-in or assignments. Rubrics are used to establish a standard guideline when multiple
-                                        examiners are grading responses for the same question Item to ensure objectivity and
+                                    <p>A Rubric is a framework for grading constructed responses such as descriptive
+                                        answers,
+                                        fill-in or assignments. Rubrics are used to establish a standard guideline when
+                                        multiple
+                                        examiners are grading responses for the same question Item to ensure objectivity
+                                        and
                                         consistency.</p>
                                     <div class="ttl">Adding Rows and Columns</div>
-                                    <p>SCORA allows you to create your own customised Rubric for a question Item that requires manual scoring (Free Text:
-                                        Descriptive and Fill-in and Upload Item Types) using a table structure. Use the Rows to create additional ‘criteria’
-                                        and columns to define ‘proficiency levels’ under each criterion. Click on ‘+’ and ‘- icons to add or delete rows and
+                                    <p>SCORA allows you to create your own customised Rubric for a question Item that
+                                        requires manual scoring (Free Text:
+                                        Descriptive and Fill-in and Upload Item Types) using a table structure. Use the
+                                        Rows to create additional ‘criteria’
+                                        and columns to define ‘proficiency levels’ under each criterion. Click on ‘+’
+                                        and ‘- icons to add or delete rows and
                                         columns, as required.
                                     </p>
                                     <div class="ttl">Assigning Points</div>
-                                    <p>You can assign maximum ‘Points’ that can be awarded for each proficiency level, moving from lowest in the first
-                                        column to the highest level in the last column, for a given parameter. Points can either be positive whole numbers
-                                        or multiples of either 0.25 (1/4) or 0.33 (1/3). Also, you cannot enter multiples of 0.25 and multiples of 0.33 as
+                                    <p>You can assign maximum ‘Points’ that can be awarded for each proficiency level,
+                                        moving from lowest in the first
+                                        column to the highest level in the last column, for a given parameter. Points
+                                        can either be positive whole numbers
+                                        or multiples of either 0.25 (1/4) or 0.33 (1/3). Also, you cannot enter
+                                        multiples of 0.25 and multiples of 0.33 as
                                         values for different cells in the same row.</p>
                                     <div class="ttl">Keywords</div>
-                                    <p>Rubrics can be reused for other question Items with or without editing. Edited Rubrics are automatically assigned new
-                                        version numbers. Add unique Keywords for each Rubric version that will help users search and retrieve relevant
-                                        Rubrics. In SCORA, each Item used in a Test Bank will have a unique Rubric assigned for scoring responses to that
+                                    <p>Rubrics can be reused for other question Items with or without editing. Edited
+                                        Rubrics are automatically assigned new
+                                        version numbers. Add unique Keywords for each Rubric version that will help
+                                        users search and retrieve relevant
+                                        Rubrics. In SCORA, each Item used in a Test Bank will have a unique Rubric
+                                        assigned for scoring responses to that
                                         Item in that particular test.</p>
-                                    </div>
-                                    </div>
+                                </div>
+                            </div>
 
                             <!-- ------------------------ -->
-                            <div class="text">
-                                <div class="table-responsive">
+                            <div class="create-table">
+                                <div class="border-bottom">
                                     <table class="rubic-table" id="hoursContainer">
+                                        <style>
+                                            .table-input {
+                                                border: 0;
+                                                text-align: center;
+                                                font-size: 14px;
+                                                font-weight: 500;
+                                                color: #979a9c;
+                                            }
+                                        </style>
                                         <thead>
                                             <tr>
-                                                <th  style="min-width: 180px;"><span class="primary">Total Points: {{totalPoints | number:'1.2-2'}}</span></th>
-                                                <th class="tableHead" *ngFor="let list of rubricItems; let i=index">
-                                                    <input type="text" [(ngModel)]="list.performance_rating_name" placeholder="Enter title" />
-                                                    <a class="addMain" [class.disabled]="rubricItems.length>3" (click)="addMainItem(i)"><img
-                                                            src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
-                                                            alt=""></a>
-                                                    <a class="deleteMain" [class.disabled]="rubricItems.length<2"
-                                                        (click)="deleteMainItem(i)"><img
-                                                            src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
-                                                            alt=""></a>
+                                                <th style="min-width: 180px;"><span class="primary">Total Points:
+                                                        {{totalPoints | number:'1.2-2'}}</span></th>
+                                                <th class="tableHead relative"
+                                                    *ngFor="let list of rubricItems; let i=index">
+                                                    <input type="text" class="table-input"
+                                                        [(ngModel)]="list.performance_rating_name"
+                                                        placeholder="Enter title" />
+                                                    <a class="addMain add-row" [class.disabled]="rubricItems.length>3"
+                                                        (click)="addMainItem(i)">
+                                                        <img src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
+                                                            alt="">
+                                                    </a>
+                                                    <a class="deleteMain delete-row"
+                                                        [class.disabled]="rubricItems.length<2"
+                                                        (click)="deleteMainItem(i)">
+                                                        <img src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
+                                                            alt="">
+                                                    </a>
                                                 </th>
-                                                <th class="relative">
-                                                    <!-- <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
+                                                <!-- <th class="relative">
+                                                    <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
                                                         class="add-row"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt=""></a>
                                                     <a [class.disabled]="rubricItems.length<2"
                                                         (click)="deleteMainItem()" class="delete-row"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
-                                                            alt=""></a> -->
-                                                </th>
+                                                            alt=""></a> 
+                                                </th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let list of rubricItems[0].criteria; let i=index" class="tablerow">
-                                                <td><span class="bold text-center d-block"><input [(ngModel)]="list.criteria_name"
-                                                            placeholder="Enter criteria name" /></span></td>
-                                                <td *ngFor="let list2 of rubricItems; let i2=index">
-                                                    <input type="text" [(ngModel)]="list2.criteria[i].description"
-                                                        placeholder="Enter description" /><br />
-                                                        <div class="points">    
-                                                    Points : <input placeholder="Points"
-                                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                        maxlength="4" type="number"
-                                                        [(ngModel)]="list2.criteria[i].point"
-                                                        (keyup)="getTotalPoints()" /></div><br />
+                                            <tr *ngFor="let list of rubricItems[0].criteria; let i=index"
+                                                class="tablerow">
+                                                <td>
+                                                    <span class="bold text-center d-block">
+                                                        <input [(ngModel)]="list.criteria_name" class="table-input"
+                                                            placeholder="Enter criteria name" />
+                                                    </span>
+                                                </td>
+                                                <td class="relative" *ngFor="let list2 of rubricItems; let i2=index">
+                                                    <textarea style="resize: none;" type="text"
+                                                        [(ngModel)]="list2.criteria[i].description" class="table-input"
+                                                        placeholder="Enter description"></textarea>
+                                                    <div class="points border-top pt-2 mt-2">
+                                                        <span class="left">Points</span>
+                                                        <span class="right">
+                                                            <input placeholder="Points"
+                                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                                maxlength="4" type="text"
+                                                                [(ngModel)]="list2.criteria[i].point"
+                                                                (keyup)="getTotalPoints()"
+                                                                class="form-control" /></span>
+                                                    </div>
                                                     <!-- <span class="text-info"
                                                         *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
                                                         enter point > {{getLastPoint(i2,i)}}</span> -->
-                                                </td>
-                                                <td class="tablecell">
-                                                    <a class="addSub" [class.disabled]="rubricItems[0].criteria.length>3"
+                                                    <a class="addSub add-col"
+                                                        [class.disabled]="rubricItems[0].criteria.length>3"
                                                         (click)="addSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt=""></a>
-                                                    <a class="deleteSub" [class.disabled]="rubricItems[0].criteria.length<2"
+                                                    <a class="deleteSub delete-col"
+                                                        [class.disabled]="rubricItems[0].criteria.length<2"
                                                         (click)="deleteSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
                                                             alt=""></a>
@@ -128,11 +168,12 @@
                                     <input type="text" (keyup)="replaceSpace()" [(ngModel)]="keywords"
                                         class="form-control" placeholder="Type keywords"
                                         style="width: calc(100% - 320px); margin-right: 15px; float: left;">
-                                    <input type="text" class="form-control" value="V {{this.rubricData.version}}" [disabled]="true" placeholder="Type keywords"
+                                    <input type="text" class="form-control" value="V {{this.rubricData.version}}"
+                                        [disabled]="true" placeholder="Type keywords"
                                         style="max-width:305px; float: left; background-color: var(--secound);">
                                     <div class="clearfix"></div>
                                 </div>
-                               
+
                             </div>
                             <!-- ----------------------- -->
 
@@ -167,7 +208,7 @@
             <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">×</span>
             </button>
-            <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Tags
+            <div class="title"><img src="src/assets/test-admin1-assets/img/author-icons/tag-icon.svg" alt=""> Item Tag
             </div>
             <div class="text m-0">
                 <table class="tables m-0 w-100">
@@ -272,7 +313,7 @@
 
 <!-- Modal Rubic Preview-->
 <div class="modal fade modal-custom" id="rubicpreview" tabindex="-1" aria-labelledby="exampleModalLabel1"
-aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" role="document" style="max-width: 1285px;">
         <div class="modal-content" style=" min-width: auto; background: #F5F6F8; padding: 24px;">
             <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
