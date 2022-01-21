@@ -99,7 +99,7 @@
                                                     <input type="text" class="table-input"
                                                         [(ngModel)]="list.performance_rating_name"
                                                         placeholder="Enter title" />
-                                                    <a class="addMain add-row" [class.disabled]="rubricItems.length>3"
+                                                    <a class="addMain add-row" [class.disabled]="rubricItems.length>4"
                                                         (click)="addMainItem(i)">
                                                         <img src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt="">
@@ -149,12 +149,12 @@
                                                     <!-- <span class="text-info"
                                                         *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
                                                         enter point > {{getLastPoint(i2,i)}}</span> -->
-                                                    <a class="addSub add-col"
-                                                        [class.disabled]="rubricItems[0].criteria.length>3"
+                                                    <a *ngIf="i2==rubricItems.length-1" class="addSub add-col"
+                                                        [class.disabled]="rubricItems[0].criteria.length>4"
                                                         (click)="addSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt=""></a>
-                                                    <a class="deleteSub delete-col"
+                                                    <a *ngIf="i2==rubricItems.length-1" class="deleteSub delete-col"
                                                         [class.disabled]="rubricItems[0].criteria.length<2"
                                                         (click)="deleteSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
