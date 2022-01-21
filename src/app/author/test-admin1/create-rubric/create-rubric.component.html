@@ -71,24 +71,30 @@
                                         <thead>
                                             <tr>
                                                 <th  style="min-width: 180px;"><span class="primary">Total Points: {{totalPoints | number:'1.2-2'}}</span></th>
-                                                <th *ngFor="let list of rubricItems">
+                                                <th class="tableHead" *ngFor="let list of rubricItems; let i=index">
                                                     <input type="text" [(ngModel)]="list.performance_rating_name" placeholder="Enter title" />
+                                                    <a class="addMain" [class.disabled]="rubricItems.length>3" (click)="addMainItem(i)"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
+                                                            alt=""></a>
+                                                    <a class="deleteMain" [class.disabled]="rubricItems.length<2"
+                                                        (click)="deleteMainItem(i)"><img
+                                                            src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
+                                                            alt=""></a>
                                                 </th>
                                                 <th class="relative">
-                                                    <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
+                                                    <!-- <a [class.disabled]="rubricItems.length>3" (click)="addMainItem()"
                                                         class="add-row"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt=""></a>
-                                                    <!-- <span class="grey font-14">Column header 2</span> -->
                                                     <a [class.disabled]="rubricItems.length<2"
                                                         (click)="deleteMainItem()" class="delete-row"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
-                                                            alt=""></a>
+                                                            alt=""></a> -->
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let list of rubricItems[0].criteria; let i=index">
+                                            <tr *ngFor="let list of rubricItems[0].criteria; let i=index" class="tablerow">
                                                 <td><span class="bold text-center d-block"><input [(ngModel)]="list.criteria_name"
                                                             placeholder="Enter criteria name" /></span></td>
                                                 <td *ngFor="let list2 of rubricItems; let i2=index">
@@ -104,20 +110,13 @@
                                                         *ngIf="i2>0 && (getLastPoint(i2,i)>list2.criteria[i].point)">*
                                                         enter point > {{getLastPoint(i2,i)}}</span>
                                                 </td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody>
-                                            <tr>
-                                                <td><br /><br /></td>
-                                                <td *ngFor="let data2 of headingsList"></td>
-                                                <td class="relative">
-                                                    <a [class.disabled]="rubricItems[0].criteria.length>3"
-                                                        (click)="addSubItems()" class="add-col mb-2"><img
+                                                <td class="tablecell">
+                                                    <a class="addSub" [class.disabled]="rubricItems[0].criteria.length>3"
+                                                        (click)="addSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/add-icon.svg"
                                                             alt=""></a>
-                                                    <a [class.disabled]="rubricItems[0].criteria.length<2"
-                                                        (click)="deleteSubItems()" class="delete-col"><img
+                                                    <a class="deleteSub" [class.disabled]="rubricItems[0].criteria.length<2"
+                                                        (click)="deleteSubItems(i)"><img
                                                             src="src/assets/test-admin1-assets/img/author-icons/minus-icon.svg"
                                                             alt=""></a>
                                                 </td>

@@ -251,12 +251,14 @@ export class ViewRubricComponent implements OnInit {
   getLastPoint(index1:number,index2:number){
     return this.rubricItems[index1-1].criteria[index2].point;
   }
-  deleteMainItem() {
-    this.rubricItems.pop();
+
+  deleteMainItem(i:number) {
+    // this.rubricItems.pop();
+    this.rubricItems.splice(i,1);
     this.getTotalPoints();
   }
 
-  addMainItem() {
+  addMainItem(i:number) {
     let no = this.rubricItems[0].criteria.length;
     let subItems = [];
     for (let i = 0; i < no; i++) {
@@ -266,28 +268,36 @@ export class ViewRubricComponent implements OnInit {
         'point': 0.0
       })
     }
-    this.rubricItems.push({
+    let newArr= {
       'performance_rating_name': '',
       'selected_value':0.00,
       'criteria': subItems
-    })
+    }
+    this.rubricItems.splice(i+1, 0, newArr);
     this.getTotalPoints();
   }
 
-  addSubItems() {
+  addSubItems(i:number) {
     this.rubricItems.forEach(x => {
-      x.criteria.push({
+      let newArr={
         'criteria_name': '',
         'description': '',
         'point': 0.0
-      })
+      };
+      // x.criteria.push({
+      //   'criteria_name': '',
+      //   'description': '',
+      //   'point': 0.0
+      // })
+      x.criteria.splice(i+1,0,newArr);
     })
     this.getTotalPoints();
   }
 
-  deleteSubItems() {
+  deleteSubItems(i:number) {
     this.rubricItems.forEach(x => {
-      x.criteria.pop();
+      // x.criteria.pop();
+      x.criteria.splice(i,1);
     })
     this.getTotalPoints();
   }

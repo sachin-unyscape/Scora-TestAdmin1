@@ -17,3 +17,28 @@
   color:rgb(235, 61, 61);
   text-align: left;
 }
+
+.tablecell:hover::before .addSub {
+  display: block;
+}
+.tablerow:hover .addSub  {
+  display: block;
+}
+.tablecell:hover::before .deleteSub {
+  display: block;
+}
+.tablerow:hover .deleteSub  {
+  display: block;
+}
+
+.addSub, .deleteSub, .addMain, .deleteMain{
+  display: none;
+}
+
+.tableHead:hover .addMain{
+  display:block;
+}
+
+.tableHead:hover .deleteMain{
+  display:block;
+}
