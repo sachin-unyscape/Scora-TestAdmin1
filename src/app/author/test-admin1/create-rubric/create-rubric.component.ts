@@ -316,7 +316,7 @@ export class CreateRubricComponent implements OnInit {
   }
 
   replaceSpace(){
-    this.keywords=this.keywords.replace(/ /g,",");
+    this.keywords=this.keywords.replace(/[ ,]+/g, ", ");
     return 1;
   }
 

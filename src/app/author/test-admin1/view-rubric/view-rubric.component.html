@@ -210,7 +210,7 @@
                                                                     <input placeholder="Points"
                                                                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                                                         maxlength="4" type="text"
-                                                                        [(ngModel)]="list2.criteria[i].point"
+                                                                        [ngModel]="list2.criteria[i].point | number:'1.2-2'" (focusout)="list2.criteria[i].point=$event.target.value"
                                                                         (keyup)="getTotalPoints()"
                                                                         class="form-control" /></span>
                                                             </div>
