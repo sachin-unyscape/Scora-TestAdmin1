@@ -83,6 +83,11 @@ import { EditorModule } from "@tinymce/tinymce-angular";
 import { ScoraInsightsComponent } from './test-admin1/scora-insights/scora-insights.component';
 import { Ng5SliderModule } from 'ng5-slider';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { TestbankListingComponent } from './test-admin1/testbank-listing/testbank-listing.component';
+import { ViewItemsComponent } from './test-admin1/view-items/view-items.component';
+import { ViewItemsEditComponent } from './test-admin1/view-items-edit/view-items-edit.component';
+import { CreateTestSchemaComponent } from './test-admin1/create-test-schema/create-test-schema.component';
+import { MarkingSchemaComponent } from './test-admin1/marking-schema/marking-schema.component';
 
 @NgModule({
   imports: [
@@ -148,6 +153,11 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     ViewRubricComponent,
     CreateRubricComponent,
     ScoraInsightsComponent,
+    TestbankListingComponent,
+    ViewItemsComponent,
+    ViewItemsEditComponent,
+    CreateTestSchemaComponent,
+    MarkingSchemaComponent,
   ],
   providers: [GetItemService,CookieService,PagerService,AuthServiceService],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
