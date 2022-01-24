@@ -1,0 +1,136 @@
+<app-loader *ngIf="showload"></app-loader>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h3 class="card-title">Test Banks</h3>
+                                </div>
+
+                                <div class="col-md-9 text-right">
+                                    <div class="adduser-action">
+                                        <a [routerLink]="['/author/create-test-schema']" class="take-test" style="margin-right: 70px; margin-top: 10px;">Create Test Bank</a>
+                                        <div class="serach-wrap">
+                                            <input type="text" class="form-control" placeholder="Search here" (keyup)="filterUsers($event.target.value)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <div class="table-responsive">
+                                <table class="custom-table v-top">
+                                    <thead>
+                                        <tr>
+                                            <th>Test Bank</th>
+                                            <th>Date Created</th>
+                                            <th>Author</th>
+                                            <th>Total Items</th>
+                                            <th>Action</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of pagedItems;let i=index">
+                                            <td>{{data.test_bank_name}}</td>
+                                            <td>{{data.formatted_date}}</td>
+                                            <td>{{data.Tenant_user_nm}}</td>
+                                            <td>{{data.No_Of_Items_In_Pool}}</td>
+                                            <td>
+                                                <a [routerLink]="['/author/view-items-edit']" *ngIf="roles.includes('Edit') && data.test_bank_name == null">
+                                                    <img src="src/assets/test-admin1-assets/img/author-icons/edit-icons.svg" alt="">
+                                                </a>
+                                                <a [routerLink]="['/author/view-items',data.ItemSet_ID]" *ngIf="roles.includes('View') && data.test_bank_name != null">
+                                                    <img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a (click)= "onDelete(data.ItemSet_ID)">
+                                                    <img src="src/assets/test-admin1-assets/img/author-icons/delete-icon.svg" alt="">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-md-12 mt-5 mb-5 text-center"   *ngIf="!pagedItems || pagedItems.length==0">
+                                    <figure>
+                                        <img src="src/assets/img/admin-icons/dashboardnodata.png">
+                                    </figure>
+                                    <p style="margin: 25px;font-size: 30px;color: silver;">No data to show </p>
+                                </div>
+                            </div>
+
+                            <div class="pagination-custom">
+                                <ul *ngIf="pager.pages && pager.pages.length">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}" class="disabled">
+                                        <a (click)="setPage(pager.currentPage - 1)"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages" class="active">
+                                        <a [class.active-selected-page]="page==currentPage"
+                                            (click)="setPage(page)">{{page}}</a>
+                                        <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                    </li>
+
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.currentPage + 1)"><i
+                                                class="fa fa-angle-right"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+   <!-- Delete Modal -->
+   <div class="modal fade delete-modal" id="delete" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" (click)="notDeleteUserPopup()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <figure class="delete-img">
+                <img src="src/assets/img/delete-img.png" alt="">
+            </figure>
+            <div class="title">Delete?</div>
+            <p class="text">This will delete the user permanently.<br> Are you sure you want to proceed?</p>
+            <div class="button-groups">
+                <button (click)="deleteTestBank()" class="delete-btn w190 mb-3">Delete</button>
+                <button (click)="notDeleteUserPopup()" class="white-btn w190">No! Go back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ <!--multiple Delete success model -->
+ <div class="modal fade delete-modal " id="multi-delete-succ" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" (click)="closeSucessDelete()" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <figure class="delete-img mt-5 pt-5">
+                <img src="src/assets/img/delete.svg" alt="">
+            </figure>
+            <div class="title">Successfully Deleted!</div>
+        </div>
+    </div>
+</div>
+ <!--multiple Delete success model end-->
+
+<simple-notifications></simple-notifications>

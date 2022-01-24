@@ -34,6 +34,10 @@ import { TRUEFALSEComponent } from '../item-menu/add-new/true-false.component';
 import { RubricListingComponent } from './test-admin1/rubric-listing/rubric-listing.component';
 import { CreateRubricComponent } from './test-admin1/create-rubric/create-rubric.component';
 import { ViewRubricComponent } from './test-admin1/view-rubric/view-rubric.component';
+import { TestbankListingComponent } from './test-admin1/testbank-listing/testbank-listing.component';
+import { ViewItemsComponent } from './test-admin1/view-items/view-items.component';
+import { ViewItemsEditComponent } from './test-admin1/view-items-edit/view-items-edit.component';
+import { CreateTestSchemaComponent } from './test-admin1/create-test-schema/create-test-schema.component';
 
 const routes: Routes = [
   {
@@ -259,6 +263,34 @@ const routes: Routes = [
     component: ViewRubricComponent,
     data: {
       title: 'view-listing'
+    }
+  },
+  {
+    path: 'test-bank',
+    component: TestbankListingComponent,
+    data: {
+      title: 'test-bank'
+    }
+  },
+  {
+    path: 'view-items/:ItemSet_ID',
+    component: ViewItemsComponent,
+    data: {
+      title: 'view-items'
+    }
+  },
+  {
+    path: 'view-items-edit',
+    component: ViewItemsEditComponent,
+    data: {
+      title: 'view-items-edit'
+    }
+  },
+  {
+    path: 'create-test-schema',
+    component: CreateTestSchemaComponent,
+    data: {
+      title: 'view-items-edit'
     }
   },
 
