@@ -131,4 +131,11 @@ export class ViewItemsComponent implements OnInit {
   backClicked() {
     this._location.back();
   }
+
+  transformMinute(value: number): string {
+    let hours = Math.floor(value / 60);
+    let minutes = Math.floor(value % 60);
+    return hours + ' hrs ' + minutes + ' mins';
+  }
+  
 }

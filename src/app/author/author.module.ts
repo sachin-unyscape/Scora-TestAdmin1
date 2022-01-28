@@ -88,6 +88,9 @@ import { ViewItemsComponent } from './test-admin1/view-items/view-items.componen
 import { ViewItemsEditComponent } from './test-admin1/view-items-edit/view-items-edit.component';
 import { CreateTestSchemaComponent } from './test-admin1/create-test-schema/create-test-schema.component';
 import { MarkingSchemaComponent } from './test-admin1/marking-schema/marking-schema.component';
+import { MyDateRangePickerModule } from 'mydaterangepicker';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+
 
 @NgModule({
   imports: [
@@ -117,7 +120,9 @@ import { MarkingSchemaComponent } from './test-admin1/marking-schema/marking-sch
     PopoverModule.forRoot(),
     EditorModule,
     Ng5SliderModule,
-    NgxSliderModule
+    NgxSliderModule,
+    MyDateRangePickerModule,
+    AngularMultiSelectModule
   ],
   declarations: [
    // DashboardComponent,
