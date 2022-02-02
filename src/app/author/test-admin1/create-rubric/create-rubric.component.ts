@@ -322,10 +322,6 @@ export class CreateRubricComponent implements OnInit {
 
 
   previous(){
-    $("#myModal").removeClass("in");
-    $(".modal-backdrop").remove();
-    $('body').removeClass('modal-open');
-    $('body').css('padding-right', '');
     $("#rubicpreview").modal('hide');
   }
 
@@ -353,10 +349,6 @@ export class CreateRubricComponent implements OnInit {
         if (!data.success) {
           return;
         }
-        $("#myModal").removeClass("in");
-        $(".modal-backdrop").remove();
-        $('body').removeClass('modal-open');
-        $('body').css('padding-right', '');
         $("#rubicpreview").modal('hide');
         this.router.navigateByUrl("author/rubric")
         setTimeout(() => {

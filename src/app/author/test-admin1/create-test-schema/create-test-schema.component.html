@@ -1,316 +1,364 @@
 <app-loader *ngIf="showload"></app-loader>
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-          <!-- Main content -->
-          <div class="content p-4">
-              <div class="container-fluid">
-                  <div class="row">
-                      <div class="col-md-12">
-                          <div class="card">
-                              <div class="card-header p-4">
-                                  <div class="row">
-                                      <div class="col-md-6">
-                                          <h3 class="card-title">Blueprint: Test Schema</h3>
-                                      </div>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content p-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header p-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3 class="card-title">Blueprint: Test Schema</h3>
+                                </div>
 
-                                      <div class="col-md-6 text-right">
-                                          <div class="steps-3">
-                                              <ul>
-                                                  <li class="active"><span>1</span></li>
-                                                  <li class=""><span>2</span></li>
-                                                  <li><span>3</span></li>
-                                              </ul>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="pad24">
-                                  <div class="row">
-                                      <div class="col-md-9">
-                                          <div class="row">
-                                              <div class="col-md-4">
-                                                  <div class="form-group">
-                                                      <label class="labels">Blueprint Name</label>
-                                                      <input type="text" [(ngModel)]="blueprint" [ngClass]="{'border-red': blueprint_value == true}" class="form-control" placeholder="Type here">
-                                                      <p class="alertDanger" *ngIf="blueprint_value == true" style="margin-bottom: -2px;">Blueprint is required.</p>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-2">
-                                                  <div class="form-group" *ngIf="metaData">
-                                                      <label class="labels">Item Status</label>
-                                                      <select name="" id="" (change)="getSatusId($event.target.value)" [ngClass]="{'border-red': status_name == true}" class="select  w-100 min-width-auto">
-                                                      <option value="">Select</option>
-                                                      <option value="{{status.id}}" *ngFor="let status of metaData.status_data">{{status.status_name}}</option>
-                                                  </select>
-                                                  <p class="alertDanger" *ngIf="status_name == true" style="margin-bottom: -2px;">Item status is required.</p>
+                                <div class="col-md-6 text-right">
+                                    <div class="steps-3">
+                                        <ul>
+                                            <li class="active"><span>1</span></li>
+                                            <li class=""><span>2</span></li>
+                                            <li><span>3</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pad24">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="labels">Blueprint Name</label>
+                                                <input type="text" [(ngModel)]="blueprint"
+                                                    [ngClass]="{'border-red': blueprint_value == true}"
+                                                    class="form-control" placeholder="Type here">
+                                                <p class="alertDanger" *ngIf="blueprint_value"
+                                                    style="margin-bottom: -2px;">Blueprint is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group" *ngIf="metaData">
+                                                <label class="labels">Item Status</label>
+                                                <select name="" id="" (change)="getSatusId($event.target.value)"
+                                                    [ngClass]="{'border-red': status_name == true}"
+                                                    class="select  w-100 min-width-auto">
+                                                    <option value="">Select</option>
+                                                    <option value="{{status.id}}"
+                                                        *ngFor="let status of metaData.status_data">
+                                                        {{status.status_name}}</option>
+                                                </select>
+                                                <p class="alertDanger" *ngIf="status_name == true"
+                                                    style="margin-bottom: -2px;">Item status is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group" *ngIf="metaData">
+                                                <label class="labels">Item Usage</label>
+                                                <select name="" id="" (change)="getItemUsesId($event.target.value)"
+                                                    [ngClass]="{'border-red': item_name == true}"
+                                                    class="select  w-100 min-width-auto">
+                                                    <option value="">Select</option>
+                                                    <option value="{{usages.id}}"
+                                                        *ngFor="let usages of metaData.usages_data">
+                                                        {{usages.usage_name}}</option>
+                                                </select>
+                                                <p class="alertDanger" *ngIf="item_name == true"
+                                                    style="margin-bottom: -2px;">Item usage is required.</p>
 
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-2">
-                                                  <div class="form-group" *ngIf="metaData">
-                                                      <label class="labels">Item Usage</label>
-                                                      <select name="" id="" (change)="getItemUsesId($event.target.value)" [ngClass]="{'border-red': item_name == true}" class="select  w-100 min-width-auto">
-                                                      <option value="">Select</option>
-                                                      <option value="{{usages.id}}" *ngFor="let usages of metaData.usages_data">{{usages.usage_name}}</option>
-                                                  </select>
-                                                  <p class="alertDanger" *ngIf="item_name == true" style="margin-bottom: -2px;">Item usage is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="labels">Item Date Range</label>
+                                                <!-- <input type="date" class="form-control border-red" placeholder="Type here"> -->
+                                                <my-date-range-picker name="mydaterange"
+                                                    [options]="myDateRangePickerOptions" [(ngModel)]="model"
+                                                    (dateRangeChanged)="onDateRangeChanged($event)" required>
+                                                </my-date-range-picker>
+                                                <p class="alertDanger" *ngIf="date_selected == true"
+                                                    style="margin-bottom: -2px;">Item date range is required.</p>
+                                            </div>
 
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-4">
-                                                  <div class="form-group">
-                                                      <label class="labels">Item Date Range</label>
-                                                      <!-- <input type="date" class="form-control border-red" placeholder="Type here"> -->
-                                                      <my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions" 
-                                                       [(ngModel)]="model" (dateRangeChanged)="onDateRangeChanged($event)" required></my-date-range-picker>
-                                                   <p class="alertDanger" *ngIf="date_selected == true" style="margin-bottom: -2px;">Item date range is required.</p>
-                                                  </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="item-wrap">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <div class="hd">Available Items</div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="number">50</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <div class="hd">Required Items</div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="number">25</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row " *ngFor="let section_item of Sections;let section_index=index ">
+                                <div class="col-md-12">
+                                    <div class="accordion schema-accord" id="accordionExample">
+                                        <!-- accordion 1 -->
+                                        <div class="card-header accord" id="headingOne" data-toggle="collapse"
+                                            data-target="#collapseOne">
+                                            <span class="font16">Section {{section_index+1}} </span>
+                                            <i class="fa fa-angle-up"></i>
+                                        </div>
+                                        <div id="collapseOne" class="accord-body collapse show"
+                                            aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="row mb-3">
+                                                <div class="col-md-3 form-group">
+                                                    <label class="labels">Section Name</label>
+                                                    <input type="text" [(ngModel)]="section_item.section"
+                                                        [ngClass]="{'border-red': section_name == true}"
+                                                        class="form-control" value="">
+                                                    <p class="alertDanger" *ngIf="section_name == true"
+                                                        style="margin-bottom: -2px;">Section Name is required.</p>
 
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="col-md-3">
-                                          <div class="item-wrap">
-                                              <div class="row">
-                                                  <div class="col-md-9">
-                                                      <div class="hd">Available Items</div>
-                                                  </div>
-                                                  <div class="col-md-3">
-                                                      <div class="number">50</div>
-                                                  </div>
-                                              </div>
-                                              <div class="row">
-                                                  <div class="col-md-9">
-                                                      <div class="hd">Required Items</div>
-                                                  </div>
-                                                  <div class="col-md-3">
-                                                      <div class="number">25</div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="row ">
-                                      <div class="col-md-12">
-                                          <div class="accordion schema-accord" id="accordionExample">
-                                              <!-- accordion 1 -->
-                                              <div class="card-header accord" id="headingOne" data-toggle="collapse" data-target="#collapseOne">
-                                                  <span class="font16">Section 1 </span>
-                                                  <i class="fa fa-angle-up"></i>
-                                              </div>
-                                              <div id="collapseOne" class="accord-body collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                                  <div class="row mb-3">
-                                                      <div class="col-md-3 form-group">
-                                                          <label class="labels">Section Name</label>
-                                                          <input type="text" [(ngModel)]="section" [ngClass]="{'border-red': section_name == true}" class="form-control" value="">
-                                                      <p class="alertDanger" *ngIf="section_name == true" style="margin-bottom: -2px;">Section Name is required.</p>
+                                                </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label class="labels">Subject</label>
+                                                    <angular2-multiselect [data]="dropdownList"
+                                                        [(ngModel)]="section_item.selectedItems"
+                                                        [settings]="dropdownSettings"
+                                                        (onSelect)="onItemSelect($event,section_index)"
+                                                        (onDeSelect)="OnItemDeSelect($event,section_index)"
+                                                        (onSelectAll)="onSelectAll($event,section_index)"
+                                                        (onDeSelectAll)="onDeSelectAll($event,section_index)">
+                                                    </angular2-multiselect>
+                                                    <p class="alertDanger" *ngIf="subject_selected == true"
+                                                        style="margin-bottom: -2px;">Subjects are required.</p>
+                                                </div>
 
-                                                      </div>
-                                                      <div class="col-md-6 form-group">
-                                                          <label class="labels">Subject</label>
-                                                          <!-- <select name="" id="" class="select w-100">
-                                                              <option value="">Choose</option>
-                                                              <option value="" *ngFor= "let subject of subjectsData">{{subject.Subject_Nm}}</option>
-                                                        </select> -->
-                                                        <angular2-multiselect [data]="dropdownList"  [(ngModel)]="selectedItems" [settings]="dropdownSettings"
-                                                            (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
-                                                            (onDeSelectAll)="onDeSelectAll($event)"></angular2-multiselect>
-                                                      <p class="alertDanger" *ngIf="subject_selected == true" style="margin-bottom: -2px;">Subjects are required.</p>
-                                                      </div>
+                                                <div class="col-md-3 form-group">
+                                                    <label class="labels">Duration</label>
+                                                    <input type="number" [(ngModel)]="section_item.duration"
+                                                        [ngClass]="{'border-red': duration_value == true}"
+                                                        class="form-control" value=''>
+                                                    <p class="alertDanger" *ngIf="duration_value == true"
+                                                        style="margin-bottom: -2px;">Duration is required.</p>
 
-                                                      <div class="col-md-3 form-group">
-                                                          <label class="labels">Duration</label>
-                                                          <input type="text" [(ngModel)]="duration" [ngClass]="{'border-red': duration_value == true}" class="form-control" value="34">
-                                                      <p class="alertDanger" *ngIf="duration_value == true" style="margin-bottom: -2px;">Duration is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3" *ngIf="section_item.topicsData">
+                                                    <label class="labels">Topic</label>
+                                                    <div class="topic-wrap">
+                                                        <div class="ttl"
+                                                            *ngFor="let subject of section_item.topicsData;let i=index">
+                                                            {{subject[0]?.subject?.Subject_Nm}} <span
+                                                                class="green">(23)</span>
+                                                            <ul class="list">
+                                                                <li
+                                                                    *ngFor="let subject_topic of section_item.topicsData[i][0]?.topic;let i2=index">
+                                                                    {{subject_topic?.Topic_Nm}} <span
+                                                                        class="green">(20)</span>
+                                                                    <a (click)="selectTopic(i,i2,section_index)"
+                                                                        *ngIf="subject_topic.is_select"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg"
+                                                                            alt=""></a>
+                                                                    <a (click)="selectTopic(i,i2,section_index)"
+                                                                        *ngIf="subject_topic.is_select == false"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg"
+                                                                            alt=""></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3" *ngIf="section_item.bloomTaxonomyData">
+                                                    <label class="labels">Bloom's Taxonomy</label>
+                                                    <div class="topic-wrap">
+                                                        <div class="ttl"
+                                                            *ngFor="let item of section_item.bloomTaxonomyData;let i=index">
+                                                            <span *ngIf="item.length > 0">
+                                                                {{item[0]?.subject?.Subject_Nm}} ->
+                                                                {{item[0]?.topicname[0]?.Topic_Nm}} </span>
+                                                            <ul class="list">
+                                                                <li
+                                                                    *ngFor="let item_data of section_item.bloomTaxonomyData[i][0]?.taxonomy;let i2=index">
+                                                                    {{item_data.Taxonomy_Nm}} <span
+                                                                        class="green">(20)</span>
+                                                                    <a (click)="selectBloomTaxonomy(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg"
+                                                                            alt=""></a>
+                                                                    <a (click)="selectBloomTaxonomy(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select == false"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg"
+                                                                            alt=""></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="labels">Item Type</label>
+                                                    <div class="topic-wrap">
+                                                        <div class="ttl"
+                                                            *ngFor="let item of section_item.itemTypeListData;let i=index">
+                                                            <span
+                                                                *ngIf="item.length > 0">{{item[0]?.subject?.Subject_Nm}}
+                                                                -> {{item[0]?.topicname[0]?.Topic_Nm}} ->
+                                                                {{item[0]?.taxonomy[0]?.Taxonomy_Nm}} </span>
+                                                            <ul class="list">
+                                                                <li
+                                                                    *ngFor="let item_data of section_item.itemTypeListData[i][0]?.item[0].itemtype;let i2=index">
+                                                                    {{item_data.Item_Type_Nm}} <span
+                                                                        class="green">(20)</span>
+                                                                    <a (click)="selectItemTypes(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg"
+                                                                            alt=""></a>
+                                                                    <a (click)="selectItemTypes(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select == false"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg"
+                                                                            alt=""></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label class="labels">Difficulty Level</label>
+                                                    <div class="topic-wrap">
+                                                        <div class="ttl"
+                                                            *ngFor="let item of section_item.difficultyLevelListData;let i=index">
+                                                            <span *ngIf="item.length > 0">
+                                                                {{item[0]?.subject?.Subject_Nm}} ->
+                                                                {{item[0]?.topicname[0]?.Topic_Nm}} ->
+                                                                {{item[0]?.taxonomy[0]?.Taxonomy_Nm}} ->
+                                                                {{item[0]?.item[0]?.itemtype[0]?.Item_Type_Nm}} </span>
+                                                            <ul class="list">
+                                                                <li
+                                                                    *ngFor="let item_data of section_item.difficultyLevelListData[i][0]?.difficultylevel;let i2=index">
+                                                                    {{item_data.Diff_Lvl_Nm}} <span
+                                                                        class="green">({{section_item.difficultyLevelListData[i][0]?.difficultylevel_count}})</span>
+                                                                    <a (click)="selectDifficultyLevel(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg"
+                                                                            alt=""></a>
+                                                                    <a (click)="selectDifficultyLevel(i,i2,section_index)"
+                                                                        *ngIf="item_data.is_select == false"
+                                                                        class="add-remove"><img
+                                                                            src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg"
+                                                                            alt=""></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="table-responsive">
+                                                        <table class="custom-table v-top border">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No</th>
+                                                                    <th>Subject</th>
+                                                                    <th>Topic</th>
+                                                                    <th>Bloom's Taxonomy</th>
+                                                                    <th>Item Type</th>
+                                                                    <th>Difficulty</th>
+                                                                    <th>Available Items</th>
+                                                                    <th>Required Items</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody *ngIf="section_item.TableArray.length > 0">
+                                                                <tr
+                                                                    *ngFor="let item of section_item.TableArray;let table_index=index">
+                                                                    <td>{{table_index+1}}</td>
+                                                                    <td>{{item?.subject}}</td>
+                                                                    <td>{{item?.topic}}</td>
+                                                                    <td>{{item?.taxonomy}}</td>
+                                                                    <td>{{item?.itemtype}}</td>
+                                                                    <td>{{item?.difficultyLevel}}</td>
+                                                                    <td>2</td>
+                                                                    <td><input type="number"
+                                                                            [(ngModel)]="item.requiredItems"
+                                                                            class="form-control text-center" value=""
+                                                                            style="width: 70px;"></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                      </div>
-                                                  </div>
-                                                  <div class="row">
-                                                      <div class="col-md-3" *ngIf="topicsData">
-                                                          <label class="labels">Topic</label>
-                                                          <div class="topic-wrap">
-                                                              <div class="ttl" *ngFor="let subject of topicsData;let i=index">{{subject[0]?.subject?.Subject_Nm}} <span class="green">(23)</span>
-                                                              <ul class="list">
-                                                                  <li *ngFor="let subject_topic of topicsData[i][0]?.topic;let i2=index">{{subject_topic?.Topic_Nm}} <span class="green">(20)</span>
-                                                                      <a (click)="selectTopic(i,i2)" *ngIf="subject_topic.is_select"  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                      <a  (click)="selectTopic(i,i2)" *ngIf="subject_topic.is_select == false"  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg" alt=""></a>
-                                                                  </li>
-                                                              </ul>
-                                                            </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-md-3"  *ngIf="bloomTaxonomyData">
-                                                          <label class="labels">Bloom's Taxonomy</label>
-                                                          <div class="topic-wrap">
-                                                              <div class="ttl" *ngFor="let item of bloomTaxonomyData;let i=index"><span *ngIf = "item.length > 0"> {{item[0]?.subject?.Subject_Nm}} -> {{item[0]?.topicname[0]?.Topic_Nm}} </span>
-                                                              <ul class="list">
-                                                                  <li *ngFor="let item_data of bloomTaxonomyData[i][0]?.taxonomy;let i2=index">{{item_data.Taxonomy_Nm}} <span class="green">(20)</span>
-                                                                    <a (click)="selectBloomTaxonomy(i,i2)" *ngIf="item_data.is_select"  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                    <a  (click)="selectBloomTaxonomy(i,i2)" *ngIf="item_data.is_select == false"  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/remove-icon.svg" alt=""></a>
-                                                                  </li>
-                                                              </ul>
-                                                            </div>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-md-3">
-                                                          <label class="labels">Item Type</label>
-                                                          <div class="topic-wrap">
-                                                              <div class="ttl">English -> Coding-Decoding -> Knowledge</div>
-                                                              <ul class="list">
-                                                                  <li>Coding-Decoding <span class="green">(20)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Correction <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Grammar <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Coding-Decoding <span class="green">(20)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Correction <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Grammar <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Coding-Decoding <span class="green">(20)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Correction <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Grammar <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                              </ul>
-                                                          </div>
-                                                      </div>
-                                                      <div class="col-md-3">
-                                                          <label class="labels">Difficulty Level</label>
-                                                          <div class="topic-wrap">
-                                                              <div class="ttl">English -> Coding-Decoding -> Knowledge -> True/False </div>
-                                                              <ul class="list">
-                                                                  <li>Coding-Decoding <span class="green">(20)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Correction <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                                  <li>Grammar <span class="green">(2)</span>
-                                                                      <a  class="add-remove"><img src="src/assets/test-admin1-assets/img/author-icons/adds-icon.svg" alt=""></a>
-                                                                  </li>
-                                                              </ul>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <div class="row">
-                                                      <div class="col-md-12">
-                                                          <div class="table-responsive">
-                                                              <table class="custom-table v-top border">
-                                                                  <thead>
-                                                                      <tr>
-                                                                          <th>S.No</th>
-                                                                          <th>Subject</th>
-                                                                          <th>Topic</th>
-                                                                          <th>Bloom's Taxonomy</th>
-                                                                          <th>Item Type</th>
-                                                                          <th>Difficulty</th>
-                                                                          <th>Available Items</th>
-                                                                          <th>Required Items</th>
-                                                                      </tr>
-                                                                  </thead>
-                                                                  <tbody>
-                                                                      <tr>
-                                                                          <td>1</td>
-                                                                          <td>English</td>
-                                                                          <td>Coding-Decoding</td>
-                                                                          <td>Knowledge</td>
-                                                                          <td>True/False</td>
-                                                                          <td>Easy</td>
-                                                                          <td>2</td>
-                                                                          <td><input type="text" class="form-control text-center" value="2" style="width: 70px;"></td>
-                                                                      </tr>
-                                                                      <tr>
-                                                                          <td>2</td>
-                                                                          <td>English</td>
-                                                                          <td>Coding-Decoding</td>
-                                                                          <td>Knowledge</td>
-                                                                          <td>True/False</td>
-                                                                          <td>Easy</td>
-                                                                          <td>2</td>
-                                                                          <td><input type="text" class="form-control text-center border-red" style="width: 70px;"></td>
-                                                                      </tr>
-                                                                      <tr>
-                                                                          <td>3</td>
-                                                                          <td>English</td>
-                                                                          <td>Coding-Decoding</td>
-                                                                          <td>Knowledge</td>
-                                                                          <td>True/False</td>
-                                                                          <td>Easy</td>
-                                                                          <td>2</td>
-                                                                          <td><input type="text" class="form-control text-center border-red" style="width: 70px;"></td>
-                                                                      </tr>
-                                                                  </tbody>
-                                                              </table>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <a (click)="addSections(section_index)" class="take-test">Add Section</a>
+                                    </div>
+                                </div>
+                            </div>
 
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="row mt-3">
-                                      <div class="col-md-12">
-                                          <a  class="take-test">Add Section</a>
-                                      </div>
-                                  </div>
-                              </div>
+                        </div>
 
-                          </div>
-                          <!-- /.card -->
-                      </div>
-                      <!-- col-md-12 -->
-                      <div class="col-lg-12">
-                          <div class="card">
-                              <div class="card-body pl-3 pr-3">
-                                  <a (click)="goToMarkingSchema()" data-toggle="modal" class="default-btn float-right">Go to Marking Schema</a>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <!-- /.row -->
-              </div>
-              <!-- /.container-fluid -->
-          </div>
-          <!-- /.content -->
-      </div>
-      <!-- /.content-wrapper -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- col-md-12 -->
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body pl-3 pr-3">
+                            <a (click)="goToMarkingSchema()" data-toggle="modal" class="default-btn float-right">Go to
+                                Marking Schema</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
 
-        <!-- Modal Test Bank -->
-    <div class="modal fade modal-custom" id="test-bank" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-modal="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                  </button>
-              <div class="title">Test Bank</div>
-              <div class="modal-body p-0 mt-2">
-                  <div class="form-group">
-                      <label class="labels">Test Bank Name</label>
-                      <input type="text" class="form-control" placeholder="Type here">
-                  </div>
-              </div>
-              <div class="button-groups mt-3">
-                  <button class="default-btn w190 mr-3">Save</button>
-                  <button class="skip-btn w190">No! Go Back</button>
-              </div>
-          </div>
-      </div>
-  </div>
+<!-- Modal Test Bank -->
+<div class="modal fade modal-custom" id="test-bank" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-modal="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <div class="title">Test Bank</div>
+            <div class="modal-body p-0 mt-2">
+                <div class="form-group">
+                    <label class="labels">Test Bank Name</label>
+                    <input type="text" class="form-control" placeholder="Type here">
+                </div>
+            </div>
+            <div class="button-groups mt-3">
+                <button class="default-btn w190 mr-3">Save</button>
+                <button class="skip-btn w190">No! Go Back</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <simple-notifications></simple-notifications>
