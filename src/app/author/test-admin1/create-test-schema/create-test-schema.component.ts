@@ -24,6 +24,7 @@ import * as _ from 'underscore';
 import { Location } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { connectableObservableDescriptor } from 'rxjs/observable/ConnectableObservable';
+import { indexOf } from 'lodash';
 
 @Component({
   selector: 'app-create-test-schema',
@@ -44,18 +45,21 @@ export class CreateTestSchemaComponent implements OnInit {
   end_date: string;
   status_id: any;
   item_usage: any;
-  blueprint_name:string;
-  subjectsData:any = [];
-  topicsData:any = [];
-  bloomTaxonomyData:any = [];
-  subarray:any = [];
-  topicArray:any = [];
+  blueprint_name: string;
+  subjectsData: any = [];
+  topicsData: any = [];
+  bloomTaxonomyData: any = [];
+  itemTypeListData: any = [];
+  difficultyLevelListData: any = [];
+  subarray: any = [];
+  topicArray: any = [];
   taxonomyArray: any = [];
+  itemTypesArray: any = [];
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
   subject_ids = [];
-  bp_name:boolean;
+  bp_name: boolean;
   section_name: boolean;
   duration: string;
   status_name: boolean;
@@ -65,8 +69,26 @@ export class CreateTestSchemaComponent implements OnInit {
   duration_value: boolean;
   topic_selected: boolean;
   section: string;
-  blueprint_value: boolean;
+  blueprint_value: boolean = false;
   blueprint: string;
+  FinalitemTypesArray: any[];
+  TableArray: any = [];
+  TableObject: any = {};
+  requiredItems: any;
+  Sections: any = [
+    {
+      "section": '',
+      "subject": '',
+      "duration": '',
+      "selectedItems": [],
+      "topicsData": [],
+      "bloomTaxonomyData": [],
+      "itemTypeListData": [],
+      "difficultyLevelListData": [],
+      "TableArray": [],
+    }
+  ];
+
 
   constructor(
     private http: Http,
@@ -89,7 +111,52 @@ export class CreateTestSchemaComponent implements OnInit {
     this.getMetaDatas();
   }
 
-
+  addSections(section_index) {
+    let required_items_value = false;
+    if (this.Sections[section_index].section.length == 0) {
+      this.section_name = true;
+    }
+    if (this.Sections[section_index].selectedItems.length == 0) {
+      this.subject_selected = true;
+    }
+    if (this.Sections[section_index].duration == '' || this.Sections[section_index].duration == null) {
+      this.duration_value = true;
+    }
+    if (this.Sections[section_index].topicsData.length == 0 || this.Sections[section_index].bloomTaxonomyData.length == 0) {
+      this._notifications.error('', 'Please select atleast one topic and one bloomTaxonomy for this section!');
+    }
+    else if (this.Sections[section_index].itemTypeListData.length == 0 || this.Sections[section_index].difficultyLevelListData.length == 0) {
+      this._notifications.error('', 'Please select atleast one itemType and one difficultyLevel for this section!');
+    }
+    else if (this.Sections[section_index].TableArray.length == 0) {
+      this._notifications.error('', 'Please select atleast one difficultyLevel for this section!');
+    }
+    this.Sections[section_index].TableArray.map((item) => {
+      if (item.requiredItems == '' || item.requiredItems == null) {
+        required_items_value = true;
+        this._notifications.error('', 'Please enter the required items values for this section!');
+      }
+    });
+    if (this.Sections[section_index].selectedItems.length > 0 && this.Sections[section_index].topicsData.length > 0 && this.Sections[section_index].bloomTaxonomyData.length > 0
+      && this.Sections[section_index].itemTypeListData.length > 0 && this.Sections[section_index].difficultyLevelListData.length > 0
+      && this.Sections[section_index].TableArray.length > 0 && this.Sections[section_index].section.length > 0 && this.Sections[section_index].duration != ''
+      && required_items_value == false) {
+      this.Sections.push({
+        "section": '',
+        "subject": '',
+        "duration": '',
+        "selectedItems": [],
+        "topicsData": [],
+        "bloomTaxonomyData": [],
+        "itemTypeListData": [],
+        "difficultyLevelListData": [],
+        "TableArray": [],
+      });
+      this.section_name = false;
+      this.subject_selected = false;
+      this.duration_value = false;
+    }
+  }
   getMetaDatas() {
     this.showload = true;
     var headers = new Headers();
@@ -137,8 +204,8 @@ export class CreateTestSchemaComponent implements OnInit {
       "Authorization",
       "Bearer " + this.cookieService.get("_PTBA")
     );
-      let orgId = parseInt(this.cookieService.get("_PAOID"));
-      body['iteam_status'] = this.status_id,
+    let orgId = parseInt(this.cookieService.get("_PAOID"));
+    body['iteam_status'] = this.status_id,
       body['iteam_usage'] = this.item_usage,
       body['from_date'] = this.start_date,
       body['to_date'] = this.end_date
@@ -157,26 +224,27 @@ export class CreateTestSchemaComponent implements OnInit {
           this.subjectsData = data;
           console.log("subjectsData", this.subjectsData);
           const newArrayOfObj = this.subjectsData.map(({
-            Subject_ID:id,
+            Subject_ID: id,
             Subject_Nm: itemName,
+            Subject_Count: items_count,
           }) => ({
             id,
             itemName,
+            items_count
           }));
           console.log("newArrayOfObj", newArrayOfObj);
           this.dropdownList = newArrayOfObj;
-          this.dropdownSettings = { 
-            singleSelection: false, 
-            text:"Select Subjects",
-            selectAllText:'Select All',
-            unSelectAllText:'UnSelect All',
+          this.dropdownSettings = {
+            singleSelection: false,
+            text: "Select Subjects",
+            selectAllText: 'Select All',
+            unSelectAllText: 'UnSelect All',
             enableSearchFilter: true,
-            classes:"myclass custom-class"
-          };      
+            classes: "myclass custom-class"
+          };
           setTimeout(() => {
             this.showload = false;
           }, 300);
-          this._notifications.create('', data.message, 'info', { timeOut: 3000 });
         },
         (error) => {
           this.showload = false;
@@ -193,8 +261,8 @@ export class CreateTestSchemaComponent implements OnInit {
       );
   }
 
-  getSubjectTopics() {
-    if(this.subject_ids.length > 0){
+  getSubjectTopics(section_index) {
+    if (this.subject_ids.length > 0) {
       this.showload = true;
       let body = {};
       var headers = new Headers();
@@ -202,12 +270,12 @@ export class CreateTestSchemaComponent implements OnInit {
         "Authorization",
         "Bearer " + this.cookieService.get("_PTBA")
       );
-        let orgId = parseInt(this.cookieService.get("_PAOID"));
-        body['iteam_status'] = this.status_id,
+      let orgId = parseInt(this.cookieService.get("_PAOID"));
+      body['iteam_status'] = this.status_id,
         body['iteam_usage'] = this.item_usage,
         body['from_date'] = this.start_date,
         body['to_date'] = this.end_date
-        body['subject_id'] = this.subject_ids.toString();
+      body['subject_id'] = this.subject_ids.toString();
       return this.http
         .post(credentials.host + "/blueprint_get_subject_topics/" + orgId, body, {
           headers: headers,
@@ -219,17 +287,16 @@ export class CreateTestSchemaComponent implements OnInit {
         .subscribe(
           (data: any) => {
             console.log("getSubjectsTopics", data);
-            this.topicsData = data;
-            for (let i = 0; i < this.topicsData.length; i++) {
-              for (let j = 0; j < this.topicsData[i][0].topic.length; j++) {
-                     this.topicsData[i][0].topic[j].is_select = true;
+            this.Sections[section_index].topicsData = data;
+            for (let i = 0; i < this.Sections[section_index].topicsData.length; i++) {
+              for (let j = 0; j < this.Sections[section_index].topicsData[i][0].topic.length; j++) {
+                this.Sections[section_index].topicsData[i][0].topic[j].is_select = true;
               }
             }
-            console.log("getSubjectsTopics", this.topicsData);
+            console.log("getSubjectsTopics", this.Sections);
             setTimeout(() => {
               this.showload = false;
             }, 300);
-            this._notifications.create('', data.message, 'info', { timeOut: 3000 });
           },
           (error) => {
             this.showload = false;
@@ -247,8 +314,8 @@ export class CreateTestSchemaComponent implements OnInit {
     }
   }
 
-  getBloomTaxonomy() {
-    if(this.subject_ids.length > 0){
+  getBloomTaxonomy(section_index) {
+    if (this.subject_ids.length > 0) {
       this.showload = true;
       let body = {};
       var headers = new Headers();
@@ -256,13 +323,13 @@ export class CreateTestSchemaComponent implements OnInit {
         "Authorization",
         "Bearer " + this.cookieService.get("_PTBA")
       );
-        let orgId = parseInt(this.cookieService.get("_PAOID"));
-        body['iteam_status'] = this.status_id,
+      let orgId = parseInt(this.cookieService.get("_PAOID"));
+      body['iteam_status'] = this.status_id,
         body['iteam_usage'] = this.item_usage,
         body['from_date'] = this.start_date,
         body['to_date'] = this.end_date
-        body['subject_id'] = this.subject_ids.toString();
-        body['topic_id'] =  this.topicArray.toString();
+      body['subject_id'] = this.subject_ids.toString();
+      body['topic_id'] = this.topicArray.toString();
       return this.http
         .post(credentials.host + "/blueprint_get_bloom_taxonomy/" + orgId, body, {
           headers: headers,
@@ -273,19 +340,18 @@ export class CreateTestSchemaComponent implements OnInit {
         })
         .subscribe(
           (data: any) => {
-            this.bloomTaxonomyData = data;
-            for (let i = 0; i < this.bloomTaxonomyData.length; i++) {
-              if (this.bloomTaxonomyData[i].length > 0) {
-                for (let j = 0; j < this.bloomTaxonomyData[i][0].taxonomy.length; j++) {
-                  this.bloomTaxonomyData[i][0].taxonomy[j].is_select = true;
+            this.Sections[section_index].bloomTaxonomyData = data;
+            for (let i = 0; i < this.Sections[section_index].bloomTaxonomyData.length; i++) {
+              if (this.Sections[section_index].bloomTaxonomyData[i].length > 0) {
+                for (let j = 0; j < this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy.length; j++) {
+                  this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[j].is_select = true;
                 }
               }
             }
-            console.log("getBloomTaxonomy", this.bloomTaxonomyData);
+            console.log("getBloomTaxonomy", this.Sections[section_index].bloomTaxonomyData);
             setTimeout(() => {
               this.showload = false;
             }, 300);
-            this._notifications.create('', data.message, 'info', { timeOut: 3000 });
           },
           (error) => {
             this.showload = false;
@@ -302,6 +368,124 @@ export class CreateTestSchemaComponent implements OnInit {
         );
     }
   }
+
+
+  getItemTypeList(section_index) {
+    if (this.subject_ids.length > 0) {
+      this.showload = true;
+      let body = {};
+      var headers = new Headers();
+      headers.append(
+        "Authorization",
+        "Bearer " + this.cookieService.get("_PTBA")
+      );
+      let orgId = parseInt(this.cookieService.get("_PAOID"));
+      body['iteam_status'] = this.status_id,
+        body['iteam_usage'] = this.item_usage,
+        body['from_date'] = this.start_date,
+        body['to_date'] = this.end_date
+      body['subject_id'] = this.subject_ids.toString();
+      body['topic_id'] = this.topicArray.toString();
+      body['taxonomy_id'] = this.taxonomyArray.toString();
+
+      return this.http
+        .post(credentials.host + "/blueprint_get_iteam_type/" + orgId, body, {
+          headers: headers,
+        })
+        .map((res) => res.json())
+        .catch((e: any) => {
+          return Observable.throw(e);
+        })
+        .subscribe(
+          (data: any) => {
+            this.Sections[section_index].itemTypeListData = data;
+            for (let i = 0; i < this.Sections[section_index].itemTypeListData.length; i++) {
+              if (this.Sections[section_index].itemTypeListData[i].length > 0) {
+                for (let j = 0; j < this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype.length; j++) {
+                  this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[j].is_select = true;
+                }
+              }
+            }
+            console.log("itemTypeListData", this.Sections[section_index].itemTypeListData);
+            setTimeout(() => {
+              this.showload = false;
+            }, 300);
+          },
+          (error) => {
+            this.showload = false;
+            if (error.status == 404) {
+              this.router.navigateByUrl("pages/NotFound");
+            } else if (error.status == 401) {
+              this.cookieService.deleteAll();
+              window.location.href = credentials.accountUrl;
+              // window.location.href='http://accounts.scora.in';
+            } else {
+              this.router.navigateByUrl("pages/serverError");
+            }
+          }
+        );
+    }
+  }
+
+  getDifficultyList(section_index) {
+    if (this.subject_ids.length > 0) {
+      this.showload = true;
+      let body = {};
+      var headers = new Headers();
+      headers.append(
+        "Authorization",
+        "Bearer " + this.cookieService.get("_PTBA")
+      );
+      let orgId = parseInt(this.cookieService.get("_PAOID"));
+      body['iteam_status'] = this.status_id,
+        body['iteam_usage'] = this.item_usage,
+        body['from_date'] = this.start_date,
+        body['to_date'] = this.end_date
+      body['subject_id'] = this.subject_ids.toString();
+      body['topic_id'] = this.topicArray.toString();
+      body['taxonomy_id'] = this.taxonomyArray.toString();
+      body['item_type_id'] = this.itemTypesArray.toString();
+      body['sub_item_type_id'] = null
+
+      return this.http
+        .post(credentials.host + "/blueprint_get_difficultylevel/" + orgId, body, {
+          headers: headers,
+        })
+        .map((res) => res.json())
+        .catch((e: any) => {
+          return Observable.throw(e);
+        })
+        .subscribe(
+          (data: any) => {
+            this.Sections[section_index].difficultyLevelListData = data;
+            for (let i = 0; i < this.Sections[section_index].difficultyLevelListData.length; i++) {
+              if (this.Sections[section_index].difficultyLevelListData[i].length > 0) {
+                for (let j = 0; j < this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel.length; j++) {
+                  this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[j].is_select = true;
+                }
+              }
+            }
+            console.log("difficultyLevelListData", this.Sections[section_index].difficultyLevelListData);
+            setTimeout(() => {
+              this.showload = false;
+            }, 300);
+          },
+          (error) => {
+            this.showload = false;
+            if (error.status == 404) {
+              this.router.navigateByUrl("pages/NotFound");
+            } else if (error.status == 401) {
+              this.cookieService.deleteAll();
+              window.location.href = credentials.accountUrl;
+              // window.location.href='http://accounts.scora.in';
+            } else {
+              this.router.navigateByUrl("pages/serverError");
+            }
+          }
+        );
+    }
+  }
+
 
   getSatusId(id) {
     this.status_id = id;
@@ -323,76 +507,123 @@ export class CreateTestSchemaComponent implements OnInit {
     this.getSubjects();
     console.log("sachin")
   }
-  onItemSelect(item: any) {
+  onItemSelect(item: any, section_index) {
     console.log(item);
-    console.log(this.selectedItems);
+    console.log(this.Sections[section_index].selectedItems);
     this.subject_ids = [];
-    this.selectedItems.forEach((x) => {
+    this.Sections[section_index].selectedItems.forEach((x) => {
       this.subject_ids.push(x.id);
     });
     console.log(this.subject_ids);
-    this.getSubjectTopics();
+    this.getSubjectTopics(section_index);
   }
-  OnItemDeSelect(item: any) {
+  OnItemDeSelect(item: any, section_index) {
     console.log(item);
-    console.log(this.selectedItems);
+    console.log(this.Sections[section_index].selectedItems);
     this.subject_ids = [];
-    this.selectedItems.forEach((x) => {
+    this.Sections[section_index].selectedItems.forEach((x) => {
       this.subject_ids.push(x.id);
     });
     console.log(this.subject_ids);
-    this.getSubjectTopics();
-
+    this.getSubjectTopics(section_index);
   }
-  onSelectAll(items: any) {
+  onSelectAll(items: any, section_index) {
     console.log(items);
+    console.log(this.Sections[section_index].selectedItems);
     this.subject_ids = [];
-    this.selectedItems.forEach((x) => {
+    this.Sections[section_index].selectedItems.forEach((x) => {
       this.subject_ids.push(x.id);
     });
     console.log(this.subject_ids);
-    this.getSubjectTopics();
+    this.getSubjectTopics(section_index);
 
   }
-  onDeSelectAll(items: any) {
+  onDeSelectAll(items: any, section_index) {
     console.log(items);
+    console.log(this.Sections[section_index].selectedItems);
     this.subject_ids = [];
-    this.selectedItems.forEach((x) => {
+    this.Sections[section_index].selectedItems.forEach((x) => {
       this.subject_ids.push(x.id);
     });
     console.log(this.subject_ids);
-    this.getSubjectTopics();
+    this.getSubjectTopics(section_index);
   }
 
-  selectTopic(i,i2){
-    this.topicsData[i][0].topic[i2].is_select = !this.topicsData[i][0].topic[i2].is_select;
-    if(this.topicsData[i][0].topic[i2].is_select == false){
-      console.log(this.topicsData[i][0].Subject_ID,this.topicsData[i][0].topic[i2].Topic_ID);
-      this.topicArray.push(this.topicsData[i][0].topic[i2].Topic_ID);
-      if(this.subarray.indexOf(this.topicsData[i][0].Subject_ID)== -1){
-        this.subarray.push(this.topicsData[i][0].Subject_ID);
+  selectTopic(i, i2, section_index) {
+    this.Sections[section_index].topicsData[i][0].topic[i2].is_select = !this.Sections[section_index].topicsData[i][0].topic[i2].is_select;
+    if (this.Sections[section_index].topicsData[i][0].topic[i2].is_select == false) {
+      console.log(this.Sections[section_index].topicsData[i][0].Subject_ID, this.Sections[section_index].topicsData[i][0].topic[i2].Topic_ID);
+      this.topicArray.push(this.Sections[section_index].topicsData[i][0].topic[i2].Topic_ID);
+      if (this.subarray.indexOf(this.Sections[section_index].topicsData[i][0].Subject_ID) == -1) {
+        this.subarray.push(this.Sections[section_index].topicsData[i][0].Subject_ID);
       }
-    }else{
-      console.log(this.topicsData[i][0].Subject_ID,this.topicsData[i][0].topic[i2].Topic_ID);
-      let idx = this.topicArray.indexOf(this.topicsData[i][0].topic[i2].Topic_ID);
-      this.topicArray.splice(idx,1);
+    } else {
+      console.log(this.Sections[section_index].topicsData[i][0].Subject_ID, this.Sections[section_index].topicsData[i][0].topic[i2].Topic_ID);
+      let idx = this.topicArray.indexOf(this.Sections[section_index].topicsData[i][0].topic[i2].Topic_ID);
+      this.topicArray.splice(idx, 1);
+      this.getItemTypeList(section_index);
+      this.getDifficultyList(section_index);
     }
     console.log(this.topicArray)
     console.log(this.subarray)
-    this.getBloomTaxonomy();
+    this.getBloomTaxonomy(section_index);
   };
 
-  selectBloomTaxonomy(i,i2){
-    this.bloomTaxonomyData[i][0].taxonomy[i2].is_select = !this.bloomTaxonomyData[i][0].taxonomy[i2].is_select;
-    if(this.bloomTaxonomyData[i][0].taxonomy[i2].is_select == false){
-      console.log(this.bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
-      this.taxonomyArray.push(this.bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
-    }else{
-      console.log(this.bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
-      let idx = this.taxonomyArray.indexOf(this.bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
-      this.taxonomyArray.splice(idx,1);
+  selectBloomTaxonomy(i, i2, section_index) {
+    this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].is_select = !this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].is_select;
+    if (this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].is_select == false) {
+      console.log(this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
+      this.taxonomyArray.push(this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
+    } else {
+      console.log(this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
+      let idx = this.taxonomyArray.indexOf(this.Sections[section_index].bloomTaxonomyData[i][0].taxonomy[i2].Taxonomy_ID);
+      this.taxonomyArray.splice(idx, 1);
+      this.getDifficultyList(section_index);
     }
-    console.log(this.taxonomyArray)
+    console.log(this.taxonomyArray);
+    this.getItemTypeList(section_index);
+  }
+
+  selectItemTypes(i, i2, section_index) {
+    this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].is_select = !this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].is_select;
+    if (this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].is_select == false) {
+      console.log(this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].Item_Type_ID);
+      this.itemTypesArray.push(this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].Item_Type_ID);
+    } else {
+      console.log(this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].Item_Type_ID);
+      let idx = this.itemTypesArray.indexOf(this.Sections[section_index].itemTypeListData[i][0].item[0].itemtype[i2].Item_Type_ID);
+      this.itemTypesArray.splice(idx, 1);
+    }
+    console.log(this.itemTypesArray);
+    this.getDifficultyList(section_index);
+  }
+
+  selectDifficultyLevel(i, i2, section_index) {
+    this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].is_select = !this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].is_select;
+    console.log(this.Sections[section_index].difficultyLevelListData[i][0]);
+    console.log(this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2]);
+    if (this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].is_select == false) {
+      this.TableObject = {
+        subject: this.Sections[section_index].difficultyLevelListData[i][0].subject.Subject_Nm,
+        topic: this.Sections[section_index].difficultyLevelListData[i][0].topicname[0].Topic_Nm,
+        taxonomy: this.Sections[section_index].difficultyLevelListData[i][0].taxonomy[0].Taxonomy_Nm,
+        itemtype: this.Sections[section_index].difficultyLevelListData[i][0].item[0].itemtype[0].Item_Type_Nm,
+        difficultyLevel: this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].Diff_Lvl_Nm,
+        Diff_Lvl_ID: this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].Diff_Lvl_ID,
+        requiredItems: ''
+      };
+      console.log(this.TableObject)
+      let idx = this.Sections[section_index].TableArray.findIndex(x => x.Diff_Lvl_ID == this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].Diff_Lvl_ID)
+      if (idx == -1) {
+        this.Sections[section_index].TableArray.push(this.TableObject);
+      }
+    } else {
+      let idx = this.Sections[section_index].TableArray.findIndex(x => x.Diff_Lvl_ID == this.Sections[section_index].difficultyLevelListData[i][0].difficultylevel[i2].Diff_Lvl_ID)
+      console.log("idex", idx);
+      console.log("this.TableObject.Diff_Lvl_ID", this.TableObject.Diff_Lvl_ID);
+      this.Sections[section_index].TableArray.splice(idx, 1);
+    }
+
   }
   goToMarkingSchema() {
     this.blueprint_value = false;
@@ -402,9 +633,9 @@ export class CreateTestSchemaComponent implements OnInit {
     this.section_name = false;
     this.subject_selected = false;
     this.duration_value = false;
-    if (this.blueprint == "" || this.blueprint == null) {
-        this.blueprint_value = true;
-        console.log(this.blueprint_value)
+    if (this.blueprint == "" || this.blueprint == null || this.blueprint.length == 0) {
+      this.blueprint_value = true;
+      console.log(this.blueprint_value)
     }
     if (this.status_id == "" || this.status_id == null || this.status_id.length == 0) {
       this.status_name = true;
@@ -428,6 +659,124 @@ export class CreateTestSchemaComponent implements OnInit {
       this.subject_selected == false && this.duration_value == false) {
       $('#test-bank').modal('show');
     }
+    console.log(this.Sections);
+    let obj = {};
+    obj['blueprint_name'] = this.blueprint;
+    obj['no_of_sections'] = this.Sections.length;
+    obj['sections'] = [];
+    obj['subjects'] = [];
+    obj['topics'] = [];
+    obj['blooms_taxonomy'] = [];
+    obj['difficulty_levels'] = [];
+    obj['item_types'] = [];
+    obj['total_time'] = 0;
+    obj['total_required_items'] = 0;
+    obj['total_available_items'] = 0;
+    obj['start_dt'] = this.start_date;
+    obj['end_dt'] = this.end_date;
+    obj['item_usage_id'] = this.item_usage;
+    obj['item_status_id'] = this.status_id;
+    obj['org_id'] = parseInt(this.cookieService.get("_PAOID"));
 
+
+    for (let i = 0; i < this.Sections.length; i++) {
+      console.log(this.Sections[i])
+      let obj1 = {
+        "section_name": this.Sections[i].section,
+        "required_items": this.Sections[i].TableArray.reduce((n, { requiredItems }) => n + requiredItems, 0),
+        "available_items": 2,
+        "time": this.Sections[i].duration,
+        "subjects": this.Sections[i].selectedItems,
+        "topics": [],
+        "blooms_taxonomy": [],
+        "item_types": [],
+        "difficulty_levels": []
+      };
+      obj1.subjects.map((v) => {
+        obj['subjects'].push(v.itemName)
+      })
+      obj['total_time'] += +this.Sections[i].duration;
+      obj['total_required_items'] += +obj1.required_items;
+      obj['total_available_items'] += +obj1.available_items;
+      this.Sections[i].topicsData.forEach((element, i1) => {
+        this.Sections[i].topicsData[i1][0].topic.map((v, i2) => {
+          console.log(element);
+          if (v.is_select == false) {
+            let objects1 = {
+              "id": v.Topic_ID,
+              "subject": v.subject.Subject_Nm,
+              "itemName": v.Topic_Nm,
+              "items_count": this.Sections[i].topicsData[i1][0].topic_count,
+            };
+            obj['topics'].push(objects1.itemName);
+            obj1.topics.push(objects1);
+          }
+        })
+      }),
+        this.Sections[i].bloomTaxonomyData.forEach((element, i1) => {
+          if (this.Sections[i].bloomTaxonomyData[i1].length > 0) {
+            this.Sections[i].bloomTaxonomyData[i1][0].taxonomy.map((v, i2) => {
+              if (v.is_select == false) {
+                let objects1 = {
+                  "id": v.Taxonomy_ID,
+                  "subject": this.Sections[i].bloomTaxonomyData[i1][0].subject.Subject_Nm,
+                  "topic": this.Sections[i].bloomTaxonomyData[i1][0].topicname[0].Topic_Nm,
+                  "itemName": v.Taxonomy_Nm,
+                  "items_count": this.Sections[i].bloomTaxonomyData[i1][0].taxonomy_count,
+                };
+                obj['blooms_taxonomy'].push(objects1.itemName);
+                obj1.blooms_taxonomy.push(objects1);
+              }
+            })
+          }
+        }),
+        this.Sections[i].itemTypeListData.forEach((element, i1) => {
+          if (this.Sections[i].itemTypeListData[i1].length > 0) {
+            this.Sections[i].itemTypeListData[i1][0].item[0].itemtype.map((v, i2) => {
+              if (v.is_select == false) {
+                let objects1 = {
+                  "id": v.Item_Type_ID,
+                  "subject": this.Sections[i].itemTypeListData[i1][0].subject.Subject_Nm,
+                  "topic": this.Sections[i].itemTypeListData[i1][0].topicname[0].Topic_Nm,
+                  "blooms_taxonomy": this.Sections[i].itemTypeListData[i1][0].taxonomy[0].Taxonomy_Nm,
+                  "itemName": v.Item_Type_Nm,
+                  "items_count": this.Sections[i].itemTypeListData[i1][0].item[0].itemtype_count,
+                };
+                obj['item_types'].push(v.Item_Type_Nm);
+                obj1.item_types.push(objects1);
+              }
+            })
+          }
+        }),
+        this.Sections[i].difficultyLevelListData.forEach((element, i1) => {
+          if (this.Sections[i].difficultyLevelListData[i1].length > 0) {
+            this.Sections[i].difficultyLevelListData[i1][0].difficultylevel.map((v, i2) => {
+              if (v.is_select == false) {
+                let objects1 = {
+                  "id": v.Diff_Lvl_ID,
+                  "subject": this.Sections[i].difficultyLevelListData[i1][0].subject.Subject_Nm,
+                  "topic": this.Sections[i].difficultyLevelListData[i1][0].topicname[0].Topic_Nm,
+                  "blooms_taxonomy": this.Sections[i].difficultyLevelListData[i1][0].taxonomy[0].Taxonomy_Nm,
+                  "item_type": this.Sections[i].difficultyLevelListData[i1][0].item[0].itemtype[0].Item_Type_Nm,
+                  "itemName": v.Diff_Lvl_Nm,
+                  "items_count": this.Sections[i].difficultyLevelListData[i1][0].difficultylevel_count,
+                };
+                obj['difficulty_levels'].push(v.Diff_Lvl_Nm);
+                obj1.difficulty_levels.push(objects1);
+              }
+            })
+          }
+        }),
+        obj['sections'].push(obj1);
+    }
+    console.log("obj", obj)
+
+    for (let i = 0; i < obj['sections'].length; i++) {
+      if (obj['sections'][i].topics.length == 0 || obj['sections'][i].blooms_taxonomy.length == 0) {
+        this._notifications.error('', `Please select atleast one topic and one bloomTaxonomy for section ${i + 1}.`);
+      } else if (obj['sections'][i].item_types.length == 0 || obj['sections'][i].difficulty_levels.length == 0) {
+        this._notifications.error('', `Please select atleast one itemType and one difficultyLevel for section ${i + 1}.`);
+      }
+    }
   }
 }

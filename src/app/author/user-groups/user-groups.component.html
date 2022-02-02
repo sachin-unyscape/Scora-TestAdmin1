@@ -24,10 +24,10 @@
                                 <table class="custom-table v-top">
                                     <thead>
                                         <tr>
-                                            <th>Test Group</th>
-                                            <th>Description</th>
-                                            <th>Add Users</th>
-                                            <th>View Group</th>
+                                            <th style="width: 20%;">Test Group</th>
+                                            <th style="width: 60%;">Description</th>
+                                            <th style="width: 10%;">Add Users</th>
+                                            <th style="width: 10%;">View Group</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -104,7 +104,7 @@
             </div>
             <div class="button-groups">
                 <button class="default-btn mr-3 w190" (click)="createUserGroup()">Create</button>
-                <button class="skip-btn w190" (click)="cancelTestGroup()">Cancel</button>
+                <button class="skip-btn w190" data-dismiss="modal" (click)="cancelTestGroup()">Cancel</button>
             </div>
         </div>
     </div>

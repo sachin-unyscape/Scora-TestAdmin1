@@ -1109,6 +1109,10 @@ closeModal(){
   }
 
   close(){
+    $("#myModal").removeClass("in");
+    $(".modal-backdrop").remove();
+    $('body').removeClass('modal-open');
+    $('body').css('padding-right', '');
     $('#importdata').modal('hide');
   }
 
