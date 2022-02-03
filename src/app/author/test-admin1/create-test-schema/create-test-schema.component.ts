@@ -88,6 +88,11 @@ export class CreateTestSchemaComponent implements OnInit {
       "TableArray": [],
     }
   ];
+  total_required_number: number = 0;
+  check_topic_boom: boolean;
+  check_item_type_difficulty: boolean;
+  table_created: boolean;
+  required_items_values: boolean;
 
 
   constructor(
@@ -111,52 +116,7 @@ export class CreateTestSchemaComponent implements OnInit {
     this.getMetaDatas();
   }
 
-  addSections(section_index) {
-    let required_items_value = false;
-    if (this.Sections[section_index].section.length == 0) {
-      this.section_name = true;
-    }
-    if (this.Sections[section_index].selectedItems.length == 0) {
-      this.subject_selected = true;
-    }
-    if (this.Sections[section_index].duration == '' || this.Sections[section_index].duration == null) {
-      this.duration_value = true;
-    }
-    if (this.Sections[section_index].topicsData.length == 0 || this.Sections[section_index].bloomTaxonomyData.length == 0) {
-      this._notifications.error('', 'Please select atleast one topic and one bloomTaxonomy for this section!');
-    }
-    else if (this.Sections[section_index].itemTypeListData.length == 0 || this.Sections[section_index].difficultyLevelListData.length == 0) {
-      this._notifications.error('', 'Please select atleast one itemType and one difficultyLevel for this section!');
-    }
-    else if (this.Sections[section_index].TableArray.length == 0) {
-      this._notifications.error('', 'Please select atleast one difficultyLevel for this section!');
-    }
-    this.Sections[section_index].TableArray.map((item) => {
-      if (item.requiredItems == '' || item.requiredItems == null) {
-        required_items_value = true;
-        this._notifications.error('', 'Please enter the required items values for this section!');
-      }
-    });
-    if (this.Sections[section_index].selectedItems.length > 0 && this.Sections[section_index].topicsData.length > 0 && this.Sections[section_index].bloomTaxonomyData.length > 0
-      && this.Sections[section_index].itemTypeListData.length > 0 && this.Sections[section_index].difficultyLevelListData.length > 0
-      && this.Sections[section_index].TableArray.length > 0 && this.Sections[section_index].section.length > 0 && this.Sections[section_index].duration != ''
-      && required_items_value == false) {
-      this.Sections.push({
-        "section": '',
-        "subject": '',
-        "duration": '',
-        "selectedItems": [],
-        "topicsData": [],
-        "bloomTaxonomyData": [],
-        "itemTypeListData": [],
-        "difficultyLevelListData": [],
-        "TableArray": [],
-      });
-      this.section_name = false;
-      this.subject_selected = false;
-      this.duration_value = false;
-    }
-  }
+
   getMetaDatas() {
     this.showload = true;
     var headers = new Headers();
@@ -223,25 +183,27 @@ export class CreateTestSchemaComponent implements OnInit {
           console.log("getSubjects", data);
           this.subjectsData = data;
           console.log("subjectsData", this.subjectsData);
-          const newArrayOfObj = this.subjectsData.map(({
-            Subject_ID: id,
-            Subject_Nm: itemName,
-            Subject_Count: items_count,
-          }) => ({
-            id,
-            itemName,
-            items_count
-          }));
-          console.log("newArrayOfObj", newArrayOfObj);
-          this.dropdownList = newArrayOfObj;
-          this.dropdownSettings = {
-            singleSelection: false,
-            text: "Select Subjects",
-            selectAllText: 'Select All',
-            unSelectAllText: 'UnSelect All',
-            enableSearchFilter: true,
-            classes: "myclass custom-class"
-          };
+          if (this.subjectsData.length > 0){
+            const newArrayOfObj = this.subjectsData.map(({
+              Subject_ID: id,
+              Subject_Nm: itemName,
+              Subject_Count: items_count,
+            }) => ({
+              id,
+              itemName,
+              items_count
+            }));
+            console.log("newArrayOfObj", newArrayOfObj);
+            this.dropdownList = newArrayOfObj;
+            this.dropdownSettings = {
+              singleSelection: false,
+              text: "Select Subjects",
+              selectAllText: 'Select All',
+              unSelectAllText: 'UnSelect All',
+              enableSearchFilter: true,
+              classes: "myclass custom-class"
+            };
+          }
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -489,10 +451,12 @@ export class CreateTestSchemaComponent implements OnInit {
 
   getSatusId(id) {
     this.status_id = id;
+    this.getSubjects();
     console.log(this.status_id);
   }
   getItemUsesId(id) {
     this.item_usage = id;
+    this.getSubjects();
     console.log(this.item_usage);
   }
 
@@ -622,8 +586,55 @@ export class CreateTestSchemaComponent implements OnInit {
       console.log("idex", idx);
       console.log("this.TableObject.Diff_Lvl_ID", this.TableObject.Diff_Lvl_ID);
       this.Sections[section_index].TableArray.splice(idx, 1);
+     
     }
-
+    // this.goToMarkingSchema();
+  }
+  addSections(section_index) {
+    let required_items_value = false;
+    if (this.Sections[section_index].section.length == 0) {
+      this.section_name = true;
+    }
+    if (this.Sections[section_index].selectedItems.length == 0) {
+      this.subject_selected = true;
+    }
+    if (this.Sections[section_index].duration == '' || this.Sections[section_index].duration == null) {
+      this.duration_value = true;
+    }
+    if (this.Sections[section_index].topicsData.length == 0 || this.Sections[section_index].bloomTaxonomyData.length == 0) {
+      this._notifications.error('', 'Please select atleast one topic and one bloomTaxonomy for this section!');
+    }
+    else if (this.Sections[section_index].itemTypeListData.length == 0 || this.Sections[section_index].difficultyLevelListData.length == 0) {
+      this._notifications.error('', 'Please select atleast one itemType and one difficultyLevel for this section!');
+    }
+    else if (this.Sections[section_index].TableArray.length == 0) {
+      this._notifications.error('', 'Please select atleast one difficultyLevel for this section!');
+    }
+    this.Sections[section_index].TableArray.map((item) => {
+      if (item.requiredItems == '' || item.requiredItems == null) {
+        required_items_value = true;
+        this._notifications.error('', 'Please enter the required items values for this section!');
+      }
+    });
+    if (this.Sections[section_index].selectedItems.length > 0 && this.Sections[section_index].topicsData.length > 0 && this.Sections[section_index].bloomTaxonomyData.length > 0
+      && this.Sections[section_index].itemTypeListData.length > 0 && this.Sections[section_index].difficultyLevelListData.length > 0
+      && this.Sections[section_index].TableArray.length > 0 && this.Sections[section_index].section.length > 0 && this.Sections[section_index].duration != ''
+      && required_items_value == false) {
+      this.Sections.push({
+        "section": '',
+        "subject": '',
+        "duration": '',
+        "selectedItems": [],
+        "topicsData": [],
+        "bloomTaxonomyData": [],
+        "itemTypeListData": [],
+        "difficultyLevelListData": [],
+        "TableArray": [],
+      });
+      this.section_name = false;
+      this.subject_selected = false;
+      this.duration_value = false;
+    }
   }
   goToMarkingSchema() {
     this.blueprint_value = false;
@@ -633,32 +644,10 @@ export class CreateTestSchemaComponent implements OnInit {
     this.section_name = false;
     this.subject_selected = false;
     this.duration_value = false;
-    if (this.blueprint == "" || this.blueprint == null || this.blueprint.length == 0) {
-      this.blueprint_value = true;
-      console.log(this.blueprint_value)
-    }
-    if (this.status_id == "" || this.status_id == null || this.status_id.length == 0) {
-      this.status_name = true;
-    }
-    if (this.item_usage == "" || this.item_usage == null || this.item_usage.length == 0) {
-      this.item_name = true;
-    }
-    if (this.end_date == "" || this.end_date == null || this.end_date.length == 0) {
-      this.date_selected = true;
-    }
-    if (this.section == "" || this.section == null || this.section.length == 0) {
-      this.section_name = true;
-    }
-    if (this.subject_ids == null || this.subject_ids.length == 0) {
-      this.subject_selected = true;
-    }
-    if (this.duration == "" || this.duration == null || this.duration.length == 0) {
-      this.duration_value = true;
-    }
-    if (this.blueprint_value = false && this.status_name == false && this.item_name == false && this.date_selected == false &&
-      this.subject_selected == false && this.duration_value == false) {
-      $('#test-bank').modal('show');
-    }
+    this.check_topic_boom = false;
+    this.check_item_type_difficulty = false;
+    this.required_items_values = false;
+    this.table_created = false
     console.log(this.Sections);
     let obj = {};
     obj['blueprint_name'] = this.blueprint;
@@ -680,28 +669,35 @@ export class CreateTestSchemaComponent implements OnInit {
 
 
     for (let i = 0; i < this.Sections.length; i++) {
+      for(let j = 0; j < this.Sections[i].TableArray.length; j++){
       console.log(this.Sections[i])
       let obj1 = {
         "section_name": this.Sections[i].section,
         "required_items": this.Sections[i].TableArray.reduce((n, { requiredItems }) => n + requiredItems, 0),
         "available_items": 2,
-        "time": this.Sections[i].duration,
-        "subjects": this.Sections[i].selectedItems,
+        "time": this.time_convert(this.Sections[i].duration),
+        "subjects":[],
         "topics": [],
         "blooms_taxonomy": [],
         "item_types": [],
         "difficulty_levels": []
       };
+      this.Sections[i].selectedItems.forEach((element,po) => {
+        if( this.Sections[i].selectedItems[po].itemName == this.Sections[i].TableArray[j].subject){
+          obj1['subjects'].push(element)
+        }
+      });
       obj1.subjects.map((v) => {
         obj['subjects'].push(v.itemName)
       })
       obj['total_time'] += +this.Sections[i].duration;
       obj['total_required_items'] += +obj1.required_items;
+      this.total_required_number = obj['total_required_items'];
       obj['total_available_items'] += +obj1.available_items;
       this.Sections[i].topicsData.forEach((element, i1) => {
         this.Sections[i].topicsData[i1][0].topic.map((v, i2) => {
           console.log(element);
-          if (v.is_select == false) {
+          if (  v.Topic_Nm == this.Sections[i].TableArray[j].topic) {
             let objects1 = {
               "id": v.Topic_ID,
               "subject": v.subject.Subject_Nm,
@@ -716,7 +712,7 @@ export class CreateTestSchemaComponent implements OnInit {
         this.Sections[i].bloomTaxonomyData.forEach((element, i1) => {
           if (this.Sections[i].bloomTaxonomyData[i1].length > 0) {
             this.Sections[i].bloomTaxonomyData[i1][0].taxonomy.map((v, i2) => {
-              if (v.is_select == false) {
+              if (v.Taxonomy_Nm == this.Sections[i].TableArray[j].taxonomy) {
                 let objects1 = {
                   "id": v.Taxonomy_ID,
                   "subject": this.Sections[i].bloomTaxonomyData[i1][0].subject.Subject_Nm,
@@ -733,7 +729,7 @@ export class CreateTestSchemaComponent implements OnInit {
         this.Sections[i].itemTypeListData.forEach((element, i1) => {
           if (this.Sections[i].itemTypeListData[i1].length > 0) {
             this.Sections[i].itemTypeListData[i1][0].item[0].itemtype.map((v, i2) => {
-              if (v.is_select == false) {
+              if (v.Item_Type_Nm == this.Sections[i].TableArray[j].itemtype) {
                 let objects1 = {
                   "id": v.Item_Type_ID,
                   "subject": this.Sections[i].itemTypeListData[i1][0].subject.Subject_Nm,
@@ -741,8 +737,9 @@ export class CreateTestSchemaComponent implements OnInit {
                   "blooms_taxonomy": this.Sections[i].itemTypeListData[i1][0].taxonomy[0].Taxonomy_Nm,
                   "itemName": v.Item_Type_Nm,
                   "items_count": this.Sections[i].itemTypeListData[i1][0].item[0].itemtype_count,
+                  "sub_id":null
                 };
-                obj['item_types'].push(v.Item_Type_Nm);
+                obj['item_types'].push(v.Item_Type_ID);
                 obj1.item_types.push(objects1);
               }
             })
@@ -751,7 +748,7 @@ export class CreateTestSchemaComponent implements OnInit {
         this.Sections[i].difficultyLevelListData.forEach((element, i1) => {
           if (this.Sections[i].difficultyLevelListData[i1].length > 0) {
             this.Sections[i].difficultyLevelListData[i1][0].difficultylevel.map((v, i2) => {
-              if (v.is_select == false) {
+              if (v.Diff_Lvl_Nm == this.Sections[i].TableArray[j].difficultyLevel) {
                 let objects1 = {
                   "id": v.Diff_Lvl_ID,
                   "subject": this.Sections[i].difficultyLevelListData[i1][0].subject.Subject_Nm,
@@ -759,7 +756,8 @@ export class CreateTestSchemaComponent implements OnInit {
                   "blooms_taxonomy": this.Sections[i].difficultyLevelListData[i1][0].taxonomy[0].Taxonomy_Nm,
                   "item_type": this.Sections[i].difficultyLevelListData[i1][0].item[0].itemtype[0].Item_Type_Nm,
                   "itemName": v.Diff_Lvl_Nm,
-                  "items_count": this.Sections[i].difficultyLevelListData[i1][0].difficultylevel_count,
+                  "available_items": +this.Sections[i].difficultyLevelListData[i1][0].difficultylevel_count,
+                  "required_items": +this.total_required_number,
                 };
                 obj['difficulty_levels'].push(v.Diff_Lvl_Nm);
                 obj1.difficulty_levels.push(objects1);
@@ -768,15 +766,116 @@ export class CreateTestSchemaComponent implements OnInit {
           }
         }),
         obj['sections'].push(obj1);
-    }
-    console.log("obj", obj)
-
-    for (let i = 0; i < obj['sections'].length; i++) {
-      if (obj['sections'][i].topics.length == 0 || obj['sections'][i].blooms_taxonomy.length == 0) {
-        this._notifications.error('', `Please select atleast one topic and one bloomTaxonomy for section ${i + 1}.`);
-      } else if (obj['sections'][i].item_types.length == 0 || obj['sections'][i].difficulty_levels.length == 0) {
-        this._notifications.error('', `Please select atleast one itemType and one difficultyLevel for section ${i + 1}.`);
       }
     }
-  }
+    console.log("obj", obj)
+    if (this.blueprint == "" || this.blueprint == null || this.blueprint.length == 0) {
+      this.blueprint_value = true;
+    }
+    if (this.status_id == "" || this.status_id == null || this.status_id.length == 0) {
+      this.status_name = true;
+    }
+    if (this.item_usage == "" || this.item_usage == null || this.item_usage.length == 0) {
+      this.item_name = true;
+    }
+    if (this.end_date == "" || this.end_date == null || this.end_date.length == 0) {
+      this.date_selected = true;
+    }
+   
+     for(let i = 0; i < this.Sections.length; i++){
+      if (this.Sections[i].section.length == 0) {
+        this.section_name = true;
+      }
+      if (this.Sections[i].selectedItems.length == 0) {
+        this.subject_selected = true;
+      }
+      if (this.Sections[i].duration == '' || this.Sections[i].duration == null) {
+        this.duration_value = true;
+      }
+      if (this.Sections[i].topicsData.length == 0 || this.Sections[i].bloomTaxonomyData.length == 0) {
+        this._notifications.error('', 'Please select atleast one topic and one bloomTaxonomy for this section!');
+         this.check_topic_boom = true;
+      }
+      else if (this.Sections[i].itemTypeListData.length == 0 || this.Sections[i].difficultyLevelListData.length == 0) {
+        this._notifications.error('', 'Please select atleast one itemType and one difficultyLevel for this section!');
+        this.check_item_type_difficulty = true
+      }
+      else if (this.Sections[i].TableArray.length == 0) {
+        this._notifications.error('', 'Please select atleast one difficultyLevel for this section!');
+        this.table_created  = true;
+      }
+      this.Sections[i].TableArray.map((item) => {
+        if (item.requiredItems == '' || item.requiredItems == null) {
+          this.required_items_values = true;
+          this._notifications.error('', 'Please enter the required items values for this section!');
+        }
+      });
+     }
+
+    console.log(this.blueprint_value, this.status_name,
+       this.item_name, this.date_selected, this.section_name, 
+       this.subject_selected, this.duration_value, this.check_topic_boom,
+        this.check_item_type_difficulty,this.table_created,
+        this.required_items_values)
+    if (this.blueprint_value == false && this.status_name == false && this.item_name == false && this.date_selected == false
+      && this.section_name == false && this.subject_selected == false && this.duration_value == false
+      && this.check_topic_boom == false && this.check_item_type_difficulty == false && this.table_created == false && this.required_items_values == false) {
+      console.log("API HIT")
+      if (this.authService.canActivate()) {
+        this.showload = true;
+        var headers = new Headers();
+        headers.append(
+          "Authorization",
+          "Bearer " + this.cookieService.get("_PTBA")
+        );
+        obj['subjects'] = obj['subjects'].toString();
+        obj['topics'] = obj['topics'].toString();
+        obj['blooms_taxonomy'] = obj['blooms_taxonomy'].toString();
+        obj['item_types'] = obj['item_types'].toString();
+        obj['difficulty_levels'] = obj['difficulty_levels'].toString();
+        obj['total_time'] = this.time_convert(obj['total_time']);
+        console.log("obj", obj)
+
+        // return obj;
+        return this.http
+          .post(credentials.host + "/create_testschema", obj, {
+            headers: headers,
+          })
+          .map((res) => res.json())
+          .catch((e: any) => {
+            return Observable.throw(e);
+          })
+          .subscribe(
+            (data: any) => {
+              setTimeout(() => {
+                this.showload = false;
+                this._notifications.create("", data.message, "info");  
+                if(data.success == true){
+                  $("#test-bank").modal('show');
+                }
+              }, 300);
+            },
+            (error) => {
+              this.showload = false;
+              if (error.status == 404) {
+                this.router.navigateByUrl("pages/NotFound");
+              } else if (error.status == 401) {
+                this.cookieService.deleteAll();
+                window.location.href = credentials.accountUrl;
+                // window.location.href='http://accounts.scora.in';
+              } else {
+                this.router.navigateByUrl("pages/serverError");
+              }
+            }
+          );
+      }
+    }
+  };
+ time_convert(num)
+ { 
+  var hours = Math.floor(num / 60);  
+  var minutes = num % 60;
+  return hours + ":" + minutes;         
 }
+}
+

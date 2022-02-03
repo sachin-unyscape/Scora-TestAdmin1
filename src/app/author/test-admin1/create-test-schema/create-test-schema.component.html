@@ -100,7 +100,7 @@
                                                 <div class="hd">Required Items</div>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="number">25</div>
+                                                <div class="number">{{total_required_number}}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -111,11 +111,11 @@
                                     <div class="accordion schema-accord" id="accordionExample">
                                         <!-- accordion 1 -->
                                         <div class="card-header accord" id="headingOne" data-toggle="collapse"
-                                            data-target="#collapseOne">
+                                        [attr.data-target]="'#' + section_index">
                                             <span class="font16">Section {{section_index+1}} </span>
                                             <i class="fa fa-angle-up"></i>
                                         </div>
-                                        <div id="collapseOne" class="accord-body collapse show"
+                                        <div id="{{section_index}}" class="accord-body collapse show"
                                             aria-labelledby="headingOne" data-parent="#accordionExample">
                                             <div class="row mb-3">
                                                 <div class="col-md-3 form-group">
