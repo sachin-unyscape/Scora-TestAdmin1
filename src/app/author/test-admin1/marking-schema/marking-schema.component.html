@@ -1,3 +1,372 @@
-<p>
-  marking-schema works!
-</p>
+<app-loader *ngIf="showload"></app-loader>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Main content -->
+      <div class="content p-4">
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-md-12">
+                      <div class="card">
+                          <div class="card-header p-4">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <h3 class="card-title">Blueprint: Marking Schema</h3>
+                                  </div>
+
+                                  <div class="col-md-6 text-right">
+                                      <div class="steps-3">
+                                          <ul>
+                                              <li class="complete"><span><i class="fa fa-check"></i></span></li>
+                                              <li class="active"><span>2</span></li>
+                                              <li><span>3</span></li>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="pad24">
+                              <div class="marking-schema">
+                                  <ul class="nav nav-tabs  d-flex" id="myTab" role="tablist">
+                                      <li class="nav-item" role="presentation">
+                                          <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic-tab" role="tab" aria-controls="basic-tab" aria-selected="true">Section 1 - Basic</a>
+                                      </li>
+                                      <li class="nav-item" role="presentation">
+                                          <a class="nav-link" id="medium-tab" data-toggle="tab" href="#medium-tab" role="tab" aria-controls="medium-tab" aria-selected="true">Section 2 - Medium</a>
+                                      </li>
+                                      <li class="nav-item" role="presentation">
+                                          <a class="nav-link" id="summary-tab" data-toggle="tab" href="#summary-tab" role="tab" aria-controls="subject" aria-selected="true">Section 3 - Advanced</a>
+                                      </li>
+                                  </ul>
+                                  <div class="tab-content pad24" id="myTabContent">
+                                      <div class="tab-pane fade show active" id="basic-tab" role="tabpanel" aria-labelledby="basic-tab">
+                                          <div class="row mb-3">
+                                              <div class="col-md-3">
+                                                  <label class="labels">Max Marks</label>
+                                                  <input type="text" class="form-control" value="100">
+                                              </div>
+                                              <div class="col-md-3">
+                                                  <label class="labels">Min Marks</label>
+                                                  <input type="text" class="form-control" value="34">
+                                              </div>
+                                              <div class="col-md-6">
+                                                  <label class="labels" style="visibility: hidden;">Max Marks</label>
+                                                  <div class="relative">
+                                                      <input type="text" class="form-control" value="Negative Points for Wrong Answers">
+                                                      <div class="switch-wrap nav-marking">
+                                                          <div class="switch-btn">
+                                                              <!-- Rounded switch -->
+                                                              <label class="switch">
+                                                                  <input type="checkbox">
+                                                                  <span class="slider round"></span>
+                                                              </label>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="table-responsive">
+                                              <table class="custom-table border v-top">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>Item Type</th>
+                                                          <th>Difficulty Level</th>
+                                                          <th>Scenario</th>
+                                                          <th>Weightage</th>
+                                                          <th>Points</th>
+                                                          <th>Score
+                                                          </th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                      <tr>
+                                                          <td>Item Types with Single Correct Answer</td>
+                                                          <td>Easy</td>
+                                                          <td>Points awarded for selecting the RIGHT Answer <span class="green f12 d-block">MCQ-SR, True/Flase, Match::One-on-One</span></td>
+                                                          <td><input type="text" class="form-control secound" value="None" style="width: 70px;"></td>
+                                                          <td><input type="text" class="form-control border-red" style="width: 70px;"></td>
+                                                          <td><input type="text" class="form-control secound" style="width: 70px; float: left;">
+                                                              <a class="show-div float-left mt-2 ml-3"><img src="src/assets/test-admin1-assets/img/author-icons/select-arrow.svg" alt=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>Item Types with Single Correct Answer</td>
+                                                          <td>Easy</td>
+                                                          <td>Points awarded for selecting the RIGHT Answer <span class="green f12 d-block">MCQ-SR, True/Flase, Match::One-on-One</span></td>
+                                                          <td>
+                                                              <div class="dropdown">
+                                                                  <span class="dropdown-toggle secound form-control" style="width: 70px;" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                                                                    <img src="src/assets/test-admin1-assets/img/author-icons/rubic-grey.svg" alt="">
+                                                                  </span>
+                                                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                      <a class="dropdown-item" href="#">
+                                                                          <img src="src/assets/test-admin1-assets/img/author-icons/edit-grey.svg" alt="">
+                                                                      </a>
+                                                                  </div>
+                                                              </div>
+                                                          </td>
+                                                          <td><input type="text" class="form-control border-red" style="width: 70px;"></td>
+                                                          <td><input type="text" class="form-control secound" style="width: 70px; float: left;">
+                                                              <a class="show-div float-left mt-2 ml-3"><img src="src/assets/test-admin1-assets/img/author-icons/select-arrow.svg" alt=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr class="hide">
+                                                          <td></td>
+                                                          <td>Easy</td>
+                                                          <td>Points awarded for selecting the RIGHT Answer <span class="green f12 d-block">MCQ-SR, True/Flase, Match::One-on-One</span></td>
+                                                          <td><input type="text" class="form-control secound" value="None" style="width: 70px;"></td>
+                                                          <td><input type="text" class="form-control border-red" style="width: 70px;"></td>
+                                                          <td><input type="text" class="form-control secound" style="width: 70px; float: left;">
+                                                              <a href="" class="float-left mt-2 ml-3"><img src="src/assets/test-admin1-assets/img/author-icons/select-arrow.svg" alt=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr class="hide">
+                                                        <td colspan="6">
+                                                            <div class="manual-marking">
+                                                                <div class="float-left head">Item Types with Manual Marking</div>
+                                                                <div class="float-right">
+                                                                    <label class="lables">Based on</label>
+                                                                    <div class="custom-radio">
+                                                                        <input type="radio" name="ans1" id="">
+                                                                        <div class="radio">
+                                                                            <div class="check"></div>
+                                                                        </div>
+                                                                        <span><img src="dist/img/author-icons/rubic-grey.svg" alt=""> Rubric</span>
+                                                                    </div>
+                                                                    <div class="custom-radio">
+                                                                        <input type="radio" name="ans1" id="">
+                                                                        <div class="radio">
+                                                                            <div class="check"></div>
+                                                                        </div>
+                                                                        <span><img src="dist/img/author-icons/rubic-grey.svg" alt=""> Examiner Discretion</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Item Types with Single Correct Answer</td>
+                                                        <td>Easy</td>
+                                                        <td>Points awarded for selecting the RIGHT Answer <span class="green f12 d-block">MCQ-SR, True/Flase, Match::One-on-One</span></td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <span class="dropdown-toggle secound form-control" style="width: 70px;" type="button" >
+                                                                  <img src="src/assets/test-admin1-assets/img/author-icons/rubic-grey.svg" alt="">
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <span class="dropdown-toggle secound form-control" style="width: 70px;" type="button" >
+                                                                  <img src="src/assets/test-admin1-assets/img/author-icons/rubic-grey.svg" alt="">
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <span class="dropdown-toggle secound form-control" style="width: 70px;" type="button" >
+                                                                  <img src="src/assets/test-admin1-assets/img/author-icons/rubic-grey.svg" alt="">
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                      <div class="tab-pane fade" id="medium-tab" role="tabpanel" aria-labelledby="medium-tab">
+                                          <div class="table-responsive">
+                                              <table class="custom-table v-top">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>S.No</th>
+                                                          <th>Items</th>
+                                                          <th>Rubric</th>
+                                                          <th>Item</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                      <tr>
+                                                          <td>1</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/rubric-bg.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>2</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>3</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/views.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>4</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/rubric-bg.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>5</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>6</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                      <div class="tab-pane fade" id="summary-tab" role="tabpanel" aria-labelledby="summary-tab">
+                                          <div class="table-responsive">
+                                              <table class="custom-table v-top">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>S.No</th>
+                                                          <th>Items</th>
+                                                          <th>Rubric</th>
+                                                          <th>Item</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                      <tr>
+                                                          <td>1</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/rubric-bg.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>2</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>3</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/views.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>4</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/rubric-bg.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>5</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td>6</td>
+                                                          <td>Lorem ipsum dolor sit amet, consec adipiscing At vero eos et accusamus et iusto odio dignissimos</td>
+                                                          <td>
+                                                              <span class="grey">N/A</span>
+                                                          </td>
+                                                          <td>
+                                                              <a href=""><img src="src/assets/test-admin1-assets/img/author-icons/view-icon.svg" alt="" srcset=""></a>
+                                                          </td>
+                                                      </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- /.card -->
+                  </div>
+
+              </div>
+              <!-- /.row -->
+          </div>
+          <!-- /.container-fluid -->
+      </div>
+      <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+
+  
+<!-- Modal Test Bank -->
+<div class="modal fade modal-custom" id="test-bank" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-modal="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <button type="button" class="close close-btn" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <div class="title">Test Bank</div>
+        <div class="modal-body p-0 mt-2">
+            <div class="form-group">
+                <label class="labels">Test Bank Name</label>
+                <input type="text" [(ngModel)]="test_bank_name" class="form-control" placeholder="Type here">
+                <p class="alertDanger" *ngIf="test_name"
+                style="margin-bottom: -2px;">Test bank name is required.</p>
+            </div>
+        </div>
+        <div class="button-groups mt-3">
+            <button (click)="createTestBank()" class="default-btn w190 mr-3">Save</button>
+            <button data-dismiss="modal" class="skip-btn w190">No! Go Back</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<simple-notifications></simple-notifications>

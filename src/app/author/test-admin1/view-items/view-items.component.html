@@ -120,8 +120,8 @@
                         <div class="pad24">
                             <div class="view-item" >
                                 <ul class="nav nav-tabs float-left shadow-none" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation" >
-                                        <a class="nav-link active" id="summary-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="true">Section 1 - Basic</a>
+                                    <li class="nav-item" role="presentation" *ngFor="let sections of viewTestBankdata.sections;let i=index ">
+                                        <a class="nav-link active" id="summary-tab" data-toggle="tab" href="#subject" role="tab" aria-controls="subject" aria-selected="true">Section {{i+1}} - {{sections.Section_Nm}}</a>
                                     </li>
                                 </ul>
                                 <div class="float-right mt-3 mr-2">

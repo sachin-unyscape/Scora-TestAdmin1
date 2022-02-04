@@ -1,0 +1,26 @@
+.alertDanger{
+    color:rgb(235, 61, 61);
+    text-align: left;
+}
+.manual-marking {
+}
+.manual-marking .custom-radio {
+    margin-right: 20px;
+    float: left;
+    width: auto;
+    margin-top: 0;
+}
+.manual-marking .lables {
+    float: left;
+    margin-right: 20px;
+    font-weight: normal !important;
+}
+.head {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 21px;
+    color: var(--primary);
+}
+.manual-marking .custom-radio span img {
+    max-height: 14px;
+}
