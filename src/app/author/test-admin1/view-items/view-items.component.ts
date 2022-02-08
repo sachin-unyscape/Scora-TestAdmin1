@@ -55,10 +55,11 @@ export class ViewItemsComponent implements OnInit {
   currentPage = 1;
   originalList: any = [];
   test_Bank_list: any = [];
+  sortedData:any = [];
   showload = false;
   roles: any;
 
-  
+
   // pager object
   pager: any = {};
   // paged items
@@ -107,7 +108,9 @@ export class ViewItemsComponent implements OnInit {
         (data: any) => {
           console.log(data);
           this.viewTestBankdata = data.testbank_section[0];
-          console.log("this.viewTestBankdata", this.viewTestBankdata);
+          console.log("this.viewTestBankdata", data);
+          this.sortedData =  this.sortData("Section_ID", data.section_items);
+          console.log(this.sortedData);
           setTimeout(() => {
             this.showload = false;
           }, 300);
@@ -126,8 +129,8 @@ export class ViewItemsComponent implements OnInit {
         }
       );
   }
- 
-  
+
+
   backClicked() {
     this._location.back();
   }
@@ -137,5 +140,15 @@ export class ViewItemsComponent implements OnInit {
     let minutes = Math.floor(value % 60);
     return hours + ' hrs ' + minutes + ' mins';
   }
-  
+  sortData(columnName, data) {
+    var sortedData = {};
+    for (var i = 0; i < data.length; i++) {
+      var object = data[i];
+      if (Object.keys(sortedData).indexOf(object[columnName]) === -1) {
+        sortedData[object[columnName]] = [];
+      }
+      sortedData[object[columnName]].push(object);
+    }
+    return sortedData;
+  }
 }
