@@ -637,6 +637,7 @@ export class CreateTestSchemaComponent implements OnInit {
     }
   }
   goToMarkingSchema() {
+   
     this.blueprint_value = false;
     this.status_name = false;
     this.item_name = false;
@@ -847,13 +848,13 @@ export class CreateTestSchemaComponent implements OnInit {
           })
           .subscribe(
             (data: any) => {
+              this._notifications.create("", data.message, "info");  
+              this.showload = false;
               setTimeout(() => {
-                this.showload = false;
-                this._notifications.create("", data.message, "info");  
                 if(data.success == true){
-                  $("#test-bank").modal('show');
+                  this.router.navigate(['author/marking-schema/',data.itemset_id]);
                 }
-              }, 300);
+              }, 2000);
             },
             (error) => {
               this.showload = false;

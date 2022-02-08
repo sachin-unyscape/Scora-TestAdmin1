@@ -38,6 +38,7 @@ import { TestbankListingComponent } from './test-admin1/testbank-listing/testban
 import { ViewItemsComponent } from './test-admin1/view-items/view-items.component';
 import { ViewItemsEditComponent } from './test-admin1/view-items-edit/view-items-edit.component';
 import { CreateTestSchemaComponent } from './test-admin1/create-test-schema/create-test-schema.component';
+import { MarkingSchemaComponent } from './test-admin1/marking-schema/marking-schema.component';
 
 const routes: Routes = [
   {
@@ -292,6 +293,10 @@ const routes: Routes = [
     data: {
       title: 'view-items-edit'
     }
+  },
+  {
+    path: 'marking-schema/:itemset_id',
+    component: MarkingSchemaComponent,
   },
 
 ];
